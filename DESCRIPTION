@@ -1,0 +1,35 @@
+Package: home2park
+Title: Spatial Provision of Urban Parks
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Xiao Ping",
+           family = "Song",
+           role = c("aut", "cre"),
+           email = "xp.song@u.nus.edu",
+           comment = c(ORCID = "0000-0002-8825-195X"))
+Description: Assess the spatial provision of urban parks to city buildings.
+License: GPL (>= 3)
+URL: https://github.com/ecological-cities/home2park
+BugReports: https://github.com/ecological-cities/home2park/issues
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    magrittr,
+    checkmate,
+    units,
+    dplyr (>= 1.0.5),
+    glue (>= 1.4.2),
+    raster (>= 3.4.5),
+    sf (>= 0.9.8),
+    stars (>= 0.5.2),
+    stringr (>= 1.4.0),
+    terra (>= 1.1.4),
+    rlang (>= 0.4.10),
+    stats (>= 4.0.3)
+Suggests: 
+    testthat (>= 3.0.0),
+    spelling
+Config/testthat/edition: 3
+Language: en-GB

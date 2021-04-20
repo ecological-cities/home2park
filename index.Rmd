@@ -1,0 +1,148 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/"
+)
+```
+
+# Allometric Scaling of Urban Trees 
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
+
+<a href='https://xp-song.github.io/allometree/'><img src='man/figures/logo.png' align="right" height="175" /></a>
+
+Develop and use allometric equations relating to the size and structure of urban trees. Refer to [package website](https://xp-song.github.io/allometree/) and [prototype web app](https://xpsong.shinyapps.io/allometree-sg/) for demonstrations of how the package may be used. The package supplements the following study:  
+
+Song, X. P., Lai, H. R., Wijedasa, L. S., Tan, P. Y., Edwards, P. J., & Richards, D. R. (2020), Height–diameter allometry for the management of city trees in the tropics. _Environmental Research Letters_, 15, 114017. https://doi.org/10.1088/1748-9326/abbbad
+
+## Installation
+
+```{r, eval = FALSE}
+# Install development version from GitHub
+devtools::install_github("xp-song/allometree")
+```
+
+## Setup
+
+```{r eval = FALSE}
+library(allometree)
+```
+
+```{r include = FALSE, eval = TRUE}
+devtools::load_all() # to knit manually
+```
+
+
+## Examples
+
+Allometric equations in this package have been used to predict relationships between parameters related tree size and structure, such as age, height, trunk diameter, crown height, crown diameter, leaf area, etc. They are foundational to other models that estimate the benefits and hazards associated with trees as they mature and grow in size. See the vignette '[Get started with allometree](articles/allometree.html)' for a full description of example datasets and allometric equations.
+
+Let's develop models to predict tree *height* from trunk *diameter* for five species in our example dataset `data(urbantrees)`:
+
+```{r urbantrees, fig.width=6.0, fig.height=4, fig.align='center', echo = FALSE}
+data(urbantrees, package = "allometree")
+library(ggplot2)
+ggplot(urbantrees, aes(diameter, height)) +
+  facet_wrap(~ species) +
+  geom_point(size=0.35, alpha = 0.3, color = "grey50") +
+  coord_cartesian(ylim=c(0, 25), xlim= c(0,1)) +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  xlab("Diameter (m)") + ylab("Height (m)")
+```
+
+&nbsp;
+
+### Single-species models
+
+One method is to develop allometric models separately for each species ([single-species models](articles/single-species_models.html)). We can select the best-fit equation for each species in the dataset, or fit data to specified (i.e. pre-defined) equations, for example, after the removal of outliers. The example below selects the best-fit equation for each species in `urbantrees`:
+
+```{r}
+results <- ss_modelselect_multi(urbantrees, 
+                                species = "species", # specify colname of species
+                                response = "height", predictor = "diameter") # specify colnames of variables
+
+```
+
+&nbsp;
+
+We can simulate data across a range of diameter sizes for each species, and use their respective models to make predictions of tree height. The simulated data can also be extrapolated beyond the range used to fit the model. In this example, we specify that predictions should be made between the range `0` to `1` metre:  
+
+```{r}
+predictions_ss <- ss_simulate(ref_table = results$ss_models_info, 
+                              models = results$ss_models, 
+                              extrapolate = c(0,1))
+
+```
+
+### Mixed-effects model
+
+Alternatively, the full dataset can be fit to a linear mixed-effects model with 'species' specified as the random effect, using the `lme4::lmer` function under the hood:  
+
+```{r warning = FALSE, message = FALSE}
+results <- mix_modelselect(urbantrees, 
+                           species = "species", 
+                           response = "height", predictor = "diameter")
+```
+
+Simulations can likewise be performed across a range of diameter sizes for each species, and extrapolated beyond the range used to fit the model:  
+
+```{r warning = FALSE, message = FALSE}
+predictions_mix <- mix_simulate(data = urbantrees, 
+                                modelselect = results,
+                                extrapolate = c(0, 1))
+```
+
+&nbsp;
+
+## Visualisations
+
+Model predictions can be visualised alongside the original data using `ggplot2::ggplot()`:
+
+```{r combine simulated data, include = FALSE}
+library(dplyr)
+
+predictions <- predictions_ss %>%
+  mutate(Type = "Single-species") %>%
+  bind_rows(predictions_mix %>% mutate(Type = "Mixed-effects"))
+```
+
+
+```{r single-species_model_curves, message = FALSE, warning = FALSE, fig.width=7.5, fig.height =4, fig.align='center', echo = FALSE}
+library(ggplot2)
+
+ggplot() +
+  facet_wrap(~ species)+ 
+  geom_point(data = urbantrees, aes(x = diameter, y = height),
+             size=0.35, alpha = 0.3, color = "grey50") +
+  
+  # prediction interval
+  geom_ribbon(data = predictions, aes(x = predictor, ymin = lwr, ymax = upr, fill = Type), 
+              alpha = 0.10) +
+  
+  # regression line
+  geom_line(data = predictions, aes(x = predictor, y = fit, lty = extrapolated, color = Type),
+            size = 0.8, alpha = 0.6) +
+  
+  scale_linetype_manual(values=c("No"= 1 , "Low" = 3, "High" = 3), name = "Extrapolated") +
+  scale_fill_manual(values = c("#0072B2", "#D55E00")) +
+  scale_color_manual(values = c("#0072B2", "#D55E00")) +
+
+  xlab("Diameter (m)") + ylab("Height (m)") +
+  theme_bw() +
+  theme(panel.grid = element_blank()) +
+  
+  coord_cartesian(ylim=c(0, 25), xlim= c(0,1))
+```
+
+&nbsp;
+
+These allometric relationships can then be interpreted according to the types of variables modelled, and in conjunction with information on the biology and growth (e.g. environmental and management) conditions associated with the trees.

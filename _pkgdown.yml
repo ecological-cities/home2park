@@ -1,0 +1,49 @@
+url: https://ecological-cities.github.io/home2park/
+title: home2park
+template:
+  opengraph:
+    image:
+      src: man/figures/logo.png
+      alt: "Spatial Provision of Urban Parks"
+    twitter:
+      creator: "@song_xiaoping"
+      site: "https://xp-song.github.io"
+      card: summary_large_image
+  params:
+    bootswatch:
+    ganalytics:
+
+development:
+  mode: auto
+
+home:
+  title: R Package - Spatial provision of urban parks
+  description: Assess the spatial provision of various park attributes to residential buildings city-wide.
+  links:
+
+reference:
+- title: "Data"
+- contents:
+  - starts_with("data")
+- title: "City population"
+  desc: "Redistribute coarse-scale population data into residential buildings."
+- contents:
+  - rasterise_pop
+  - rasterise_landuse
+  - rasterise_buildings
+  - starts_with("pop_")
+- title: "Parks attributes"
+  desc: "Extract attributes important to recreation/leisure."
+- contents:
+  - starts_with("park_")
+- title: "Park supply"
+  desc: "Calculate park provision per residential building."
+- contents:
+  - starts_with("ss_")
+- title: "Helper functions"
+- contents:
+  - matchyear
+
+authors:
+  Xiao Ping Song:
+    href: https://xp-song.github.io
