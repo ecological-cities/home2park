@@ -39,3 +39,19 @@ more details and options for input arguments when downloading the data.
 \details{
 OSM points are filtered by key-value attributes, where \code{leisure:playground}, and \verb{access:} is not \code{no} or \code{private}.
 }
+\examples{
+\dontrun{
+city_boundaries <- data(singapore) \%>\%
+   dplyr::filter(year == 2020) \%>\%
+   sf::st_union() \%>\%
+   sf::st_as_sf() \%>\%
+   smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  \%>\%
+   smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  \%>\%
+   sf::st_make_valid()
+
+get_sportfitness_osm(place = city_boundaries,
+                    date = as.Date("2021-01-01"),
+                    filename = "sport-fitness_osm-points_2021-01-01.geojson")
+}
+
+}

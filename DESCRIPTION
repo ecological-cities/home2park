@@ -36,3 +36,5 @@ Suggests:
     spelling
 Config/testthat/edition: 3
 Language: en-GB
+Depends: 
+    R (>= 2.10)

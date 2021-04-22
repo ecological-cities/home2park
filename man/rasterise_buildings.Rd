@@ -82,3 +82,18 @@ If necessary, the argument \code{match_buildings_landuse} provides ways to match
 with a specific year in \code{sf_landuse}, but only if \code{sf_pop} is not provided. This is because the main
 reference point for all the datasets is \code{sf_pop} (primary focus is the analysis of population data).
 }
+\examples{
+\dontrun{
+population_sgp <- data(singapore)
+landuse <- data(landuse_sgp)
+buildings <- data(buildings_sgp)
+
+buildings_rasters <- rasterise_buildings(buildings,
+                                     proxy_pop_density = "levels",
+                                     year = "year",
+                                     sf_pop = population_sgp,
+                                     sf_landuse = landuse,
+                                     match_buildings_pop = "closest")
+}
+
+}

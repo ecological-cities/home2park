@@ -24,13 +24,47 @@
 #'
 #'@import sf
 #'@import checkmate
-#'@importFrom dplyr bind_cols select
+#'@importFrom dplyr bind_cols select filter
 #'@importFrom glue glue
 #'@importFrom terra vect rast rasterize
 #'@importFrom rlang .data
 #'
+#'@examples
+#' \dontrun{
+#' population_sgp <- data(singapore)
+#' landuse <- data(landuse_sgp)
+#' buildings <- data(buildings_sgp)
+#'
+#' # first, rasterise population, landuse & buildings
+#' pop_rasters <- rasterise_pop(population_sgp)
+#'
+#' landuse_rasters <- rasterise_landuse(landuse,
+#'                                      land_use = "lu_desc",
+#'                                      subset = c("1" = "RESIDENTIAL",
+#'                                                 "2" = "COMMERCIAL & RESIDENTIAL",
+#'                                                 "3" = "RESIDENTIAL WITH COMMERCIAL AT 1ST STOREY",
+#'                                                 "4" = "RESIDENTIAL / INSTITUTION"),
+#'                                      sf_pop = population_sgp,
+#'                                      match_landuse_pop = "recent")
+#'
+#' buildings_rasters <- rasterise_buildings(buildings,
+#'                                      proxy_pop_density = "levels",
+#'                                      year = "year",
+#'                                      sf_pop = population_sgp,
+#'                                      sf_landuse = landuse,
+#'                                      match_buildings_pop = "closest")
+#'
+#' # then perform dasymetric mapping on selected (first) year
+#' popdens_raster <- pop_dasymap(pop_polygons = pop_rasters$pop_polygons[[1]],
+#'                               pop_perblock_count = pop_rasters$pop_count[[1]],
+#'                               pop_perblock_density = pop_rasters$pop_density[[1]],
+#'                               land_relative_density = buildings_rasters[[1]],
+#'                               filename = "buildings_popdensity.tif",
+#'                               wopt = list(gdal=c("COMPRESS=LZW")))
+#' }
+#'
 #'@export
-pop_dasymap <- function(pop_polygons, pop_perblock_count, pop_perblock_density, land_relative_density, 
+pop_dasymap <- function(pop_polygons, pop_perblock_count, pop_perblock_density, land_relative_density,
     filename = NULL, dir_rastertemplate = NULL, overwrite = TRUE, ...) {
 
 
@@ -43,13 +77,13 @@ pop_dasymap <- function(pop_polygons, pop_perblock_count, pop_perblock_density, 
     checkmate::assertTRUE(all(st_is_valid(pop_polygons)), add = coll)  # all features must be valid
 
     # all crs similar
-    checkmate::assertTRUE(all(st_crs(pop_polygons) == st_crs(pop_perblock_count) & st_crs(pop_polygons) == 
+    checkmate::assertTRUE(all(st_crs(pop_polygons) == st_crs(pop_perblock_count) & st_crs(pop_polygons) ==
         st_crs(pop_perblock_density) & st_crs(pop_polygons) == st_crs(land_relative_density)))
 
     # file paths
-    checkmate::assert_character(filename, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
+    checkmate::assert_character(filename, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
-    checkmate::assert_character(dir_rastertemplate, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
+    checkmate::assert_character(dir_rastertemplate, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
 
     checkmate::reportAssertions(coll)
@@ -73,7 +107,7 @@ pop_dasymap <- function(pop_polygons, pop_perblock_count, pop_perblock_density, 
 
     # 2) Zonal sum of pop_perblock_rel_density (per census block) - later serves as
     # non-negative weights tt sum to 1 within each
-    pop_perblock_rel_density_sum <- terra::extract(pop_perblock_rel_density, vect(pop_polygons), 
+    pop_perblock_rel_density_sum <- terra::extract(pop_perblock_rel_density, vect(pop_polygons),
         fun = "sum", na.rm = TRUE)
 
     colnames(pop_perblock_rel_density_sum) <- c("ID", "sum")
@@ -85,7 +119,7 @@ pop_dasymap <- function(pop_polygons, pop_perblock_count, pop_perblock_density, 
 
 
     # rasterize
-    pop_perblock_rel_density_sum <- terra::rasterize(vect(pop_perblock_rel_density_sum), raster_template, 
+    pop_perblock_rel_density_sum <- terra::rasterize(vect(pop_perblock_rel_density_sum), raster_template,
         field = "sum")
 
 

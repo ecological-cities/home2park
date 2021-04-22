@@ -44,3 +44,19 @@ values were then rounded up to the nearest whole number.
 The column \code{area_m2} represents the building footprint area,
 and \code{floorarea_m2} is calculated by multiplying the \code{area_m2} by the number of \code{levels}.
 }
+\examples{
+\dontrun{
+city_boundaries <- data(singapore) \%>\%
+   dplyr::filter(year == 2020) \%>\%
+   sf::st_union() \%>\%
+   sf::st_as_sf() \%>\%
+   smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  \%>\%
+   smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  \%>\%
+   sf::st_make_valid()
+
+get_buildings_osm(place = city_boundaries,
+                  date = as.Date("2021-01-01"),
+                  filename = "buildings_osm-polygons_2021-01-01.geojson")
+}
+
+}

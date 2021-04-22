@@ -7,3 +7,6 @@
 ^docs$
 ^pkgdown$
 ^LICENSE\.md$
+^data-raw$
+^index\.md$
+^index\.Rmd$

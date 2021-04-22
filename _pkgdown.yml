@@ -22,32 +22,36 @@ home:
   links:
 
 reference:
-- title: "Data: Homes"
-  desc: "Raw datasets related to residential buildings in the city."
+- title: "Homes: Data"
+  desc: "Raw/example data related to the resident population."
 - contents:
+  - singapore
+  - landuse_sgp
+  - buildings_sgp
   - get_buildings_osm
-- title: "Data: Parks"
-  desc: "Raw datasets related to parks and outdoor recreation."
-- contents:
-  - get_parks_osm
-  - get_beaches_osm
-  - get_informalnature_osm
-  - get_playgrounds_osm
-  - get_sportfitness_osm
-  - get_trails_osm
-- title: "Process: Resident population"
+- title: "Homes: Process resident population"
   desc: "Redistribute coarse-scale population data into residential buildings."
 - contents:
   - rasterise_pop
   - rasterise_landuse
   - rasterise_buildings
   - starts_with("pop_")
-- title: "Process: Park attributes"
-  desc: "Derive attributes important to recreation/leisure."
+- title: "Parks: Data"
+  desc: "Raw/example datasets related to parks and outdoor recreation."
+- contents:
+  - parks_sgp
+  - get_parks_osm
+  - get_beaches_osm
+  - get_informalnature_osm
+  - get_playgrounds_osm
+  - get_sportfitness_osm
+  - get_trails_osm
+- title: "Parks: Process attributes"
+  desc: "Derive park attributes important for recreation/leisure."
 - contents:
   - starts_with("park_")
 - title: "Metrics: Recreation supply"
-  desc: "Calculate the provision of different park attributes per residential building."
+  desc: "Calculate the provision of park attributes per residential building."
 - contents:
   - starts_with("ss_")
 - title: "Helper functions"

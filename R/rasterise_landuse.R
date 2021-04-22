@@ -48,9 +48,25 @@
 #'@importFrom terra vect rast rasterize
 #'@importFrom rlang .data
 #'
+#'@examples
+#' \dontrun{
+#' population_sgp <- data(singapore)
+#' landuse <- data(landuse_sgp)
+#'
+#' landuse_rasters <- rasterise_landuse(landuse,
+#'                                      land_use = "lu_desc",
+#'                                      subset = c("1" = "RESIDENTIAL",
+#'                                                 "2" = "COMMERCIAL & RESIDENTIAL",
+#'                                                 "3" = "RESIDENTIAL WITH COMMERCIAL AT 1ST STOREY",
+#'                                                 "4" = "RESIDENTIAL / INSTITUTION"),
+#'                                      year = "year",
+#'                                      sf_pop = population_sgp,
+#'                                      match_landuse_pop = "recent")
+#' }
+#'
 #'@export
-rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year = "year", sf_pop = NULL, 
-    match_landuse_pop = "recent", dir_rastertemplate = NULL, dir_processing = tempdir(), dir_export = tempdir(), 
+rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year = "year", sf_pop = NULL,
+    match_landuse_pop = "recent", dir_rastertemplate = NULL, dir_processing = tempdir(), dir_export = tempdir(),
     overwrite = TRUE, wopt = list(gdal = c("COMPRESS=LZW")), ...) {
 
     # Error checking ------------------
@@ -67,17 +83,17 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
     checkmate::assert_subset(year, choices = colnames(sf_landuse), empty.ok = TRUE, add = coll)
 
     # land use classes
-    checkmate::assert_character(subset, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
+    checkmate::assert_character(subset, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
-    checkmate::assert_subset(subset, choices = unique(sf_landuse[[land_use]]), empty.ok = TRUE, 
+    checkmate::assert_subset(subset, choices = unique(sf_landuse[[land_use]]), empty.ok = TRUE,
         add = coll)  # as vector
 
     # file paths
-    checkmate::assert_character(dir_rastertemplate, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
+    checkmate::assert_character(dir_rastertemplate, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
-    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
+    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
-    checkmate::assert_character(dir_export, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
+    checkmate::assert_character(dir_export, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
 
     checkmate::reportAssertions(coll)
@@ -127,7 +143,7 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
     results <- list()  # create empty list for output
 
     # If there is a year column in sf_landuse
-    if (!is.null(unique(sf_landuse[[year]]))) 
+    if (!is.null(unique(sf_landuse[[year]])))
         {
 
             years_landuse <- unique(sf_landuse[[year]])
@@ -139,7 +155,7 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
                   dplyr::filter(.data[[year]] == years_landuse[i])
 
                 # rasterize & export to temp directory
-                landuse_raster <- terra::rasterize(terra::vect(sf_landuse_subset), raster_template, 
+                landuse_raster <- terra::rasterize(terra::vect(sf_landuse_subset), raster_template,
                   field = "residential")
 
                 landuse_raster[landuse_raster == 0] <- NA  # convert 0s to NAs
@@ -164,7 +180,7 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
 
                     # export
                     if (!is.null(dir_export)) {
-                      terra::writeRaster(results[[i]][[j]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]][[j]])}.tif")), 
+                      terra::writeRaster(results[[i]][[j]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]][[j]])}.tif")),
                         overwrite = overwrite, wopt = wopt, ...)
                     }
                     terra::tmpFiles(remove = TRUE)  # remove temp files to clear memory
@@ -180,7 +196,7 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
 
                   # export
                   if (!is.null(dir_export)) {
-                    terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")), 
+                    terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")),
                       overwrite = overwrite, wopt = wopt, ...)
                   }
                   terra::tmpFiles(remove = TRUE)  # remove temp files to clear memory

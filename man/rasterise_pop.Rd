@@ -43,3 +43,15 @@ Census data for multiple years can be processed (one raster per year).
 The column name for the \code{year} must be specified, even if data does not contain multiple years
 (combined data across multiple years must be in the 'long' format).
 }
+\examples{
+\dontrun{
+population_sgp <- data(singapore)
+
+pop_rasters <- rasterise_pop(population_sgp,
+                             res = 10,
+                             census_block = subzone_n,
+                             pop_count = "pop_count",
+                             year = "year")
+}
+
+}

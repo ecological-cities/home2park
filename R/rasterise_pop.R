@@ -30,8 +30,19 @@
 #'@importFrom terra vect rast rasterize
 #'@importFrom rlang .data
 #'
+#'@examples
+#' \dontrun{
+#' population_sgp <- data(singapore)
+#'
+#' pop_rasters <- rasterise_pop(population_sgp,
+#'                              res = 10,
+#'                              census_block = subzone_n,
+#'                              pop_count = "pop_count",
+#'                              year = "year")
+#' }
+#'
 #'@export
-rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, year = "year", 
+rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, year = "year",
     dir_processing = tempdir()) {
 
     # Error checking ------------------
@@ -51,7 +62,7 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
     checkmate::assert_subset(year, choices = colnames(sf), empty.ok = FALSE, add = coll)
 
     # filepaths
-    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
+    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
 
     checkmate::reportAssertions(coll)
@@ -68,7 +79,7 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
     raster_template <- sf %>%
         raster::raster(res = res)  # make & export using library('raster'), cuz library('terra') fails to export if no cell values
 
-    suppressWarnings(raster::writeRaster(raster_template, filename = file.path(glue::glue("{dir_processing}/popdensity_raster-template.tif")), 
+    suppressWarnings(raster::writeRaster(raster_template, filename = file.path(glue::glue("{dir_processing}/popdensity_raster-template.tif")),
         overwrite = TRUE, wopt = list(gdal = c("COMPRESS=LZW"))))
 
 
@@ -81,7 +92,7 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
 
 
     # If census year was specified
-    if (!is.null(year)) 
+    if (!is.null(year))
         {
 
             years <- unique(sf[[year]])
@@ -95,11 +106,11 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
                 # to include 0 or missing when rasterised
 
                 # rasterize & export to temp directory
-                results[[1]][[i]] <- terra::rasterize(terra::vect(sf_subset), terra::rast(raster_template), 
+                results[[1]][[i]] <- terra::rasterize(terra::vect(sf_subset), terra::rast(raster_template),
                   field = pop_count)  # pop count
                 results[[1]][[i]][results[[1]][[i]] == 0] <- NA  # convert 0s to NAs
 
-                results[[2]][[i]] <- terra::rasterize(terra::vect(sf_subset), terra::rast(raster_template), 
+                results[[2]][[i]] <- terra::rasterize(terra::vect(sf_subset), terra::rast(raster_template),
                   field = "pop_perpixel")  # pop density
                 results[[2]][[i]][results[[2]][[i]] == 0] <- NA
 
@@ -111,7 +122,7 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
 
                 names(results[[2]][[i]]) <- glue::glue("popdensity-by-census-block_{years[i]}")
                 # export output imported by filename in subsequent processing
-                terra::writeRaster(results[[2]][[i]], filename = file.path(glue::glue("{dir_processing}/{names(results[[2]][[i]])}.tif")), 
+                terra::writeRaster(results[[2]][[i]], filename = file.path(glue::glue("{dir_processing}/{names(results[[2]][[i]])}.tif")),
                   overwrite = TRUE, wopt = list(gdal = c("COMPRESS=LZW")))
 
                 # raw file

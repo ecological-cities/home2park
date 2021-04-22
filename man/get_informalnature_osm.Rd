@@ -71,3 +71,25 @@ If \code{mutually_exclusive_with} is provided, \href{https://postgis.net/docs/ST
 the output and these polygon(s) will be excluded using \code{polygons_mutually_exclude()}.
 Polygons are then cleaned up using \code{polygons_clean()}.
 }
+\examples{
+\dontrun{
+city_boundaries <- data(singapore) \%>\%
+   dplyr::filter(year == 2020) \%>\%
+   sf::st_union() \%>\%
+   sf::st_as_sf() \%>\%
+   smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  \%>\%
+   smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  \%>\%
+   sf::st_make_valid()
+
+parks <- data(parks_sgp)
+
+get_informalnature_osm(place = city_boundaries,
+                       date = as.Date("2021-01-01"),
+                       mutually_exclusive_with = list(parks),
+                       snap_tolerance = 5,
+                       min_area = units::set_units(2500, "m^2"),
+                       aggregate_polygons = 15,
+                       filename = "informal-accessible-nature-areas_osm-polygons_2021-01-01.geojson")
+}
+
+}

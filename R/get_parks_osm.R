@@ -43,7 +43,25 @@
 #'@import osmextract
 #'@importFrom dplyr filter mutate
 #'@importFrom units set_units
+#'@importFrom smoothr fill_holes drop_crumbs
 #'@importFrom rlang .data
+#'
+#'@examples
+#' \dontrun{
+#' city_boundaries <- data(singapore) %>%
+#'    dplyr::filter(year == 2020) %>%
+#'    sf::st_union() %>%
+#'    sf::st_as_sf() %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    sf::st_make_valid()
+#'
+#' get_parks_osm(place = city_boundaries,
+#'               date = as.Date("2021-01-01"),
+#'               snap_tolerance = 5,
+#'               aggregate_polygons = 15,
+#'               filename = "public-parks_osm-polygons_2021-01-01.geojson")
+#' }
 #'
 #'@export
 get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, snap_tolerance = 5,
@@ -177,7 +195,28 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, sn
 #'@import osmextract
 #'@importFrom dplyr filter mutate
 #'@importFrom units set_units
+#'@importFrom smoothr fill_holes drop_crumbs
 #'@importFrom rlang .data
+#'
+#'@examples
+#' \dontrun{
+#' city_boundaries <- data(singapore) %>%
+#'    dplyr::filter(year == 2020) %>%
+#'    sf::st_union() %>%
+#'    sf::st_as_sf() %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    sf::st_make_valid()
+#'
+#' parks <- data(parks_sgp)
+#'
+#' get_beaches_osm(place = city_boundaries,
+#'                 date = as.Date("2021-01-01"),
+#'                 mutually_exclusive_with = list(parks),
+#'                 snap_tolerance = 5,
+#'                 aggregate_polygons = 15,
+#'                 filename = "public-beaches_osm-polygons_2021-01-01.geojson")
+#' }
 #'
 #'@export
 get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, snap_tolerance = 5,
@@ -317,7 +356,29 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, 
 #'@import osmextract
 #'@importFrom dplyr filter mutate
 #'@importFrom units set_units
+#'@importFrom smoothr fill_holes drop_crumbs
 #'@importFrom rlang .data
+#'
+#'@examples
+#' \dontrun{
+#' city_boundaries <- data(singapore) %>%
+#'    dplyr::filter(year == 2020) %>%
+#'    sf::st_union() %>%
+#'    sf::st_as_sf() %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    sf::st_make_valid()
+#'
+#' parks <- data(parks_sgp)
+#'
+#' get_informalnature_osm(place = city_boundaries,
+#'                        date = as.Date("2021-01-01"),
+#'                        mutually_exclusive_with = list(parks),
+#'                        snap_tolerance = 5,
+#'                        min_area = units::set_units(2500, "m^2"),
+#'                        aggregate_polygons = 15,
+#'                        filename = "nature-areas_osm-polygons_2021-01-01.geojson")
+#' }
 #'
 #'@export
 get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, snap_tolerance = 5,

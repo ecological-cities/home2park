@@ -75,3 +75,20 @@ be associated with a specific population census year, and removed if there are n
 Rasterised land use zones will be masked away (i.e., convert pixels to \code{NA})
 at areas with no (zero) population data (for the respective matching year).
 }
+\examples{
+\dontrun{
+population_sgp <- data(singapore)
+landuse <- data(landuse_sgp)
+
+landuse_rasters <- rasterise_landuse(landuse,
+                                     land_use = "lu_desc",
+                                     subset = c("1" = "RESIDENTIAL",
+                                                "2" = "COMMERCIAL & RESIDENTIAL",
+                                                "3" = "RESIDENTIAL WITH COMMERCIAL AT 1ST STOREY",
+                                                "4" = "RESIDENTIAL / INSTITUTION"),
+                                     year = "year",
+                                     sf_pop = population_sgp,
+                                     match_landuse_pop = "recent")
+}
+
+}

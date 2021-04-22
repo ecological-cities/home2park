@@ -28,7 +28,23 @@
 #'@import checkmate
 #'@import osmextract
 #'@importFrom dplyr filter mutate
+#'@importFrom smoothr fill_holes drop_crumbs
 #'@importFrom rlang .data
+#'
+#'@examples
+#' \dontrun{
+#' city_boundaries <- data(singapore) %>%
+#'    dplyr::filter(year == 2020) %>%
+#'    sf::st_union() %>%
+#'    sf::st_as_sf() %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    sf::st_make_valid()
+#'
+#' get_buildings_osm(place = city_boundaries,
+#'                   date = as.Date("2021-01-01"),
+#'                   filename = "buildings_osm-polygons_2021-01-01.geojson")
+#' }
 #'
 #'@export
 get_buildings_osm <- function(place, date = NULL, dir_raw = oe_download_directory(), filename = NULL,
@@ -107,16 +123,3 @@ get_buildings_osm <- function(place, date = NULL, dir_raw = oe_download_director
 
     return(results)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

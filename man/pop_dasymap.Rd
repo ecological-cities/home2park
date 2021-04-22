@@ -47,3 +47,38 @@ Data provided should be a snapshot of the population for a single time period (e
 All input data should have a similar projected coordinate reference system
 specific to the target area.
 }
+\examples{
+\dontrun{
+population_sgp <- data(singapore)
+landuse <- data(landuse_sgp)
+buildings <- data(buildings_sgp)
+
+# first, rasterise population, landuse & buildings
+pop_rasters <- rasterise_pop(population_sgp)
+
+landuse_rasters <- rasterise_landuse(landuse,
+                                     land_use = "lu_desc",
+                                     subset = c("1" = "RESIDENTIAL",
+                                                "2" = "COMMERCIAL & RESIDENTIAL",
+                                                "3" = "RESIDENTIAL WITH COMMERCIAL AT 1ST STOREY",
+                                                "4" = "RESIDENTIAL / INSTITUTION"),
+                                     sf_pop = population_sgp,
+                                     match_landuse_pop = "recent")
+
+buildings_rasters <- rasterise_buildings(buildings,
+                                     proxy_pop_density = "levels",
+                                     year = "year",
+                                     sf_pop = population_sgp,
+                                     sf_landuse = landuse,
+                                     match_buildings_pop = "closest")
+
+# then perform dasymetric mapping on selected (first) year
+popdens_raster <- pop_dasymap(pop_polygons = pop_rasters$pop_polygons[[1]],
+                              pop_perblock_count = pop_rasters$pop_count[[1]],
+                              pop_perblock_density = pop_rasters$pop_density[[1]],
+                              land_relative_density = buildings_rasters[[1]],
+                              filename = "buildings_popdensity.tif",
+                              wopt = list(gdal=c("COMPRESS=LZW")))
+}
+
+}
