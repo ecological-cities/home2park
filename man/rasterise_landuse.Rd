@@ -20,23 +20,23 @@ rasterise_landuse(
 )
 }
 \arguments{
-\item{sf_landuse}{Simple feature (polygons) of the land use zones.
-Should be transformed to a projected coordinate reference system.}
+\item{sf_landuse}{\code{sf} polygons of the land use zones.
+Data should be in a projected coordinate reference system.}
 
 \item{subset}{Named vector containing the residential land use classes of interest to retain in column \code{land_use}.
 Each element is named according to the integer that will be used
 to represent this class in the output raster. Defaults to \code{NULL} (integers will be alphabetically
 assigned to land use classes).}
 
-\item{land_use}{Specify column name of the land use classes.}
+\item{land_use}{character. Specify column name of the land use classes.}
 
-\item{year}{Specify column name for the year within \code{sf_landuse}
-and \code{sf_pop} (if provided). Defaults to \code{'year'}. Columns should be numeric.}
+\item{year}{character. Specify column name for the year within \code{sf_landuse}
+and \code{sf_pop} (if provided). Defaults to \code{'year'}. Column data should be numeric.}
 
-\item{sf_pop}{(optional) Simple feature (polygons) containing the population census data with column containing the census year (optional).
-If absent, the output (land use rasters) will not be associated with specific population census years.}
+\item{sf_pop}{(optional) \code{sf} polygons containing the population census data with column containing the census year.
+If absent, the output (land use rasters) will not be associated with specific population census year(s).}
 
-\item{match_landuse_pop}{Type of matching between \code{sf_landuse} and \code{sf_pop}, passed on to \code{match} argument in function \code{matchyear()}.
+\item{match_landuse_pop}{character. Type of matching between \code{sf_landuse} and \code{sf_pop}, passed on to \code{match} argument in function \code{matchyear()}.
 Either \code{'exact'}, \code{'closest'}, \code{'recent'} or \code{'soonest'}. Defaults to \code{'recent'}, i.e.
 assumes that land use is pre-planned (and followed by population changes), rather than a result of post-monitoring (e.g. remotely-sensed).}
 

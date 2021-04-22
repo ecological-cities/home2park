@@ -31,12 +31,12 @@ Output from \code{pop_dasymap()} may be used.}
 \item{...}{Other arguments passed to \code{sf::st_write()}.}
 }
 \value{
-Building polygons (sf) with column \code{popcount}.
+Building \code{sf }polygons with column \code{popcount}.
 }
 \description{
-Convert raster of population density (e.g. from \code{pop_dasymap()} output) to population count per polygon.
-Adjacent polygons with similar pixel values are merged. Thus, if input/output rasters
-supplied to \code{pop_dasymap()} were at the spatial resolution of individual buildings,
-conversion to polygons using this function would result in an output of population count per building.
+Convert raster of population density (e.g. from \code{pop_dasymap()} output) to population count per polygon
+(adjacent polygons with similar pixel values are merged).
+Thus, if rasters supplied to \code{pop_dasymap()} are at a spatial resolution small enough to delineate individual buildings,
+conversion to polygons using this function would reflect the population count per building.
 Input data should have a projected coordinate reference system specific to the target area.
 }

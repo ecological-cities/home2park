@@ -14,16 +14,16 @@ rasterise_pop(
 )
 }
 \arguments{
-\item{sf}{Simple feature (polygons) containing the population census data.
-Should be transformed to a projected coordinate reference system (for calculation of pixel resolution).}
+\item{sf}{\code{sf}polygons containing the population census data.
+Data should be in a projected coordinate reference system (for calculation of pixel resolution).}
 
-\item{res}{Specify the pixel resolution for rasterisation (in metres). Defaults to \code{10}.}
+\item{res}{number. Specify the pixel resolution for rasterisation (in metres). Defaults to \code{10}.}
 
-\item{census_block}{Specify column name of the census block unique identifier (e.g. name).}
+\item{census_block}{character. Specify column name of the census block unique identifier (e.g. name).}
 
-\item{pop_count}{Specify column name of the population counts per census block.}
+\item{pop_count}{character. Specify column name of the population counts per census block.}
 
-\item{year}{Specify column name of the census year. Defaults to \code{'year'}.}
+\item{year}{character. Specify column name of the census year. Defaults to \code{'year'}.}
 
 \item{dir_processing}{character. Directory to store intermediate files. Defaults to \code{tempdir()}.
 Set to \code{NULL} if you do not wish to export intermediate (temporary) files for subsequent processing.}

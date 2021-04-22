@@ -21,26 +21,26 @@ rasterise_buildings(
 )
 }
 \arguments{
-\item{sf_buildings}{Simple feature (polygons) of the buildings.
-Should be transformed to a projected coordinate reference system.}
+\item{sf_buildings}{\code{sf }polygons of the buildings.
+Data should be in a projected coordinate reference system.}
 
-\item{proxy_pop_density}{Specify column name of the building attribute that is used
+\item{proxy_pop_density}{character. Specify column name of the building attribute that is used
 as an indicator of population density (e.g. building height, no. of levels).
 This column will be used to assign values to the output raster. If not provided, population density
 across all building pixels are assumed to be similar.}
 
-\item{year}{Specify column name for the year within \code{sf_buildings}, \code{sf_landuse}
-and \code{sf_pop} (if provided). Defaults to \code{'year'}. Columns should be numeric.}
+\item{year}{character. Specify column name for the year within \code{sf_buildings}, \code{sf_landuse}
+and \code{sf_pop} (if provided). Defaults to \code{'year'}. Column data should be numeric.}
 
-\item{sf_pop}{(optional) Simple feature (polygons) containing the population census data with column containing the census year.
-If absent, the output (building rasters) will not be associated with specific population census years.}
+\item{sf_pop}{(optional) \code{sf} polygons containing the population census data with column containing the census year.
+If absent, the output (building rasters) will not be associated with specific population census year(s).}
 
-\item{sf_landuse}{(optional) Simple feature (polygons) of the land use zones.}
+\item{sf_landuse}{(optional) \code{sf} polygons of the land use zones.}
 
-\item{match_buildings_pop}{Type of matching between \code{sf_buildings} and \code{sf_pop} (if provided), passed on to \code{match} argument in function \code{matchyear()}.
+\item{match_buildings_pop}{character. Type of matching between \code{sf_buildings} and \code{sf_pop} (if provided), passed on to \code{match} argument in function \code{matchyear()}.
 Either \code{'exact'}, \code{'closest'}, \code{'recent'} or \code{'soonest'}. Defaults to \code{'closest'}.}
 
-\item{match_buildings_landuse}{Type of matching between \code{sf_buildings} and \code{sf_landuse} (if provided), passed on to \code{match} argument in function \code{matchyear()}.
+\item{match_buildings_landuse}{character. Type of matching between \code{sf_buildings} and \code{sf_landuse} (if provided), passed on to \code{match} argument in function \code{matchyear()}.
 Either \code{'exact'}, \code{'closest'}, \code{'recent'} or \code{'soonest'}. Defaults to \code{'closest'}.
 This argument is used only if \code{sf_pop} is not provided.}
 
@@ -68,7 +68,7 @@ land use data (\code{sf_landuse}), if supplied. Multiple output rasters will be 
 building data for multiple years are present.
 }
 \details{
-#'If population (\code{sf_pop}) and/or land use data (\code{sf_landuse}) are supplied,
+If population (\code{sf_pop}) and/or land use data (\code{sf_landuse}) are supplied,
 their raster(s) must have been previously generated in the \code{tempdir()} using
 the functions \code{rasterise_pop()} and \code{rasterise_landuse()}, respectively.
 Rasterised buildings will be masked away (i.e., convert pixels to \code{NA})
