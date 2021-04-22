@@ -22,26 +22,38 @@ home:
   links:
 
 reference:
-- title: "Data"
+- title: "Data: Homes"
+  desc: "Raw datasets related to residential buildings in the city."
 - contents:
-  - starts_with("data")
-- title: "City population"
+  - get_buildings_osm
+- title: "Data: Parks"
+  desc: "Raw datasets related to parks and outdoor recreation."
+- contents:
+  - get_parks_osm
+  - get_beaches_osm
+  - get_informalnature_osm
+  - get_playgrounds_osm
+  - get_sportfitness_osm
+  - get_trails_osm
+- title: "Process: Resident population"
   desc: "Redistribute coarse-scale population data into residential buildings."
 - contents:
   - rasterise_pop
   - rasterise_landuse
   - rasterise_buildings
   - starts_with("pop_")
-- title: "Parks attributes"
-  desc: "Extract attributes important to recreation/leisure."
+- title: "Process: Park attributes"
+  desc: "Derive attributes important to recreation/leisure."
 - contents:
   - starts_with("park_")
-- title: "Park supply"
-  desc: "Calculate park provision per residential building."
+- title: "Metrics: Recreation supply"
+  desc: "Calculate the provision of different park attributes per residential building."
 - contents:
   - starts_with("ss_")
 - title: "Helper functions"
 - contents:
+  - polygons_clean
+  - polygons_mutually_exclude
   - matchyear
 
 authors:

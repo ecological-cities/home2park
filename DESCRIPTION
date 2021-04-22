@@ -19,15 +19,18 @@ Imports:
     magrittr,
     checkmate,
     units,
-    dplyr (>= 1.0.5),
-    glue (>= 1.4.2),
+    dplyr,
+    stringr,
+    tidyselect,
+    rlang,
+    stats,
+    glue,
     raster (>= 3.4.5),
     sf (>= 0.9.8),
     stars (>= 0.5.2),
-    stringr (>= 1.4.0),
     terra (>= 1.1.4),
-    rlang (>= 0.4.10),
-    stats (>= 4.0.3)
+    osmextract (>= 0.2.1),
+    smoothr (>= 0.1.2)
 Suggests: 
     testthat (>= 3.0.0),
     spelling

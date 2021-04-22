@@ -8,12 +8,12 @@
 #'The column name for the `year` must be specified, even if data does not contain multiple years
 #'(combined data across multiple years must be in the 'long' format).
 #'
-#'@param sf Simple feature (polygons) containing the population census data.
-#'Should be transformed to a projected coordinate reference system (for calculation of pixel resolution).
-#'@param res Specify the pixel resolution for rasterisation (in metres). Defaults to `10`.
-#'@param census_block Specify column name of the census block unique identifier (e.g. name).
-#'@param pop_count Specify column name of the population counts per census block.
-#'@param year Specify column name of the census year. Defaults to `'year'`.
+#'@param sf `sf`polygons containing the population census data.
+#'Data should be in a projected coordinate reference system (for calculation of pixel resolution).
+#'@param res number. Specify the pixel resolution for rasterisation (in metres). Defaults to `10`.
+#'@param census_block character. Specify column name of the census block unique identifier (e.g. name).
+#'@param pop_count character. Specify column name of the population counts per census block.
+#'@param year character. Specify column name of the census year. Defaults to `'year'`.
 #'@param dir_processing character. Directory to store intermediate files. Defaults to `tempdir()`.
 #'Set to `NULL` if you do not wish to export intermediate (temporary) files for subsequent processing.
 #'
@@ -31,7 +31,7 @@
 #'@importFrom rlang .data
 #'
 #'@export
-rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, year = "year",
+rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, year = "year", 
     dir_processing = tempdir()) {
 
     # Error checking ------------------
@@ -51,23 +51,24 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
     checkmate::assert_subset(year, choices = colnames(sf), empty.ok = FALSE, add = coll)
 
     # filepaths
-    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
 
     checkmate::reportAssertions(coll)
 
 
     # Calculations ------------------
+
     sf <- sf %>%
         dplyr::mutate(area = st_area(sf)) %>%
-        dplyr::mutate(pop_perpixel = units::drop_units(pop_count / .data$area * (res * res)))  # drop units
+        dplyr::mutate(pop_perpixel = units::drop_units(pop_count/.data$area * (res * res)))  # drop units
 
 
     # template raster file - reference for downstream calculations (& export)
     raster_template <- sf %>%
         raster::raster(res = res)  # make & export using library('raster'), cuz library('terra') fails to export if no cell values
 
-    suppressWarnings(raster::writeRaster(raster_template, filename = file.path(glue::glue("{dir_processing}/popdensity_raster-template.tif")),
+    suppressWarnings(raster::writeRaster(raster_template, filename = file.path(glue::glue("{dir_processing}/popdensity_raster-template.tif")), 
         overwrite = TRUE, wopt = list(gdal = c("COMPRESS=LZW"))))
 
 
@@ -80,7 +81,7 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
 
 
     # If census year was specified
-    if (!is.null(year))
+    if (!is.null(year)) 
         {
 
             years <- unique(sf[[year]])
@@ -94,11 +95,11 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
                 # to include 0 or missing when rasterised
 
                 # rasterize & export to temp directory
-                results[[1]][[i]] <- terra::rasterize(terra::vect(sf_subset), terra::rast(raster_template),
+                results[[1]][[i]] <- terra::rasterize(terra::vect(sf_subset), terra::rast(raster_template), 
                   field = pop_count)  # pop count
                 results[[1]][[i]][results[[1]][[i]] == 0] <- NA  # convert 0s to NAs
 
-                results[[2]][[i]] <- terra::rasterize(terra::vect(sf_subset), terra::rast(raster_template),
+                results[[2]][[i]] <- terra::rasterize(terra::vect(sf_subset), terra::rast(raster_template), 
                   field = "pop_perpixel")  # pop density
                 results[[2]][[i]][results[[2]][[i]] == 0] <- NA
 
@@ -110,7 +111,7 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
 
                 names(results[[2]][[i]]) <- glue::glue("popdensity-by-census-block_{years[i]}")
                 # export output imported by filename in subsequent processing
-                terra::writeRaster(results[[2]][[i]], filename = file.path(glue::glue("{dir_processing}/{names(results[[2]][[i]])}.tif")),
+                terra::writeRaster(results[[2]][[i]], filename = file.path(glue::glue("{dir_processing}/{names(results[[2]][[i]])}.tif")), 
                   overwrite = TRUE, wopt = list(gdal = c("COMPRESS=LZW")))
 
                 # raw file

@@ -1,10 +1,11 @@
 #'Polygonise population density raster to population count per (building) polygon
 #'
-#'Convert raster of population density (e.g. from `pop_dasymap()` output) to population count per polygon.
-#'Adjacent polygons with similar pixel values are merged. Thus, if input/output rasters
-#'supplied to `pop_dasymap()` were at the spatial resolution of individual buildings,
-#'conversion to polygons using this function would result in an output of population count per building.
+#'Convert raster of population density (e.g. from `pop_dasymap()` output) to population count per polygon
+#'(adjacent polygons with similar pixel values are merged).
+#'Thus, if rasters supplied to `pop_dasymap()` are at a spatial resolution small enough to delineate individual buildings,
+#'conversion to polygons using this function would reflect the population count per building.
 #'Input data should have a projected coordinate reference system specific to the target area.
+#'
 #'
 #'@param input_raster Population density raster as a SpatRaster object (`terra::rast()`).
 #'Output from `pop_dasymap()` may be used.
@@ -15,7 +16,7 @@
 #'@param delete_dsn Argument passed to `sf::st_write()`. Defaults to `TRUE`.
 #'@param ... Other arguments passed to `sf::st_write()`.
 #'
-#'@return Building polygons (sf) with column `popcount`.
+#'@return Building `sf `polygons with column `popcount`.
 #'
 #'@import sf
 #'@import checkmate
@@ -26,7 +27,7 @@
 #'@importFrom rlang .data
 #'
 #'@export
-pop_density_polygonise <- function(input_raster, write = TRUE, dsn, driver = "GeoJSON", overwrite = TRUE,
+pop_density_polygonise <- function(input_raster, write = TRUE, dsn, driver = "GeoJSON", overwrite = TRUE, 
     delete_dsn = TRUE, ...) {
 
     # Error checking ------------------
@@ -44,8 +45,9 @@ pop_density_polygonise <- function(input_raster, write = TRUE, dsn, driver = "Ge
     # Calculations ------------------
 
     pixel_res <- terra::res(input_raster)  # get pixel res for later
+    crs_output <- st_crs(input_raster)  # get crs for later
 
-    input_raster <- stars::st_as_stars(input_raster)  # convert to stars object to polygonise
+    input_raster <- stars::st_as_stars(input_raster)  # convert to stars object to polygonise (crs changes!)
 
     # polygonise, merge polygons with similar pixel values
     output_polygons <- st_as_sf(input_raster, as_points = FALSE, merge = TRUE) %>%
@@ -61,15 +63,17 @@ pop_density_polygonise <- function(input_raster, write = TRUE, dsn, driver = "Ge
         dplyr::select(-.data$area_m2, -.data$pop_perpixel) %>%
         dplyr::mutate(popcount = units::drop_units(.data$popcount))
 
-    # set crs st_crs(output_polygons) # crs changes. weird. change back
-    output_polygons <- st_set_crs(output_polygons, st_crs(input_raster))
+    # set crs back to original
+    output_polygons <- st_set_crs(output_polygons, crs_output)
 
 
     # export
     if (write == TRUE) {
-        st_write(output_polygons, dsn = dsn, overwrite = overwrite, driver = driver, delete_dsn = delete_dsn,
+        st_write(output_polygons, dsn = dsn, overwrite = overwrite, driver = driver, delete_dsn = delete_dsn, 
             ...)
     }
+
+    rm(pixel_res, crs_output)
 
     return(output_polygons)
 }

@@ -35,48 +35,52 @@
 #'@importFrom units set_units
 #'
 #'@export
-ss_recre_perbuilding <- function(park_attribute, dist_matrix, c = 1){
+ss_recre_perbuilding <- function(park_attribute, dist_matrix, c = 1) {
 
-  # Error checking ------------------
+    # Error checking ------------------
 
-  coll <- checkmate::makeAssertCollection()
+    coll <- checkmate::makeAssertCollection()
 
-  # colnames
-  checkmate::assert_numeric(park_attribute, lower = 0, finite = TRUE, all.missing = FALSE, len = ncol(dist_matrix), add = coll)
-  checkmate::assert_matrix(dist_matrix, mode = "numeric", all.missing = FALSE, ncols = length(park_attribute), add = coll)
-  checkmate::assert_number(c, lower = 0, upper = Inf, finite = TRUE, add = coll)
+    # colnames
+    checkmate::assert_numeric(park_attribute, lower = 0, finite = TRUE, all.missing = FALSE, 
+        len = ncol(dist_matrix), add = coll)
+    checkmate::assert_matrix(dist_matrix, mode = "numeric", all.missing = FALSE, ncols = length(park_attribute), 
+        add = coll)
+    checkmate::assert_number(c, lower = 0, upper = Inf, finite = TRUE, add = coll)
 
-  checkmate::reportAssertions(coll)
-
-
-  # Calculations ------------------
-
-  # remove units
-  # park_attribute <- units::drop_units(park_attribute)
-  # dist_matrix <- units::drop_units(dist_matrix)
-  park_attribute <- units::set_units(park_attribute, value = NULL) # can still run if already no units
-  dist_matrix <- units::set_units(dist_matrix, value = NULL)
-
-  # convert vector of park area to matrix for matrix calculations
-  # park_attribute <- scale(park_attribute, center = FALSE) # scale before making into matrix w duplicated values!
-  attribute_matrix <- matrix(park_attribute, nrow=nrow(dist_matrix), ncol = length(park_attribute), byrow = TRUE)
+    checkmate::reportAssertions(coll)
 
 
-  # calculate recre supply
-  # Dist: proportional (linear) inverse relationship
-  # # supply <-  attribute_matrix * 1/(scale(dist_matrix + 0.001, center = FALSE)) # scale before
-  # # supply <-  attribute_matrix * scale(1/(dist_matrix + 0.001), center = FALSE) # scale before (scale reciprocal of dist)
-  # supply <-  scale(attribute_matrix * 1/(dist_matrix + 0.001), center = FALSE) # scale after
+    # Calculations ------------------
 
-  # Dist: decay exponentially
-  supply <- attribute_matrix * exp(-c * dist_matrix) # don't scale (w coefficient)
-  # supply <- attribute_matrix * exp(-scale(dist_matrix, center = FALSE)) # scale before
-  # # supply <- attribute_matrix * exp(-c * scale(dist_matrix, center = FALSE)) # scale before (w coefficient)
-  # # supply <- scale(attribute_matrix * exp(-dist_matrix), center = FALSE) # scale after
+    # remove units park_attribute <- units::drop_units(park_attribute) dist_matrix <-
+    # units::drop_units(dist_matrix)
+    park_attribute <- units::set_units(park_attribute, value = NULL)  # can still run if already no units
+    dist_matrix <- units::set_units(dist_matrix, value = NULL)
 
-  supply <- apply(supply, 1, sum) # sum per row
+    # convert vector of park area to matrix for matrix calculations park_attribute <-
+    # scale(park_attribute, center = FALSE) # scale before making into matrix w duplicated
+    # values!
+    attribute_matrix <- matrix(park_attribute, nrow = nrow(dist_matrix), ncol = length(park_attribute), 
+        byrow = TRUE)
 
 
-  return(supply)
+    # calculate recre supply Dist: proportional (linear) inverse relationship # supply <-
+    # attribute_matrix * 1/(scale(dist_matrix + 0.001, center = FALSE)) # scale before #
+    # supply <- attribute_matrix * scale(1/(dist_matrix + 0.001), center = FALSE) # scale
+    # before (scale reciprocal of dist) supply <- scale(attribute_matrix * 1/(dist_matrix +
+    # 0.001), center = FALSE) # scale after
+
+    # Dist: decay exponentially
+    supply <- attribute_matrix * exp(-c * dist_matrix)  # don't scale (w coefficient)
+    # supply <- attribute_matrix * exp(-scale(dist_matrix, center = FALSE)) # scale before #
+    # supply <- attribute_matrix * exp(-c * scale(dist_matrix, center = FALSE)) # scale before
+    # (w coefficient) # supply <- scale(attribute_matrix * exp(-dist_matrix), center = FALSE)
+    # # scale after
+
+    supply <- apply(supply, 1, sum)  # sum per row
+
+
+    return(supply)
 }
 

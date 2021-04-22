@@ -12,18 +12,18 @@
 #'Rasterised land use zones will be masked away (i.e., convert pixels to `NA`)
 #'at areas with no (zero) population data (for the respective matching year).
 #'
-#'@param sf_landuse Simple feature (polygons) of the land use zones.
-#'Should be transformed to a projected coordinate reference system.
+#'@param sf_landuse `sf` polygons of the land use zones.
+#'Data should be in a projected coordinate reference system.
 #'@param subset Named vector containing the residential land use classes of interest to retain in column `land_use`.
 #'Each element is named according to the integer that will be used
 #'to represent this class in the output raster. Defaults to `NULL` (integers will be alphabetically
 #'assigned to land use classes).
-#'@param land_use Specify column name of the land use classes.
-#'@param year Specify column name for the year within `sf_landuse`
-#'and `sf_pop` (if provided). Defaults to `'year'`. Columns should be numeric.
-#'@param sf_pop (optional) Simple feature (polygons) containing the population census data with column containing the census year (optional).
-#'If absent, the output (land use rasters) will not be associated with specific population census years.
-#'@param match_landuse_pop Type of matching between `sf_landuse` and `sf_pop`, passed on to `match` argument in function `matchyear()`.
+#'@param land_use character. Specify column name of the land use classes.
+#'@param year character. Specify column name for the year within `sf_landuse`
+#'and `sf_pop` (if provided). Defaults to `'year'`. Column data should be numeric.
+#'@param sf_pop (optional) `sf` polygons containing the population census data with column containing the census year.
+#'If absent, the output (land use rasters) will not be associated with specific population census year(s).
+#'@param match_landuse_pop character. Type of matching between `sf_landuse` and `sf_pop`, passed on to `match` argument in function `matchyear()`.
 #'Either `'exact'`, `'closest'`, `'recent'` or `'soonest'`. Defaults to `'recent'`, i.e.
 #'assumes that land use is pre-planned (and followed by population changes), rather than a result of post-monitoring (e.g. remotely-sensed).
 #'@param dir_rastertemplate character. Filepath to the raster used to define the pixel resolution, extent, nrow, ncol of
@@ -49,8 +49,8 @@
 #'@importFrom rlang .data
 #'
 #'@export
-rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year = "year", sf_pop = NULL,
-    match_landuse_pop = "recent", dir_rastertemplate = NULL, dir_processing = tempdir(), dir_export = tempdir(),
+rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year = "year", sf_pop = NULL, 
+    match_landuse_pop = "recent", dir_rastertemplate = NULL, dir_processing = tempdir(), dir_export = tempdir(), 
     overwrite = TRUE, wopt = list(gdal = c("COMPRESS=LZW")), ...) {
 
     # Error checking ------------------
@@ -67,17 +67,17 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
     checkmate::assert_subset(year, choices = colnames(sf_landuse), empty.ok = TRUE, add = coll)
 
     # land use classes
-    checkmate::assert_character(subset, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(subset, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
-    checkmate::assert_subset(subset, choices = unique(sf_landuse[[land_use]]), empty.ok = TRUE,
+    checkmate::assert_subset(subset, choices = unique(sf_landuse[[land_use]]), empty.ok = TRUE, 
         add = coll)  # as vector
 
     # file paths
-    checkmate::assert_character(dir_rastertemplate, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(dir_rastertemplate, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
-    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
-    checkmate::assert_character(dir_export, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(dir_export, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
 
     checkmate::reportAssertions(coll)
@@ -127,7 +127,7 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
     results <- list()  # create empty list for output
 
     # If there is a year column in sf_landuse
-    if (!is.null(unique(sf_landuse[[year]])))
+    if (!is.null(unique(sf_landuse[[year]]))) 
         {
 
             years_landuse <- unique(sf_landuse[[year]])
@@ -139,7 +139,7 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
                   dplyr::filter(.data[[year]] == years_landuse[i])
 
                 # rasterize & export to temp directory
-                landuse_raster <- terra::rasterize(terra::vect(sf_landuse_subset), raster_template,
+                landuse_raster <- terra::rasterize(terra::vect(sf_landuse_subset), raster_template, 
                   field = "residential")
 
                 landuse_raster[landuse_raster == 0] <- NA  # convert 0s to NAs
@@ -164,7 +164,7 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
 
                     # export
                     if (!is.null(dir_export)) {
-                      terra::writeRaster(results[[i]][[j]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]][[j]])}.tif")),
+                      terra::writeRaster(results[[i]][[j]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]][[j]])}.tif")), 
                         overwrite = overwrite, wopt = wopt, ...)
                     }
                     terra::tmpFiles(remove = TRUE)  # remove temp files to clear memory
@@ -180,7 +180,7 @@ rasterise_landuse <- function(sf_landuse, subset = NULL, land_use = NULL, year =
 
                   # export
                   if (!is.null(dir_export)) {
-                    terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")),
+                    terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")), 
                       overwrite = overwrite, wopt = wopt, ...)
                   }
                   terra::tmpFiles(remove = TRUE)  # remove temp files to clear memory

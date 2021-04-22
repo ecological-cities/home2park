@@ -4,7 +4,7 @@
 #'land use data (`sf_landuse`), if supplied. Multiple output rasters will be generated if
 #'building data for multiple years are present.
 #'
-#'#'If population (`sf_pop`) and/or land use data (`sf_landuse`) are supplied,
+#'If population (`sf_pop`) and/or land use data (`sf_landuse`) are supplied,
 #'their raster(s) must have been previously generated in the `tempdir()` using
 #'the functions `rasterise_pop()` and `rasterise_landuse()`, respectively.
 #'Rasterised buildings will be masked away (i.e., convert pixels to `NA`)
@@ -19,20 +19,20 @@
 #'reference point for all the datasets is `sf_pop` (primary focus is the analysis of population data).
 #'
 #'
-#'@param sf_buildings Simple feature (polygons) of the buildings.
-#'Should be transformed to a projected coordinate reference system.
-#'@param proxy_pop_density Specify column name of the building attribute that is used
+#'@param sf_buildings `sf `polygons of the buildings.
+#'Data should be in a projected coordinate reference system.
+#'@param proxy_pop_density character. Specify column name of the building attribute that is used
 #'as an indicator of population density (e.g. building height, no. of levels).
 #'This column will be used to assign values to the output raster. If not provided, population density
 #'across all building pixels are assumed to be similar.
-#'@param year Specify column name for the year within `sf_buildings`, `sf_landuse`
-#'and `sf_pop` (if provided). Defaults to `'year'`. Columns should be numeric.
-#'@param sf_pop (optional) Simple feature (polygons) containing the population census data with column containing the census year.
-#'If absent, the output (building rasters) will not be associated with specific population census years.
-#'@param sf_landuse (optional) Simple feature (polygons) of the land use zones.
-#'@param match_buildings_pop Type of matching between `sf_buildings` and `sf_pop` (if provided), passed on to `match` argument in function `matchyear()`.
+#'@param year character. Specify column name for the year within `sf_buildings`, `sf_landuse`
+#'and `sf_pop` (if provided). Defaults to `'year'`. Column data should be numeric.
+#'@param sf_pop (optional) `sf` polygons containing the population census data with column containing the census year.
+#'If absent, the output (building rasters) will not be associated with specific population census year(s).
+#'@param sf_landuse (optional) `sf` polygons of the land use zones.
+#'@param match_buildings_pop character. Type of matching between `sf_buildings` and `sf_pop` (if provided), passed on to `match` argument in function `matchyear()`.
 #'Either `'exact'`, `'closest'`, `'recent'` or `'soonest'`. Defaults to `'closest'`.
-#'@param match_buildings_landuse Type of matching between `sf_buildings` and `sf_landuse` (if provided), passed on to `match` argument in function `matchyear()`.
+#'@param match_buildings_landuse character. Type of matching between `sf_buildings` and `sf_landuse` (if provided), passed on to `match` argument in function `matchyear()`.
 #'Either `'exact'`, `'closest'`, `'recent'` or `'soonest'`. Defaults to `'closest'`.
 #'This argument is used only if `sf_pop` is not provided.
 #'@param dir_rastertemplate character. Filepath to the raster used to define the pixel resolution, extent, nrow, ncol of
@@ -57,9 +57,9 @@
 #'@importFrom rlang .data
 #'
 #'@export
-rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "year", sf_pop = NULL,
-    sf_landuse = NULL, match_buildings_pop = "closest", match_buildings_landuse = "closest",
-    dir_rastertemplate = NULL, dir_processing = tempdir(), dir_export = NULL, overwrite = TRUE,
+rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "year", sf_pop = NULL, 
+    sf_landuse = NULL, match_buildings_pop = "closest", match_buildings_landuse = "closest", 
+    dir_rastertemplate = NULL, dir_processing = tempdir(), dir_export = NULL, overwrite = TRUE, 
     wopt = list(gdal = c("COMPRESS=LZW")), ...) {
 
     # Error checking ------------------
@@ -72,22 +72,22 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
     # valid (too time consuming)
 
     # colnames
-    checkmate::assert_subset(proxy_pop_density, choices = colnames(sf_buildings), empty.ok = FALSE,
+    checkmate::assert_subset(proxy_pop_density, choices = colnames(sf_buildings), empty.ok = FALSE, 
         add = coll)
     checkmate::assert_subset(year, choices = colnames(sf_buildings), empty.ok = TRUE, add = coll)
 
     # proxy_pop_density
-    checkmate::assert_character(proxy_pop_density, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(proxy_pop_density, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
-    checkmate::assert_subset(proxy_pop_density, choices = colnames(sf_buildings), empty.ok = TRUE,
+    checkmate::assert_subset(proxy_pop_density, choices = colnames(sf_buildings), empty.ok = TRUE, 
         add = coll)  # as vector
 
     # file paths
-    checkmate::assert_character(dir_rastertemplate, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(dir_rastertemplate, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
-    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(dir_processing, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
-    checkmate::assert_character(dir_export, min.len = 1, any.missing = FALSE, all.missing = FALSE,
+    checkmate::assert_character(dir_export, min.len = 1, any.missing = FALSE, all.missing = FALSE, 
         null.ok = TRUE, add = coll)
 
     checkmate::reportAssertions(coll)
@@ -125,7 +125,7 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
     results <- list()  # create empty list for output
 
     # If there is a year column in sf_buildings
-    if (!is.null(unique(sf_buildings[[year]])))
+    if (!is.null(unique(sf_buildings[[year]]))) 
         {
 
             years_buildings <- unique(sf_buildings[[year]])
@@ -137,7 +137,7 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
                   dplyr::filter(.data[[year]] == years_buildings[i])
 
                 # rasterize & export to temp directory
-                buildings_raster <- terra::rasterize(terra::vect(sf_buildings_subset), raster_template,
+                buildings_raster <- terra::rasterize(terra::vect(sf_buildings_subset), raster_template, 
                   field = proxy_pop_density)
 
                 buildings_raster[buildings_raster == 0] <- NA  # convert 0s to NAs
@@ -164,13 +164,13 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
                     # IF BOTH POP & LANDUSE PROVIDED (landuse file will have pop year as suffix)
                     if (!is.null(sf_landuse)) {
 
-                      file <- dir(dir_processing, pattern = glue::glue("^landuse.*{years_popmatch[j]}"),
+                      file <- dir(dir_processing, pattern = glue::glue("^landuse.*{years_popmatch[j]}"), 
                         full.names = TRUE)
                       landuse_raster_matching <- rast(file)
 
                       # mask away building pixels not within relevant landuse zones
                       results[[i]][[j]] <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
-                      names(results[[i]][[j]]) <- glue::glue("buildings-{years_buildings[i]}_",
+                      names(results[[i]][[j]]) <- glue::glue("buildings-{years_buildings[i]}_", 
                         {
                           sub("\\..*$", "", basename(file))
                         })
@@ -179,7 +179,7 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
 
                     # export
                     if (!is.null(dir_export)) {
-                      terra::writeRaster(results[[i]][[j]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]][[j]])}.tif")),
+                      terra::writeRaster(results[[i]][[j]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]][[j]])}.tif")), 
                         overwrite = overwrite, wopt = wopt, ...)
                     }
 
@@ -209,7 +209,7 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
                         as.numeric()
 
                       # match building to landuse (rmbr not to use the full sf)
-                      buildings_temp <- matchyear(data = sf_buildings_subset, data_tomatch = sf_landuse,
+                      buildings_temp <- matchyear(data = sf_buildings_subset, data_tomatch = sf_landuse, 
                         year = year, match = match_buildings_landuse)
 
                       which_file <- which(years_landuse == unique(buildings_temp$year_match))
@@ -229,7 +229,7 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
 
                   # export
                   if (!is.null(dir_export)) {
-                    terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")),
+                    terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")), 
                       overwrite = overwrite, wopt = wopt, ...)
                   }
                   terra::tmpFiles(remove = TRUE)
