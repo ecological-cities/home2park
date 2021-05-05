@@ -1,12 +1,12 @@
 #' Population counts within census block polygons in Singapore
 #'
-#' Example dataset containing Singapore census data for years 2019 and 2020 from the [Department of Statistics Singapore](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data),
+#' Example dataset containing Singapore census data for years 2018 and 2020 from the [Department of Statistics Singapore](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data),
 #'joined by name to the Master Plan Subzone polygons from [data.gov.sg](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea).
 #' Both datasets are released under the [Singapore Open Data License](https://data.gov.sg/open-data-licence).
 #'
 #' @docType data
 #'
-#' @format `sf` polygons with census data for years 2019 and 2020.
+#' @format `sf` polygons with census data for years 2018 and 2020.
 #' Data is in the 'long' format (rows are repeated for each census year).
 #' The following columns are used in this package:
 #' \describe{
@@ -23,20 +23,9 @@
 #' both of which are made available under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
 #'
 #' @examples
-#' data(singapore)
-#' head(singapore)
-#'
-#' \dontrun{
-#' # city boundaries - combine all census blocks for a specific year, then simplify
-#' city_boundaries <- data(singapore) %>%
-#'    dplyr::filter(year == 2020) %>%
-#'    sf::st_union() %>%
-#'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
-#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
-#'    sf::st_make_valid()
-#' }
-"singapore"
+#' data(pop_sgp)
+#' head(pop_sgp)
+"pop_sgp"
 
 #' Land use master plan for the city of Singapore
 #'
@@ -68,36 +57,46 @@
 #' head(landuse_sgp)
 "landuse_sgp"
 
-#' Buildings in Singapore
+#' Population count per residential building in Singapore
 #'
-#' Example dataset of building polygons in Singapore downloaded from OpenStreetMap
-#' (data snapshot on `2021-01-01` from the from the [Geofabrik database](https://download.geofabrik.de)),
-#' using the function `get_buildings_osm()`.
+#' Example dataset of residential building polygons in Singapore,
+#' each with a population count (column `popcount`)
+#' estimated via dasymetric mapping.
+#'
+#' Building polygons were downloaded from OpenStreetMap
+#' (data snapshot on `2021-01-01` from the [Geofabrik database](https://download.geofabrik.de)),
+#' using the function `get_buildings_osm()`. The population count per census block in the year 2020
+#' was re-distributed across the buildings located within residential land use zones,
+#' by performing dasymetric mapping using the functions `pop_dasymap()` and `pop_density_polygonise()`.
+#' See vignette and examples in `pop_density_polygonise()` for more details.
 #'
 #' @docType data
 #'
-#' @format `sf` polygons. The following columns are used in this package:
-#' \describe{
-#'   \item{levels}{Number of building levels, derived from `building_levels`.
-#'   Values were set to `1` if the extracted value was empty or `NA`, and set to `NA` if `≤ 0` (i.e. underground);
-#'   values were then rounded up to the nearest whole number.}
-#'  }
+#' @format `sf` polygons.
 #'
 #' @keywords datasets
 #'
 #' @source
-#' Map data [copyrighted](https://www.openstreetmap.org/copyright) OpenStreetMap contributors and available from https://www.openstreetmap.org.
+#' Building polygons [copyrighted](https://www.openstreetmap.org/copyright) OpenStreetMap contributors and available from https://www.openstreetmap.org.
+#' Made available via the [ODbL License](https://opendatacommons.org/licenses/odbl/summary/).
+#'
+#' Population data and census block polygons `data(pop_sgp)` are from the [Department of Statistics Singapore](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data);
+#' and [Singapore Master Plan Subzones](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea), respectively;
+#' land use polygons `data(landuse_sgp)` are from the Singapore Land Use Master Plan released in [2019](https://data.gov.sg/dataset/master-plan-2019-land-use-layer).
+#' All are made available under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
 #'
 #' @examples
-#' data(buildings_sgp)
-#' head(buildings_sgp)
-"buildings_sgp"
+#' data(buildings_pop_sgp)
+#' head(buildings_pop_sgp)
+"buildings_pop_sgp"
 
 #' Public parks in Singapore
 #'
 #' Example dataset of park polygons in Singapore downloaded from OpenStreetMap
-#' (data snapshot on `2021-01-01` from the from the [Geofabrik database](https://download.geofabrik.de)),
-#' using the function `get_parks_osm()`.
+#' (data snapshot on `2021-01-01` from the [Geofabrik database](https://download.geofabrik.de)),
+#' using the function `get_parks_osm()`. Includes summaries (columns) of selected attributes related
+#' to outdoor recreation, i.e., playgrounds (see `get_playgrounds_osm()`) and trails (see `get_trails_osm()`)
+#'calculated using the function `parks_calc_attributes()`.
 #'
 #' @docType data
 #'
@@ -107,6 +106,7 @@
 #'
 #' @source
 #' Map data [copyrighted](https://www.openstreetmap.org/copyright) OpenStreetMap contributors and available from https://www.openstreetmap.org.
+#' Made available via the [ODbL License](https://opendatacommons.org/licenses/odbl/summary/).
 #'
 #' @examples
 #' data(parks_sgp)

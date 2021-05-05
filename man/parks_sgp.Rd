@@ -9,14 +9,17 @@
 }
 \source{
 Map data \href{https://www.openstreetmap.org/copyright}{copyrighted} OpenStreetMap contributors and available from https://www.openstreetmap.org.
+Made available via the \href{https://opendatacommons.org/licenses/odbl/summary/}{ODbL License}.
 }
 \usage{
 parks_sgp
 }
 \description{
 Example dataset of park polygons in Singapore downloaded from OpenStreetMap
-(data snapshot on \code{2021-01-01} from the from the \href{https://download.geofabrik.de}{Geofabrik database}),
-using the function \code{get_parks_osm()}.
+(data snapshot on \code{2021-01-01} from the \href{https://download.geofabrik.de}{Geofabrik database}),
+using the function \code{get_parks_osm()}. Includes summaries (columns) of selected attributes related
+to outdoor recreation, i.e., playgrounds (see \code{get_playgrounds_osm()}) and trails (see \code{get_trails_osm()})
+calculated using the function \code{parks_calc_attributes()}.
 }
 \examples{
 data(parks_sgp)

@@ -45,11 +45,11 @@ The column name for the \code{year} must be specified, even if data does not con
 }
 \examples{
 \dontrun{
-population_sgp <- data(singapore)
+data(pop_sgp)
 
-pop_rasters <- rasterise_pop(population_sgp,
+pop_rasters <- rasterise_pop(pop_sgp,
                              res = 10,
-                             census_block = subzone_n,
+                             census_block = "subzone_n",
                              pop_count = "pop_count",
                              year = "year")
 }

@@ -9,7 +9,7 @@
 #'
 #'@param input_raster Population density raster as a SpatRaster object (`terra::rast()`).
 #'Output from `pop_dasymap()` may be used.
-#'@param write Whether or not to export the output. Defaults to `TRUE`.
+#'@param write Whether or not to export the output. Defaults to `FALSE`.
 #'@param dsn Argument passed to `sf::st_write()`.
 #'@param driver character. Argument passed to `sf::st_write()`. Defaults to `'GeoJSON'`.
 #'@param overwrite logical. Argument passed to `sf::st_write()`. Defaults to `TRUE`.
@@ -28,45 +28,63 @@
 #'
 #'@examples
 #' \dontrun{
-#' population_sgp <- data(singapore)
-#' landuse <- data(landuse_sgp)
-#' buildings <- data(buildings_sgp)
+#' data(pop_sgp) # population census block polygons
+#' data(landuse_sgp) # land use polygons
 #'
-#' # first, rasterise population, landuse & buildings
-#' pop_rasters <- rasterise_pop(population_sgp)
+#' # merge all census blocks for chosen year (2020) into single multi-polygon
+#' # function requires that polygons are merged
+#' city_boundaries <- pop_sgp %>%
+#'    dplyr::filter(year == 2020) %>%
+#'    sf::st_union() %>%
+#'    sf::st_as_sf() %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
+#'    sf::st_make_valid()
 #'
-#' landuse_rasters <- rasterise_landuse(landuse,
-#'                                      land_use = "lu_desc",
-#'                                      subset = c("1" = "RESIDENTIAL",
-#'                                                 "2" = "COMMERCIAL & RESIDENTIAL",
-#'                                                 "3" = "RESIDENTIAL WITH COMMERCIAL AT 1ST STOREY",
-#'                                                 "4" = "RESIDENTIAL / INSTITUTION"),
-#'                                      sf_pop = population_sgp,
-#'                                      match_landuse_pop = "recent")
+#' buildings <- get_buildings_osm(place = city_boundaries,
+#'                                date = as.Date('2021-01-01')) %>%
+#'    dplyr::mutate(year = 2020)
+#'
+#'
+#' # rasterise population, landuse & buildings
+#' pop_rasters <- rasterise_pop(pop_sgp,
+#'                              census_block = "subzone_n",
+#'                              pop_count = "pop_count")
+#'
+#' landuse_rasters <- rasterise_landuse(landuse_sgp,
+#'                                      land_use = 'lu_desc',
+#'                                      subset = c('1' = 'RESIDENTIAL',
+#'                                                 '2' = 'COMMERCIAL & RESIDENTIAL',
+#'                                                 '3' = 'RESIDENTIAL WITH COMMERCIAL AT 1ST STOREY',
+#'                                                 '4' = 'RESIDENTIAL / INSTITUTION'),
+#'                                      sf_pop = pop_sgp,
+#'                                      match_landuse_pop = 'recent')
 #'
 #' buildings_rasters <- rasterise_buildings(buildings,
-#'                                      proxy_pop_density = "levels",
-#'                                      year = "year",
-#'                                      sf_pop = population_sgp,
-#'                                      sf_landuse = landuse,
-#'                                      match_buildings_pop = "closest")
+#'                                      proxy_pop_density = 'levels',
+#'                                      year = 'year',
+#'                                      sf_pop = pop_sgp,
+#'                                      sf_landuse = landuse_sgp,
+#'                                      match_buildings_pop = 'closest')
 #'
-#' # then perform dasymetric mapping on selected (first) year
-#' popdens_raster <- pop_dasymap(pop_polygons = pop_rasters$pop_polygons[[1]],
-#'                               pop_perblock_count = pop_rasters$pop_count[[1]],
-#'                               pop_perblock_density = pop_rasters$pop_density[[1]],
-#'                               land_relative_density = buildings_rasters[[1]],
-#'                               filename = "buildings_popdensity.tif",
-#'                               wopt = list(gdal=c("COMPRESS=LZW")))
 #'
-#' # finally, convert to pop count per building polygons
+#' # perform dasymetric mapping on selected year (2020)
+#' popdens_raster <- pop_dasymap(pop_polygons = pop_rasters$pop_polygons[[2]],
+#'                               pop_perblock_count = pop_rasters$pop_count[[2]],
+#'                               pop_perblock_density = pop_rasters$pop_density[[2]],
+#'                               land_relative_density = buildings_rasters[[2]],
+#'                               filename = 'buildings_popdensity.tif',
+#'                               wopt = list(gdal=c('COMPRESS=LZW')))
+#'
+#'
+#' # finally, convert to population count per building polygon
 #' pop_density_polygonise(input_raster = popdens_raster,
 #'                        write = TRUE,
-#'                        dsn = "buildings_popcount.geojson")
+#'                        dsn = 'buildings_popcount.geojson')
 #' }
 #'
 #'@export
-pop_density_polygonise <- function(input_raster, write = TRUE, dsn, driver = "GeoJSON", overwrite = TRUE,
+pop_density_polygonise <- function(input_raster, write = FALSE, dsn, driver = "GeoJSON", overwrite = TRUE,
     delete_dsn = TRUE, ...) {
 
     # Error checking ------------------

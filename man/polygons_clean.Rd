@@ -23,7 +23,7 @@ Defaults to \code{5}. Set to \code{0} if you do not wish to rectify minor overla
 \item{min_area}{numeric. Specify minimum area of each polygon to be retained in the output,
 passed to argument \code{threshold} in \code{smoothr::drop_crumbs()}.
 Provided either as a units object (see \code{units::set_units()}), or a number in the units of
-the coordinate reference system. Defaults to \code{0} \eqn{m^2}.}
+the coordinate reference system. Defaults to \code{0} m^2.}
 
 \item{aggregate_polygons}{numeric. Argument for \code{dist} passed to \code{sf::st_buffer()}.
 Buffered polygons that overlap will be aggregated into multipolygons.

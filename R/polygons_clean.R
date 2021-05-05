@@ -18,7 +18,7 @@
 #'@param min_area numeric. Specify minimum area of each polygon to be retained in the output,
 #'passed to argument `threshold` in `smoothr::drop_crumbs()`.
 #'Provided either as a units object (see `units::set_units()`), or a number in the units of
-#'the coordinate reference system. Defaults to `0` \eqn{m^2}.
+#'the coordinate reference system. Defaults to `0` m^2.
 #'@param aggregate_polygons numeric. Argument for `dist` passed to `sf::st_buffer()`.
 #'Buffered polygons that overlap will be aggregated into multipolygons.
 #'Set to `NULL` if you do not wish to aggregate to multipolygons.
@@ -33,7 +33,7 @@
 #'@importFrom units set_units drop_units
 #'@importFrom rlang .data
 #'
-polygons_clean <- function(input, snap_tolerance = 5, min_area = units::set_units(0, "m^2"),
+polygons_clean <- function(input, snap_tolerance = 5, min_area = units::set_units(0, "m^2"), 
     aggregate_polygons = 15) {
 
     # Error checking ------------------
@@ -68,7 +68,8 @@ polygons_clean <- function(input, snap_tolerance = 5, min_area = units::set_unit
         dplyr::select(-.data$id)
 
 
-    # remove polygons covered by others rectify minor overlaps first (using .data doesn't work)
+    # remove polygons covered by others rectify minor overlaps first (using .data doesn't
+    # work)
     results <- results %>%
         st_snap(x = ., y = ., tolerance = snap_tolerance)
     suppressWarnings(results <- st_make_valid(results) %>%
@@ -100,7 +101,8 @@ polygons_clean <- function(input, snap_tolerance = 5, min_area = units::set_unit
             st_cast("POLYGON") %>%
             dplyr::mutate(id = dplyr::row_number())
 
-        # join ID of buffered to original, based on whether they are within the buffered polygons, then make into individual polygons
+        # join ID of buffered to original, based on whether they are within the buffered polygons,
+        # then make into individual polygons
         results <- st_join(results, poly_buffered, join = st_within) %>%
             st_cast("POLYGON")
         rm(poly_buffered)

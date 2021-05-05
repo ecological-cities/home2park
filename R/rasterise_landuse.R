@@ -50,18 +50,18 @@
 #'
 #'@examples
 #' \dontrun{
-#' population_sgp <- data(singapore)
-#' landuse <- data(landuse_sgp)
+#' data(pop_sgp)
+#' data(landuse_sgp)
 #'
-#' landuse_rasters <- rasterise_landuse(landuse,
-#'                                      land_use = "lu_desc",
-#'                                      subset = c("1" = "RESIDENTIAL",
-#'                                                 "2" = "COMMERCIAL & RESIDENTIAL",
-#'                                                 "3" = "RESIDENTIAL WITH COMMERCIAL AT 1ST STOREY",
-#'                                                 "4" = "RESIDENTIAL / INSTITUTION"),
-#'                                      year = "year",
-#'                                      sf_pop = population_sgp,
-#'                                      match_landuse_pop = "recent")
+#' landuse_rasters <- rasterise_landuse(landuse_sgp,
+#'                                      land_use = 'lu_desc',
+#'                                      subset = c('1' = 'RESIDENTIAL',
+#'                                                 '2' = 'COMMERCIAL & RESIDENTIAL',
+#'                                                 '3' = 'RESIDENTIAL WITH COMMERCIAL AT 1ST STOREY',
+#'                                                 '4' = 'RESIDENTIAL / INSTITUTION'),
+#'                                      year = 'year',
+#'                                      sf_pop = pop_sgp,
+#'                                      match_landuse_pop = 'recent')
 #' }
 #'
 #'@export

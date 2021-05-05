@@ -58,16 +58,32 @@
 #'
 #'@examples
 #' \dontrun{
-#' population_sgp <- data(singapore)
-#' landuse <- data(landuse_sgp)
-#' buildings <- data(buildings_sgp)
+#' # load data
+#' data(pop_sgp) # population census block polygons
+#' data(landuse_sgp) # land use polygons
 #'
+#'
+#' # get osm buildings based on census block polygons (year 2020)
+#' city_boundaries <- pop_sgp %>%
+#'    dplyr::filter(year == 2020) %>%
+#'    sf::st_union() %>%
+#'    sf::st_as_sf() %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
+#'    sf::st_make_valid()
+#'
+#' buildings <- get_buildings_osm(place = city_boundaries,
+#'                                date = as.Date('2021-01-01')) %>%
+#'    mutate(year = 2020)
+#'
+#'
+#' # run function
 #' buildings_rasters <- rasterise_buildings(buildings,
-#'                                      proxy_pop_density = "levels",
-#'                                      year = "year",
-#'                                      sf_pop = population_sgp,
-#'                                      sf_landuse = landuse,
-#'                                      match_buildings_pop = "closest")
+#'                                      proxy_pop_density = 'levels',
+#'                                      year = 'year',
+#'                                      sf_pop = pop_sgp,
+#'                                      sf_landuse = landuse_sgp,
+#'                                      match_buildings_pop = 'closest')
 #' }
 #'
 #'@export

@@ -27,7 +27,7 @@
 #'@param min_area numeric. Specify minimum area of each polygon to be retained in the output,
 #'passed to argument `threshold` in `smoothr::drop_crumbs()`.
 #'Provided either as a units object (see `units::set_units()`), or a number in the units of
-#'the coordinate reference system. Defaults to `0` \eqn{m^2}.
+#'the coordinate reference system. Defaults to `0` m^2.
 #'@param aggregate_polygons numeric. Argument for `dist` passed to `sf::st_buffer()`.
 #'Buffered polygons that overlap will be aggregated into multipolygons.
 #'Set to `NULL` if you do not wish to aggregate to multipolygons.
@@ -48,24 +48,29 @@
 #'
 #'@examples
 #' \dontrun{
-#' city_boundaries <- data(singapore) %>%
+#' data(pop_sgp)
+#'
+#' # merge all census blocks for chosen year (2020) into single multi-polygon
+#' # function requires that polygons are merged
+#' city_boundaries <- pop_sgp %>%
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
-#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
+#' # run function
 #' get_parks_osm(place = city_boundaries,
-#'               date = as.Date("2021-01-01"),
+#'               date = as.Date('2021-01-01'),
 #'               snap_tolerance = 5,
 #'               aggregate_polygons = 15,
-#'               filename = "public-parks_osm-polygons_2021-01-01.geojson")
+#'               filename = 'public-parks_osm-polygons_2021-01-01.geojson')
 #' }
 #'
 #'@export
-get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, snap_tolerance = 5,
-    min_area = units::set_units(0, "m^2"), aggregate_polygons = 15, dir_raw = oe_download_directory(),
+get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = list(), snap_tolerance = 5,
+    min_area = units::set_units(0, "m^2"), aggregate_polygons = 15, dir_raw = osmextract::oe_download_directory(),
     filename = NULL, ...) {
 
     # Error checking ------------------
@@ -75,17 +80,17 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, sn
     # data type
     checkmate::assert_date(date, any.missing = FALSE, all.missing = FALSE, len = 1, null.ok = TRUE,
         add = coll)
-    checkmate::assert_list(mutually_exclusive_with, any.missing = FALSE, all.missing = FALSE,
-        min.len = 1, unique = FALSE, null.ok = TRUE, add = coll)
+    checkmate::assert_list(mutually_exclusive_with, any.missing = FALSE, all.missing = TRUE,
+        unique = TRUE, null.ok = FALSE, add = coll)
 
     # file paths
     checkmate::assert_character(filename, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
 
     # all crs similar
-    if (!is.null(mutually_exclusive_with)) {
-        checkmate::assertTRUE(all(unlist(lapply(lapply(mutually_exclusive_with, st_crs), function(x) x ==
-            st_crs(place)))))
+    if (length(mutually_exclusive_with) != 0) {
+        checkmate::assertTRUE(all(unlist(lapply(lapply(mutually_exclusive_with, sf::st_crs), function(x) x ==
+            sf::st_crs(place)))))
     }
 
     checkmate::reportAssertions(coll)
@@ -108,7 +113,7 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, sn
     q <- "SELECT * FROM 'multipolygons' WHERE (leisure IN ('park', 'garden', 'nature_reserve') AND (access IS NULL OR access NOT IN ('no', 'private'))) OR tourism = 'zoo'"
 
     # to extract features that intersect bounding box (geographic crs)
-    bb <- sf::st_transform(place, st_crs(4326)) %>%
+    bb <- sf::st_transform(place, sf::st_crs(4326)) %>%
         sf::st_geometry() %>%
         sf::st_as_text()
 
@@ -121,15 +126,15 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, sn
     # transform back to same crs as 'place', then remove empty geoms, cast to individual
     # polygons
     suppressWarnings(results <- results %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid() %>%
-                         st_cast("MULTIPOLYGON") %>%
-                         st_cast("POLYGON"))
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid() %>%
+        st_cast("MULTIPOLYGON") %>%
+        st_cast("POLYGON"))
 
 
     # run helper functions ----
-    if (!is.null(mutually_exclusive_with)) {
+    if (length(mutually_exclusive_with) != 0) {
 
         for (i in seq_along(mutually_exclusive_with)) {
 
@@ -138,7 +143,8 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, sn
         }
     }
 
-    results <- polygons_clean(results, snap_tolerance = snap_tolerance, min_area = min_area, aggregate_polygons = aggregate_polygons)
+    results <- polygons_clean(results, snap_tolerance = snap_tolerance, min_area = min_area,
+        aggregate_polygons = aggregate_polygons)
 
 
     # export ----
@@ -179,7 +185,7 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, sn
 #'@param min_area numeric. Specify minimum area of each polygon to be retained in the output,
 #'passed to argument `threshold` in `smoothr::drop_crumbs()`.
 #'Provided either as a units object (see `units::set_units()`), or a number in the units of
-#'the coordinate reference system. Defaults to `0` \eqn{m^2}.
+#'the coordinate reference system. Defaults to `0` m^2.
 #'@param aggregate_polygons numeric. Argument for `dist` passed to `sf::st_buffer()`.
 #'Buffered polygons that overlap will be aggregated into multipolygons.
 #'Set to `NULL` if you do not wish to aggregate to multipolygons.
@@ -200,27 +206,32 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, sn
 #'
 #'@examples
 #' \dontrun{
-#' city_boundaries <- data(singapore) %>%
+#' data(pop_sgp)
+#'
+#' # merge all census blocks for chosen year (2020) into single multi-polygon
+#' # function requires that polygons are merged
+#' city_boundaries <- pop_sgp %>%
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
-#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
-#' parks <- data(parks_sgp)
+#' data(parks_sgp) # to exclude beaches within/intersecting these polygons
 #'
+#' # run function
 #' get_beaches_osm(place = city_boundaries,
-#'                 date = as.Date("2021-01-01"),
-#'                 mutually_exclusive_with = list(parks),
+#'                 date = as.Date('2021-01-01'),
+#'                 mutually_exclusive_with = list(parks_sgp),
 #'                 snap_tolerance = 5,
 #'                 aggregate_polygons = 15,
-#'                 filename = "public-beaches_osm-polygons_2021-01-01.geojson")
+#'                 filename = 'public-beaches_osm-polygons_2021-01-01.geojson')
 #' }
 #'
 #'@export
-get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, snap_tolerance = 5,
-    min_area = units::set_units(0, "m^2"), aggregate_polygons = 15, dir_raw = oe_download_directory(),
+get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = list(), snap_tolerance = 5,
+    min_area = units::set_units(0, "m^2"), aggregate_polygons = 15, dir_raw = osmextract::oe_download_directory(),
     filename = NULL, ...) {
 
     # Error checking ------------------
@@ -230,17 +241,17 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, 
     # data type
     checkmate::assert_date(date, any.missing = FALSE, all.missing = FALSE, len = 1, null.ok = TRUE,
         add = coll)
-    checkmate::assert_list(mutually_exclusive_with, any.missing = FALSE, all.missing = FALSE,
-        min.len = 1, unique = FALSE, null.ok = TRUE, add = coll)
+    checkmate::assert_list(mutually_exclusive_with, any.missing = FALSE, all.missing = TRUE,
+        unique = TRUE, null.ok = FALSE, add = coll)
 
     # file paths
     checkmate::assert_character(filename, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
 
     # all crs similar
-    if (!is.null(mutually_exclusive_with)) {
-        checkmate::assertTRUE(all(unlist(lapply(lapply(mutually_exclusive_with, st_crs), function(x) x ==
-            st_crs(place)))))
+    if (length(mutually_exclusive_with) != 0) {
+        checkmate::assertTRUE(all(unlist(lapply(lapply(mutually_exclusive_with, sf::st_crs), function(x) x ==
+            sf::st_crs(place)))))
     }
 
     checkmate::reportAssertions(coll)
@@ -263,7 +274,7 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, 
     q <- "SELECT * FROM 'multipolygons' WHERE natural = 'beach' AND (access IS NULL OR access NOT IN ('no', 'private'))"
 
     # to extract features that intersect bounding box (geographic crs)
-    bb <- sf::st_transform(place, st_crs(4326)) %>%
+    bb <- sf::st_transform(place, sf::st_crs(4326)) %>%
         sf::st_geometry() %>%
         sf::st_as_text()
 
@@ -276,15 +287,15 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, 
     # transform back to same crs as 'place', then remove empty geoms, cast to individual
     # polygons
     suppressWarnings(results <- results %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid() %>%
-                         st_cast("MULTIPOLYGON") %>%
-                         st_cast("POLYGON"))
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid() %>%
+        st_cast("MULTIPOLYGON") %>%
+        st_cast("POLYGON"))
 
 
     # run helper functions ----
-    if (!is.null(mutually_exclusive_with)) {
+    if (length(mutually_exclusive_with) != 0) {
 
         for (i in seq_along(mutually_exclusive_with)) {
 
@@ -293,7 +304,8 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, 
         }
     }
 
-    results <- polygons_clean(results, snap_tolerance = snap_tolerance, min_area = min_area, aggregate_polygons = aggregate_polygons)
+    results <- polygons_clean(results, snap_tolerance = snap_tolerance, min_area = min_area,
+        aggregate_polygons = aggregate_polygons)
 
 
     # export ----
@@ -340,7 +352,11 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, 
 #'@param min_area numeric. Specify minimum area of each polygon to be retained in the output,
 #'passed to argument `threshold` in `smoothr::drop_crumbs()`.
 #'Provided either as a units object (see `units::set_units()`), or a number in the units of
-#'the coordinate reference system. Defaults to `0` \eqn{m^2}.
+#'the coordinate reference system. Defaults to `0` m^2.
+#'@param min_trails numeric. Specify minimum length of OSM trail lines that has to be within
+#'nature area polygons, for the polygons to be retained in the output.
+#'Provided either as a units object (see `units::set_units()`), or a number in the units of
+#'the coordinate reference system. Defaults to `0` m.
 #'@param aggregate_polygons numeric. Argument for `dist` passed to `sf::st_buffer()`.
 #'Buffered polygons that overlap will be aggregated into multipolygons.
 #'Set to `NULL` if you do not wish to aggregate to multipolygons.
@@ -354,36 +370,42 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, 
 #'@import sf
 #'@import checkmate
 #'@import osmextract
-#'@importFrom dplyr filter mutate
+#'@importFrom dplyr filter mutate group_by summarise left_join
 #'@importFrom units set_units
 #'@importFrom smoothr fill_holes drop_crumbs
 #'@importFrom rlang .data
 #'
 #'@examples
 #' \dontrun{
-#' city_boundaries <- data(singapore) %>%
+#' data(pop_sgp)
+#'
+#' # merge all census blocks for chosen year (2020) into single multi-polygon
+#' # function requires that polygons are merged
+#' city_boundaries <- pop_sgp %>%
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
-#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
-#' parks <- data(parks_sgp)
+#' data(parks_sgp) # to exclude nature areas within/intersecting these polygons
 #'
+#' # run function
 #' get_informalnature_osm(place = city_boundaries,
-#'                        date = as.Date("2021-01-01"),
-#'                        mutually_exclusive_with = list(parks),
+#'                        date = as.Date('2021-01-01'),
+#'                        mutually_exclusive_with = list(parks_sgp),
 #'                        snap_tolerance = 5,
-#'                        min_area = units::set_units(2500, "m^2"),
+#'                        min_area = units::set_units(2500, 'm^2'),
+#'                        min_trails = units::set_units(0, 'm'),
 #'                        aggregate_polygons = 15,
-#'                        filename = "nature-areas_osm-polygons_2021-01-01.geojson")
+#'                        filename = 'nature-areas_osm-polygons_2021-01-01.geojson')
 #' }
 #'
 #'@export
-get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with = NULL, snap_tolerance = 5,
-    min_area = units::set_units(0, "m^2"), aggregate_polygons = 15, dir_raw = oe_download_directory(),
-    filename = NULL, ...) {
+get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with = list(), snap_tolerance = 5,
+    min_area = units::set_units(0, "m^2"), min_trails = units::set_units(0, "m"), aggregate_polygons = 15,
+    dir_raw = osmextract::oe_download_directory(), filename = NULL, ...) {
 
     # Error checking ------------------
 
@@ -392,17 +414,17 @@ get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with =
     # data type
     checkmate::assert_date(date, any.missing = FALSE, all.missing = FALSE, len = 1, null.ok = TRUE,
         add = coll)
-    checkmate::assert_list(mutually_exclusive_with, any.missing = FALSE, all.missing = FALSE,
-        min.len = 1, unique = FALSE, null.ok = TRUE, add = coll)
+    checkmate::assert_list(mutually_exclusive_with, any.missing = FALSE, all.missing = TRUE,
+        unique = TRUE, null.ok = FALSE, add = coll)
 
     # file paths
     checkmate::assert_character(filename, min.len = 1, any.missing = FALSE, all.missing = FALSE,
         null.ok = TRUE, add = coll)
 
     # all crs similar
-    if (!is.null(mutually_exclusive_with)) {
-        checkmate::assertTRUE(all(unlist(lapply(lapply(mutually_exclusive_with, st_crs), function(x) x ==
-            st_crs(place)))))
+    if (length(mutually_exclusive_with) != 0) {
+        checkmate::assertTRUE(all(unlist(lapply(lapply(mutually_exclusive_with, sf::st_crs), function(x) x ==
+            sf::st_crs(place)))))
     }
 
     checkmate::reportAssertions(coll)
@@ -425,7 +447,7 @@ get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with =
     q <- "SELECT * FROM 'multipolygons' WHERE (landuse IN ('forest', 'meadow') OR natural IN ('wood', 'scrub', 'heath', 'grassland', 'wetland', 'marsh', 'fell', 'tundra')) AND (access IS NULL OR access NOT IN ('no', 'private', 'restricted'))"
 
     # to extract features that intersect bounding box (geographic crs)
-    bb <- sf::st_transform(place, st_crs(4326)) %>%
+    bb <- sf::st_transform(place, sf::st_crs(4326)) %>%
         sf::st_geometry() %>%
         sf::st_as_text()
 
@@ -438,11 +460,11 @@ get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with =
     # transform back to same crs as 'place', then remove empty geoms, cast to individual
     # polygons
     suppressWarnings(results <- results %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid() %>%
-                         st_cast("MULTIPOLYGON") %>%
-                         st_cast("POLYGON"))
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid() %>%
+        st_cast("MULTIPOLYGON") %>%
+        st_cast("POLYGON"))
 
 
     # exclude golf courses ----
@@ -450,11 +472,11 @@ get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with =
         extra_tags = osmkeys, force_vectortranslate = TRUE, query = "SELECT * FROM 'multipolygons' WHERE leisure = 'golf_course'",
         wkt_filter = bb)
     suppressWarnings(golf <- golf %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid() %>%
-                         st_cast("MULTIPOLYGON") %>%
-                         st_cast("POLYGON"))
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid() %>%
+        st_cast("MULTIPOLYGON") %>%
+        st_cast("POLYGON"))
 
     # rectify minor overlaps w mutual snap, BUT SAVE TO NEW VAR
     golf2 <- st_snap(golf, results, tolerance = snap_tolerance)
@@ -477,11 +499,11 @@ get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with =
         extra_tags = osmkeys, force_vectortranslate = TRUE, query = "SELECT * FROM 'multipolygons' WHERE landuse = 'military'",
         wkt_filter = bb)
     suppressWarnings(military <- military %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid() %>%
-                         st_cast("MULTIPOLYGON") %>%
-                         st_cast("POLYGON"))
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid() %>%
+        st_cast("MULTIPOLYGON") %>%
+        st_cast("POLYGON"))
 
     # rectify minor overlaps w mutual snap
     military <- st_snap(military, results, tolerance = snap_tolerance)
@@ -503,19 +525,36 @@ get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with =
         force_vectortranslate = TRUE, query = "SELECT * FROM 'lines' WHERE (highway IN ('track', 'path', 'footway', 'cycleway')) AND (access IS NULL OR access NOT IN ('no', 'private'))",
         wkt_filter = bb)
     suppressWarnings(trails <- trails %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid())
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid())
 
     results <- results %>%
         dplyr::mutate(id = row_number()) %>%
         dplyr::filter((.data$id %in% unlist(st_within(trails, results %>%
             mutate(id = row_number())))))
+
+    # exclude nature areas below min trail length
+    trails <- st_intersection(trails, results)  # subset trails
+    trails$length <- st_length(trails)  # new col for line length
+
+    trails <- trails %>%
+        dplyr::group_by(.data$id) %>%
+        dplyr::summarise(trails = sum(.data$length, na.rm = TRUE))
+    st_geometry(trails) <- NULL
+
+    results <- results %>%
+        dplyr::left_join(trails, by = "id")
+
+    results$trails[is.na(results$trails)] <- 0  # replace na with 0
+
+    results <- results %>%
+        dplyr::filter(!.data$trails < min_trails)
     rm(trails)
 
 
     # run helper functions ----
-    if (!is.null(mutually_exclusive_with)) {
+    if (length(mutually_exclusive_with) != 0) {
 
         for (i in seq_along(mutually_exclusive_with)) {
 
@@ -524,7 +563,8 @@ get_informalnature_osm <- function(place, date = NULL, mutually_exclusive_with =
         }
     }
 
-    results <- polygons_clean(results, snap_tolerance = snap_tolerance, min_area = min_area, aggregate_polygons = aggregate_polygons)
+    results <- polygons_clean(results, snap_tolerance = snap_tolerance, min_area = min_area,
+        aggregate_polygons = aggregate_polygons)
 
 
     # export ----
