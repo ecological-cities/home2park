@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# home2park <a href='https://ecological-cities.github.io/home2park/'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# home2park: Spatial Provision of Urban Parks
 
 <!-- badges: start -->
 
@@ -13,10 +13,10 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![test-coverage](https://github.com/ecological-cities/home2park/workflows/test-coverage/badge.svg)](https://github.com/ecological-cities/home2park/actions)
 <!-- badges: end -->
 
-## Spatial Provision of Urban Parks
+<a href='https://ecological-cities.github.io/home2park/'><img src='man/figures/logo.png' align="right" height="175" /></a>
 
-Assess the spatial provision of urban parks to residential buildings
-city-wide. Refer to [package
+`home2park` is an R package for assessing the spatial provision of urban
+parks to residential buildings city-wide. Refer to the [package
 website](https://ecological-cities.github.io/home2park/) for
 demonstrations of how the package may be used.
 
@@ -275,10 +275,10 @@ buildings_pop_sgp <- buildings_pop_sgp %>%
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette was binned according to quantile values." width="100%" />
+<img src="man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette were binned according to quantile values." width="100%" />
 <p class="caption">
 Screenshot: Supply of park area to building residents in Singapore based
-on OSM data (2020). The color palette was binned according to quantile
+on OSM data (2020). The color palette were binned according to quantile
 values.
 </p>
 

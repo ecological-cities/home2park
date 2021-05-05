@@ -1,0 +1,14 @@
+citHeader("To cite home2park in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "home2park : An R package to assess the spatial provision of urban parks",
+  author   = "Xiao Ping Song, Kwek Yan Chong",
+  journal  = "(in prep)",
+  year     = "2021",
+  volume   = "",
+  number   = "",
+  pages    = "",
+  url      = "",
+  textVersion = paste("Song, X. P., Chong, K. Y., home2park : An R package to assess the spatial provision of urban parks (in prep).")
+)

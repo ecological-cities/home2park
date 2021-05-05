@@ -23,21 +23,22 @@ home:
 
 reference:
 - title: "Homes: Data"
-  desc: "Raw/example data related to the resident population."
+  desc: "Use/get example datasets related to the resident population."
 - contents:
-  - singapore
+  - pop_sgp
   - landuse_sgp
-  - buildings_sgp
+  - buildings_pop_sgp
   - get_buildings_osm
-- title: "Homes: Process resident population"
+- title: "Homes: Process population"
   desc: "Redistribute coarse-scale population data into residential buildings."
 - contents:
   - rasterise_pop
   - rasterise_landuse
   - rasterise_buildings
-  - starts_with("pop_")
+  - pop_dasymap
+  - pop_density_polygonise
 - title: "Parks: Data"
-  desc: "Raw/example datasets related to parks and outdoor recreation."
+  desc: "Use/get example datasets related to parks and outdoor recreation."
 - contents:
   - parks_sgp
   - get_parks_osm
@@ -47,18 +48,20 @@ reference:
   - get_sportfitness_osm
   - get_trails_osm
 - title: "Parks: Process attributes"
-  desc: "Derive park attributes important for recreation/leisure."
+  desc: "Calculate park attributes important for recreation/leisure."
 - contents:
-  - starts_with("park_")
-- title: "Metrics: Recreation supply"
+  - parks_calc_attributes
+- title: "Recreation supply"
   desc: "Calculate the provision of park attributes per residential building."
 - contents:
-  - starts_with("ss_")
+  - starts_with("recre_")
 - title: "Helper functions"
 - contents:
   - polygons_clean
   - polygons_mutually_exclude
   - matchyear
+  - raster_edge_length
+  - raster_class_area
 
 authors:
   Xiao Ping Song:

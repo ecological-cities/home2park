@@ -24,11 +24,11 @@ knitr::opts_chunk$set(
 
 ## Spatial Provision of Urban Parks
 
-Assess the spatial provision of urban parks to residential buildings city-wide. Refer to [package website](https://ecological-cities.github.io/home2park/) and [prototype web app]() for demonstrations of how the package may be used. The package supplements the following study: 
+Assess the spatial provision of urban parks to residential buildings city-wide. Refer to [package website](https://ecological-cities.github.io/home2park/) for demonstrations of how the package may be used.
 
 ## Installation
 
-You can install the development version from GitHub with:
+Install the development version of `home2park` from GitHub:
 
 ```{r, eval = FALSE}
 devtools::install_github("ecological-cities/home2park")
@@ -36,14 +36,171 @@ devtools::install_github("ecological-cities/home2park")
 
 ## Setup
 
-```{r eval = FALSE}
+Load the package:
+
+```{r eval = TRUE}
 library(home2park)
 ```
 
-```{r include = FALSE, eval = TRUE}
+```{r include = FALSE, eval = FALSE}
 devtools::load_all() # to knit manually
 ```
 
-## Example
+## Citation
+
+To cite `home2park` or acknowledge its use, please cite the following:
+
+_Song, X. P., Chong, K. Y., home2park: An R package to assess the spatial provision of urban parks (in prep)._
+
+<br>
+
+The get a BibTex entry, run `citation("home2park")`.
+
+<br>
+
+## Background
+
+Parks are important spaces for recreation and leisure in cities. Conventional metrics that measure the provision of parks to city residents usually summarise the park area within a given region (e.g. per capita park area). However, 
+there is a need to characterise the wide variety of parks (e.g. nature areas, gardens, waterfront parks, outdoor playgrounds, etc.) that serve different groups of people. When planning at fine spatial scales, such metrics are also limited by their coarse spatial resolution and the presence of artificial boundaries.
+
+<br>
+
+## Using home2park
+
+The package `home2park` provides a way to measure _multiple aspects_ of park provision to homes, at the resolution of _individual buildings_. The key features include the ability to:
+
+- Download relevant data from OpenStreetMap (OSM), e.g., buildings, parks and features related to recreation/leisure (alternatively, the user may use their own datasets).
+- Redistribute coarse-scale population data (per census block region) into residential buildings, also known as 'dasymetric mapping'.
+- Summarise multiple attributes that are important for recreation/leisure, at each park.
+- Calculate the supply (provision) of the park attributes to each residential building, while accounting for 'distance decay', or the fact that supply from parks further away are reduced.
+
+The following sections provide a high-level overview of the various steps required to measure the spatial provision of parks. Further details and code examples can be found in the package vignette '[Get started](articles/home2park.html)'
+
+### 1. Process city population
+
+Residential buildings (homes) are an important component of the analysis. These may be obtained, for example, by downloading building polygons from OpenStreetMap (OSM), and subsetting the dataset to areas within 'residential' land use zones. 
+
+In addition, having the population count per residential building allows us to calculate the total spatial provision of parks to all residents, and can help highlight important areas where more people will benefit from the presence of parks. Coarse-scale population census data can be redistributed into the residential buildings, via a technique known as 'dasymetric mapping'. The number of building 'levels' from OSM can be used as a proxy for population density (i.e. more residents per unit area). Here's an example screenshot showing an overlay of multiple example datasets in the package (for the city of Singapore), which were used to redistribute population data per census block (subzones) across residential buildings. 
+
+```{r, echo=FALSE, fig.align = "center", out.width="80%", fig.cap = paste0("Screenshot: Residential population in Singapore redistributed across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution.")}
+knitr::include_graphics("man/figures/README-dasymetric-mapping.png")
+```
+
+<br>
+
+Residential building polygons in Singapore each with a population count can be found in the following example dataset:
+
+```{r}
+data(buildings_pop_sgp)
+head(buildings_pop_sgp)
+```
 
 
+<br>
+
+### 2. Process parks
+
+Parks are the other important component of the analysis. These may be downloaded and processed from OSM using this package. The following example dataset contains parks in Singapore with selected attributes related to recreation/leisure:
+
+```{r}
+data(parks_sgp)
+head(parks_sgp[, 28:33]) # subset to relevant columns
+```
+
+<br>
+
+### 3. Recreation supply
+
+With the processed building and park polygons, the provision of park attributes per residential building can be calculated. The total supply $S$ of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; attributes from parks further away are generally reduced as a result of the negative exponential function _e<sup>-cd</sup>_, an effect also known as the 'distance decay' ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)).
+
+```{r, echo=FALSE, fig.align = "center", out.width="18%"}
+knitr::include_graphics("man/figures/README-equation.png")
+```
+
+where  
+
+- $S$ = Total supply of a specific park attribute to the building from parks $i$; $i$ = 1,2,3, ... $n$ where $n$ = total number of parks citywide.
+
+- $s_{i}$ = Supply of a specific park attribute from park $i$. A perfect positive linear association is assumed, since the focus is on supply metrics. If park area has been calculated as an attribute, other attributes may be calculated as relative amounts (e.g. point density, ratio of line-to-perimeter length, proportional area) to avoid double-counting the effect of park size.
+
+- $d_{i}$ = Euclidean distance from the building to park $i$.
+
+- $c$ = Coefficient determining rate of decay in supply $s_{i}$ with increasing distance. 
+
+<br>
+
+Note that the value of Coefficient $c$ depends on both park and park visitors' attributes, such as socio-demographic factors and preferences for activities that may impel shorter or longer travel ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008); [Tu et al.](https://doi.org/10.1016/j.ufug.2020.126689)). A lower value implies that parks further away are accessible or frequently visited by residents (i.e. still contributes to the 'recreation supply' of a particular building).
+
+
+```{r, echo=FALSE, fig.align = "center", out.width="50%", fig.cap = paste0("Figure: The effect of Coefficient c and its effect on the distance decay between a building and park.")}
+knitr::include_graphics("man/figures/README-c-sensitivity.png")
+```
+<br>
+
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: The supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature areas tend to be centrally located. The color palette for the buildings (points) are binned according to their quantile values.")}
+knitr::include_graphics("man/figures/README-c-sensitivity-map.png")
+```
+
+
+<br>
+
+To calculate the supply of each park attribute, we first calculate the pairwise distances between all buildings and parks (a distance matrix). This is supplied to the function `recre_supply()`. For example, we can calculate the supply of park _area_ to each building. This supply value can then be multiplied by the population count per building, to obtain the total supply to all residents.
+
+```{r calc distance matrix and supply of park area, message = FALSE, warning = FALSE}
+
+# convert buildings to points (centroids), then calculate distances to every park
+m_dist <- buildings_pop_sgp %>%
+  sf::st_centroid() %>%
+  sf::st_distance(parks_sgp) %>%
+    units::set_units(NULL)
+
+
+# new column for the supply of park area
+buildings_pop_sgp$area_supply <- recre_supply(park_attribute = parks_sgp$area, 
+                                              dist_matrix = m_dist, 
+                                              c = 0.302) # e.g. from Tu et al. (2020)
+
+# supply to all residents per building
+buildings_pop_sgp$area_supplytopop <- buildings_pop_sgp$area_supply * buildings_pop_sgp$popcount
+
+
+
+# scale the supply variables if necessary
+buildings_pop_sgp <- buildings_pop_sgp %>%
+    dplyr::mutate(across(.cols = c(area_supply, area_supplytopop), 
+                         ~(scale(., center = FALSE))))
+
+```
+
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette was binned according to quantile values.")}
+knitr::include_graphics("man/figures/README-supply-parkarea-to-building-residents.png")
+```
+
+
+```{r include = FALSE}
+rm(buildings_pop_sgp, parks_sgp, pop_sgp,
+   m_dist)
+```
+
+
+<br>
+
+## Data sources
+
+- Singapore census data from the [Department of Statistics Singapore](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data). Released under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
+
+- Singapore census block (subzone) polygons from the [Singapore Master Plan Subzones](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea). Released under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
+
+- Singapore Master Plan Land Use Zones for the years [2014](https://data.gov.sg/dataset/master-plan-2014-land-use) and [2019](https://data.gov.sg/dataset/master-plan-2019-land-use-layer). Released under the terms of the [Singapore Open Data License](https://data.gov.sg/open-data-licence).
+
+- Building polygons derived from map data [copyrighted](https://www.openstreetmap.org/copyright) OpenStreetMap contributors and available from https://www.openstreetmap.org. Released under the terms of the [ODbL License](https://opendatacommons.org/licenses/odbl/summary/).
+
+- Park polygons and summarised attributes (trails, playgrounds) derived from map data [copyrighted](https://www.openstreetmap.org/copyright) OpenStreetMap contributors and available from https://www.openstreetmap.org. Released under the terms of the [ODbL License](https://opendatacommons.org/licenses/odbl/summary/).
+
+<br>
+
+## References
+
+Rossi, S. D., Byrne, J. A., & Pickering, C. M. (2015). The role of distance in peri-urban national park use: Who visits them and how far do they travel?. Applied Geography, 63, 77-88.
+
+Tu, X., Huang, G., Wu, J., & Guo, X. (2020). How do travel distance and park size influence urban park visits?. Urban Forestry & Urban Greening, 52, 126689.
