@@ -7,7 +7,7 @@
 get_buildings_osm(
   place,
   date = NULL,
-  dir_raw = oe_download_directory(),
+  dir_raw = osmextract::oe_download_directory(),
   filename = NULL,
   ...
 )
@@ -46,17 +46,22 @@ and \code{floorarea_m2} is calculated by multiplying the \code{area_m2} by the n
 }
 \examples{
 \dontrun{
-city_boundaries <- data(singapore) \%>\%
+data(pop_sgp)
+
+# merge all census blocks for chosen year (2020) into single multi-polygon
+# function requires that polygons are merged
+city_boundaries <- pop_sgp \%>\%
    dplyr::filter(year == 2020) \%>\%
    sf::st_union() \%>\%
    sf::st_as_sf() \%>\%
-   smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  \%>\%
-   smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  \%>\%
+   smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  \%>\%
+   smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  \%>\%
    sf::st_make_valid()
 
+# run function
 get_buildings_osm(place = city_boundaries,
-                  date = as.Date("2021-01-01"),
-                  filename = "buildings_osm-polygons_2021-01-01.geojson")
+                  date = as.Date('2021-01-01'),
+                  filename = 'buildings_osm-polygons_2021-01-01.geojson')
 }
 
 }

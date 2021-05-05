@@ -7,11 +7,11 @@
 get_parks_osm(
   place,
   date = NULL,
-  mutually_exclusive_with = NULL,
+  mutually_exclusive_with = list(),
   snap_tolerance = 5,
   min_area = units::set_units(0, "m^2"),
   aggregate_polygons = 15,
-  dir_raw = oe_download_directory(),
+  dir_raw = osmextract::oe_download_directory(),
   filename = NULL,
   ...
 )
@@ -36,7 +36,7 @@ Defaults to \code{5}. Set to \code{0} if you do not wish to rectify minor overla
 \item{min_area}{numeric. Specify minimum area of each polygon to be retained in the output,
 passed to argument \code{threshold} in \code{smoothr::drop_crumbs()}.
 Provided either as a units object (see \code{units::set_units()}), or a number in the units of
-the coordinate reference system. Defaults to \code{0} \eqn{m^2}.}
+the coordinate reference system. Defaults to \code{0} m^2.}
 
 \item{aggregate_polygons}{numeric. Argument for \code{dist} passed to \code{sf::st_buffer()}.
 Buffered polygons that overlap will be aggregated into multipolygons.
@@ -68,19 +68,24 @@ Polygons are then cleaned up using \code{polygons_clean()}.
 }
 \examples{
 \dontrun{
-city_boundaries <- data(singapore) \%>\%
+data(pop_sgp)
+
+# merge all census blocks for chosen year (2020) into single multi-polygon
+# function requires that polygons are merged
+city_boundaries <- pop_sgp \%>\%
    dplyr::filter(year == 2020) \%>\%
    sf::st_union() \%>\%
    sf::st_as_sf() \%>\%
-   smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  \%>\%
-   smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  \%>\%
+   smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  \%>\%
+   smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  \%>\%
    sf::st_make_valid()
 
+# run function
 get_parks_osm(place = city_boundaries,
-              date = as.Date("2021-01-01"),
+              date = as.Date('2021-01-01'),
               snap_tolerance = 5,
               aggregate_polygons = 15,
-              filename = "public-parks_osm-polygons_2021-01-01.geojson")
+              filename = 'public-parks_osm-polygons_2021-01-01.geojson')
 }
 
 }

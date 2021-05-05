@@ -29,21 +29,26 @@
 #'
 #'@examples
 #' \dontrun{
-#' city_boundaries <- data(singapore) %>%
+#' data(pop_sgp)
+#'
+#' # merge all census blocks for chosen year (2020) into single multi-polygon
+#' # function requires that polygons are merged
+#' city_boundaries <- pop_sgp %>%
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
-#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
+#' # run function
 #' get_playgrounds_osm(place = city_boundaries,
-#'                     date = as.Date("2021-01-01"),
-#'                     filename = "public-playgrounds_osm-points_2021-01-01.geojson")
+#'                     date = as.Date('2021-01-01'),
+#'                     filename = 'public-playgrounds_osm-points_2021-01-01.geojson')
 #' }
 #'
 #'@export
-get_playgrounds_osm <- function(place, date = NULL, dir_raw = oe_download_directory(), filename = NULL,
+get_playgrounds_osm <- function(place, date = NULL, dir_raw = osmextract::oe_download_directory(), filename = NULL,
     ...) {
 
     # Error checking ------------------
@@ -78,7 +83,7 @@ get_playgrounds_osm <- function(place, date = NULL, dir_raw = oe_download_direct
     q <- "SELECT * FROM 'points' WHERE leisure = 'playground' AND (access IS NULL OR access NOT IN ('no', 'private'))"
 
     # to extract features that intersect bounding box (geographic crs)
-    bb <- sf::st_transform(place, st_crs(4326)) %>%
+    bb <- sf::st_transform(place, sf::st_crs(4326)) %>%
         sf::st_geometry() %>%
         sf::st_as_text()
 
@@ -91,9 +96,9 @@ get_playgrounds_osm <- function(place, date = NULL, dir_raw = oe_download_direct
 
     # clean up ---- remove empty geoms, transform back to same crs as 'place'
     suppressWarnings(results <- results %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid())
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid())
 
 
     # export ----
@@ -136,21 +141,26 @@ get_playgrounds_osm <- function(place, date = NULL, dir_raw = oe_download_direct
 #'
 #'@examples
 #' \dontrun{
-#' city_boundaries <- data(singapore) %>%
+#' data(pop_sgp)
+#'
+#' # merge all census blocks for chosen year (2020) into single multi-polygon
+#' # function requires that polygons are merged
+#' city_boundaries <- pop_sgp %>%
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
-#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
+#' # run function
 #' get_sportfitness_osm(place = city_boundaries,
-#'                     date = as.Date("2021-01-01"),
-#'                     filename = "sport-fitness_osm-points_2021-01-01.geojson")
+#'                     date = as.Date('2021-01-01'),
+#'                     filename = 'sport-fitness_osm-points_2021-01-01.geojson')
 #' }
 #'
 #'@export
-get_sportfitness_osm <- function(place, date = NULL, dir_raw = oe_download_directory(), filename = NULL,
+get_sportfitness_osm <- function(place, date = NULL, dir_raw = osmextract::oe_download_directory(), filename = NULL,
     ...) {
 
     # Error checking ------------------
@@ -185,7 +195,7 @@ get_sportfitness_osm <- function(place, date = NULL, dir_raw = oe_download_direc
     q <- "SELECT * FROM 'points' WHERE (leisure = 'fitness_station' OR sport IS NOT NULL) AND (access IS NULL OR access NOT IN ('no', 'private'))"
 
     # to extract features that intersect bounding box (geographic crs)
-    bb <- sf::st_transform(place, st_crs(4326)) %>%
+    bb <- sf::st_transform(place, sf::st_crs(4326)) %>%
         sf::st_geometry() %>%
         sf::st_as_text()
 
@@ -198,9 +208,9 @@ get_sportfitness_osm <- function(place, date = NULL, dir_raw = oe_download_direc
 
     # clean up ---- remove empty geoms, transform back to same crs as 'place'
     suppressWarnings(results <- results %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid())
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid())
 
 
     # export ----
@@ -243,21 +253,26 @@ get_sportfitness_osm <- function(place, date = NULL, dir_raw = oe_download_direc
 #'
 #'@examples
 #' \dontrun{
-#' city_boundaries <- data(singapore) %>%
+#' data(pop_sgp)
+#'
+#' # merge all census blocks for chosen year (2020) into single multi-polygon
+#' # function requires that polygons are merged
+#' city_boundaries <- pop_sgp %>%
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
-#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
+#' # run function
 #' get_trails_osm(place = city_boundaries,
-#'                date = as.Date("2021-01-01"),
-#'                filename = "accessible-trails_osm-lines_2021-01-01.geojson")
+#'                date = as.Date('2021-01-01'),
+#'                filename = 'accessible-trails_osm-lines_2021-01-01.geojson')
 #' }
 #'
 #'@export
-get_trails_osm <- function(place, date = NULL, dir_raw = oe_download_directory(), filename = NULL,
+get_trails_osm <- function(place, date = NULL, dir_raw = osmextract::oe_download_directory(), filename = NULL,
     ...) {
 
     # Error checking ------------------
@@ -292,7 +307,7 @@ get_trails_osm <- function(place, date = NULL, dir_raw = oe_download_directory()
     q <- "SELECT * FROM 'lines' WHERE (highway IN ('track', 'path', 'footway', 'cycleway')) AND (access IS NULL OR access NOT IN ('no', 'private'))"
 
     # to extract features that intersect bounding box (geographic crs)
-    bb <- sf::st_transform(place, st_crs(4326)) %>%
+    bb <- sf::st_transform(place, sf::st_crs(4326)) %>%
         sf::st_geometry() %>%
         sf::st_as_text()
 
@@ -306,9 +321,9 @@ get_trails_osm <- function(place, date = NULL, dir_raw = oe_download_directory()
 
     # clean up ---- remove empty geoms, transform back to same crs as 'place'
     suppressWarnings(results <- results %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid())
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid())
 
 
     # export ----

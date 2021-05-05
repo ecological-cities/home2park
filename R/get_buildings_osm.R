@@ -33,21 +33,26 @@
 #'
 #'@examples
 #' \dontrun{
-#' city_boundaries <- data(singapore) %>%
+#' data(pop_sgp)
+#'
+#' # merge all census blocks for chosen year (2020) into single multi-polygon
+#' # function requires that polygons are merged
+#' city_boundaries <- pop_sgp %>%
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, "km^2"))  %>%
-#'    smoothr::drop_crumbs(threshold = units::set_units(1, "km^2"))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
+#' # run function
 #' get_buildings_osm(place = city_boundaries,
-#'                   date = as.Date("2021-01-01"),
-#'                   filename = "buildings_osm-polygons_2021-01-01.geojson")
+#'                   date = as.Date('2021-01-01'),
+#'                   filename = 'buildings_osm-polygons_2021-01-01.geojson')
 #' }
 #'
 #'@export
-get_buildings_osm <- function(place, date = NULL, dir_raw = oe_download_directory(), filename = NULL,
+get_buildings_osm <- function(place, date = NULL, dir_raw = osmextract::oe_download_directory(), filename = NULL,
     ...) {
 
     # Error checking ------------------
@@ -82,26 +87,29 @@ get_buildings_osm <- function(place, date = NULL, dir_raw = oe_download_director
     q <- "SELECT * FROM 'multipolygons' WHERE building IS NOT NULL"
 
     # to extract features that intersect bounding box (geographic crs)
-    bb <- sf::st_transform(place, st_crs(4326)) %>%
+    bb <- sf::st_transform(place, sf::st_crs(4326)) %>%
         sf::st_geometry() %>%
         sf::st_as_text()
 
 
 
-    # download and filter data ---- filter by st_read() instead of using vectortranslate_option
+    # download and filter data ---- filter by st_read() instead of using
+    # vectortranslate_option
     results <- osmextract::oe_read(link, download_directory = dir_raw, layer = "multipolygons",
         extra_tags = osmkeys, force_vectortranslate = TRUE, query = q, wkt_filter = bb)
 
 
-    # clean up ---- remove empty geoms, transform back to same crs as 'place', cast to individual polygons
+    # clean up ---- remove empty geoms, transform back to same crs as 'place', cast to
+    # individual polygons
     suppressWarnings(results <- results %>%
-                         dplyr::filter(!sf::st_is_empty(.)) %>%
-                         sf::st_transform(sf::st_crs(place)) %>%
-                         sf::st_make_valid() %>%
-                         sf::st_cast("MULTIPOLYGON", warn = FALSE) %>%
-                         sf::st_cast("POLYGON", warn = FALSE))
+        dplyr::filter(!sf::st_is_empty(.)) %>%
+        sf::st_transform(sf::st_crs(place)) %>%
+        sf::st_make_valid() %>%
+        sf::st_cast("MULTIPOLYGON", warn = FALSE) %>%
+        sf::st_cast("POLYGON", warn = FALSE))
 
-    # convert building_levels ---- if no info, set as 1; if underground, NA; convert to numeric, round up
+    # convert building_levels ---- if no info, set as 1; if underground, NA; convert to
+    # numeric, round up
     suppressWarnings(results <- results %>%
         dplyr::mutate(levels = as.numeric(.data$building_levels)) %>%
         dplyr::mutate(levels = ifelse(is.na(.data$levels) | .data$levels == "", 1, ifelse(.data$levels <=
