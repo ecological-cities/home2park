@@ -52,13 +52,19 @@ specific to the target area.
 data(pop_sgp) # population census block polygons
 data(landuse_sgp) # land use polygons
 
+
+# transform to projected crs
+pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648))
+landuse_sgp <- sf::st_transform(landuse_sgp, sf::st_crs(32648))
+
+
 # merge all census blocks for chosen year (2020) into single multi-polygon
 # function requires that polygons are merged
 city_boundaries <- pop_sgp \%>\%
    dplyr::filter(year == 2020) \%>\%
    sf::st_union() \%>\%
    sf::st_as_sf() \%>\%
-   smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  \%>\%
+   smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  \%>\% # clean up
    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  \%>\%
    sf::st_make_valid()
 
@@ -82,11 +88,11 @@ landuse_rasters <- rasterise_landuse(landuse_sgp,
                                      match_landuse_pop = 'recent')
 
 buildings_rasters <- rasterise_buildings(buildings,
-                                     proxy_pop_density = 'levels',
-                                     year = 'year',
-                                     sf_pop = pop_sgp,
-                                     sf_landuse = landuse_sgp,
-                                     match_buildings_pop = 'closest')
+                                         proxy_pop_density = 'levels',
+                                         year = 'year',
+                                         sf_pop = pop_sgp,
+                                         sf_landuse = landuse_sgp,
+                                         match_buildings_pop = 'closest')
 
 
 # finally, perform dasymetric mapping on selected year (2020)

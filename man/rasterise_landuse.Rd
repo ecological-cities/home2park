@@ -80,6 +80,13 @@ at areas with no (zero) population data (for the respective matching year).
 data(pop_sgp)
 data(landuse_sgp)
 
+
+# transform to projected crs
+pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648))
+landuse_sgp <- sf::st_transform(landuse_sgp, sf::st_crs(32648))
+
+
+# run function
 landuse_rasters <- rasterise_landuse(landuse_sgp,
                                      land_use = 'lu_desc',
                                      subset = c('1' = 'RESIDENTIAL',

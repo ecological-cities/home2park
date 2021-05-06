@@ -43,6 +43,7 @@ and \verb{access:} is not \code{no} or \code{private}.
 \examples{
 \dontrun{
 data(pop_sgp)
+pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
 
 # merge all census blocks for chosen year (2020) into single multi-polygon
 # function requires that polygons are merged
@@ -50,7 +51,7 @@ city_boundaries <- pop_sgp \%>\%
    dplyr::filter(year == 2020) \%>\%
    sf::st_union() \%>\%
    sf::st_as_sf() \%>\%
-   smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  \%>\%
+   smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  \%>\% # clean up
    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  \%>\%
    sf::st_make_valid()
 

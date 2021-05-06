@@ -38,6 +38,7 @@ Suggests:
     testthat (>= 3.0.0),
     spelling,
     knitr,
+    markdown,
     rmarkdown,
     leaflet,
     viridis, 

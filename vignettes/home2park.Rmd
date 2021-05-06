@@ -48,7 +48,8 @@ library(home2park)
 ```
 
 ```{r include = FALSE, eval = FALSE}
-devtools::load_all() # to knit manually
+devtools::load_all() # to knit manually w latest changes (not built/installed yet)
+# vignette will be checked in R-CMD check & package build (should use library(home2park))
 ```
 
 <br>
@@ -60,6 +61,8 @@ The first step is to process data related to the residential population (e.g. po
 ```{r load data, eval = FALSE}
 
 data(pop_sgp) # population count per census block (years 2018 & 2020)
+pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
+  
 
 # merge all census blocks for chosen year (2020) into single multi-polygon 
 # next function requires that polygons are merged
@@ -89,6 +92,8 @@ pop_rasters <- rasterise_pop(pop_sgp,
 
 # rasterise land use - specify relevant column names and residential land use classes
 data(landuse_sgp) 
+landuse_sgp <- sf::st_transform(landuse_sgp, sf::st_crs(32648)) # transform to projected crs
+
 landuse_rasters <- rasterise_landuse(landuse_sgp,
                                      land_use = 'lu_desc',
                                      subset = c('1' = 'RESIDENTIAL',
@@ -140,6 +145,7 @@ head(buildings_pop_sgp)
 
 ```{r echo = FALSE}
 data(buildings_pop_sgp)
+buildings_pop_sgp <- sf::st_transform(buildings_pop_sgp, sf::st_crs(32648)) # transform to projected crs
 head(buildings_pop_sgp)
 ```
 
@@ -184,6 +190,7 @@ head(parks_sgp[, 28:33]) # view park attributes
 
 ```{r echo = FALSE}
 data(parks_sgp)
+parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648)) # transform to projected crs
 head(parks_sgp[, 28:33])
 ```
 
@@ -263,6 +270,7 @@ Finally, it is also possible to summarise the supply values of buildings within 
 
 ```{r echo = FALSE}
 data(pop_sgp)
+pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
 ```
 
 ```{r}

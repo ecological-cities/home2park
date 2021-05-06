@@ -86,14 +86,21 @@ Ensure that all have a (projected) coordinate reference system similar to \code{
 }
 \examples{
 \dontrun{
-parks_sgp <- data(parks_sgp) # park polygons
+data(pop_sgp) # city census blocks
+data(parks_sgp) # park polygons
 
-# get playground points first
-city_boundaries <- data(singapore) \%>\%
+
+# transform to projected crs
+pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648))
+parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648))
+
+
+# get playground points (example attribute)
+city_boundaries <- pop_sgp \%>\%
    dplyr::filter(year == 2020) \%>\%
    sf::st_union() \%>\%
    sf::st_as_sf() \%>\%
-   smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  \%>\%
+   smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  \%>\% # clean up
    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  \%>\%
    sf::st_make_valid()
 
@@ -103,7 +110,7 @@ point_list <- list(playgrounds) # convert to list (can add other point data too)
 names(point_list) <- c("playground") # name each element in list
 
 
-# point count & density per park
+# calculate playground point count & density per park
 parks_calc_attributes(parks = parks_sgp,
                       data_points = point_list,
                       relative = TRUE)

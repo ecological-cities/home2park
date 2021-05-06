@@ -47,6 +47,12 @@ The column name for the \code{year} must be specified, even if data does not con
 \dontrun{
 data(pop_sgp)
 
+
+# transform to projected crs
+pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648))
+
+
+# run function
 pop_rasters <- rasterise_pop(pop_sgp,
                              res = 10,
                              census_block = "subzone_n",
