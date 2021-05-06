@@ -130,7 +130,7 @@ popdens_raster <- pop_dasymap(pop_polygons = pop_rasters$pop_polygons[[2]],
 Here's a screenshot showing an overlay of the multiple datasets used to redistribute the population data per census block (subzones) across residential buildings. 
 
 ```{r, echo=FALSE, fig.align = "center", out.width="80%", fig.cap = paste0("Screenshot: Residential population in Singapore redistributed across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution.")}
-knitr::include_graphics("../man/figures/README-dasymetric-mapping.png")
+knitr::include_graphics("README-dasymetric-mapping.png")
 ```
 
 <br>
@@ -201,7 +201,7 @@ head(parks_sgp[, 28:33])
 The processed data can now be used to calculate the provision of park attributes per residential building. The total supply $S$ of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; attributes from parks further away are generally reduced as a result of the negative exponential function _e<sup>-cd</sup>_, an effect also known as the 'distance decay' ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)).
 
 ```{r, echo=FALSE, fig.align = "center", out.width="18%"}
-knitr::include_graphics("../man/figures/README-equation.png")
+knitr::include_graphics("README-equation.png")
 ```
 
 where  
@@ -220,13 +220,13 @@ The value of coefficient $c$ depends on both park and park visitors' attributes,
 
 
 ```{r, echo=FALSE, fig.align = "center", out.width="50%", fig.cap = paste0("Figure: The effect of Coefficient c and its effect on the distance decay between a building and park.")}
-knitr::include_graphics("../man/figures/README-c-sensitivity.png")
+knitr::include_graphics("README-c-sensitivity.png")
 ```
 
 <br> 
 
 ```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: The supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature areas tend to be centrally located. The color palette for the buildings (points) are binned according to their quantile values.")}
-knitr::include_graphics("../man/figures/README-c-sensitivity-map.png")
+knitr::include_graphics("README-c-sensitivity-map.png")
 ```
 
 
