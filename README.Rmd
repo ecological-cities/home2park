@@ -74,7 +74,7 @@ The package `home2park` provides a way to measure _multiple aspects_ of park pro
 - Summarise multiple attributes that are important for recreation/leisure, at each park.
 - Calculate the supply (provision) of the park attributes to each residential building, while accounting for 'distance decay', or the fact that supply from parks further away are reduced.
 
-The following sections provide a high-level overview of the various steps required to measure the spatial provision of parks. Further details and code examples can be found in the package vignette '[Get started](articles/home2park.html)'
+The following sections provide a high-level overview of the various steps required to measure the spatial provision of parks. Further details and code examples can be found in the package vignette '[Get started](https://ecological-cities.github.io/home2park/articles/home2park.html)'
 
 ### 1. Process city population
 
