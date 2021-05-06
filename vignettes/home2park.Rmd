@@ -281,7 +281,7 @@ pop_2020 <- pop_sgp %>%
 
 Calculate summary statistics (e.g. sum, median, mean) for the supply of park area within each census block region:
 
-```{r summarise supply of park area per census block, message = FALSE}
+```{r summarise supply of park area per census block, message = FALSE, warning = FALSE}
 
 # append subzone info to buildings if building intersects with subzone  
 buildings_subzones <- buildings_pop_sgp  %>%
