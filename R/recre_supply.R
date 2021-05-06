@@ -41,21 +41,24 @@
 #'
 #' @examples
 #' \dontrun{
-#'   data(parks_sgp) # load park polygons
-#'   data(buildings_pop_sgp) # load building polygons w population counts
+#' data(parks_sgp) # load park polygons
+#' data(buildings_pop_sgp) # load building polygons w population counts
+#'
+#' # transform to projected crs
+#' parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648))
+#' buildings_pop_sgp <- sf::st_transform(buildings_pop_sgp, sf::st_crs(32648))
 #'
 #'
-#'   # Calculate pairwise distances between (the centroid of) each building & all parks
-#'   d_matrix <- buildings_pop_sgp %>%
-#'     st_centroid() %>%
-#'     st_distance(parks_sgp)
+#' # Calculate pairwise distances between (the centroid of) each building & all parks
+#' d_matrix <- buildings_pop_sgp %>%
+#'   st_centroid() %>%
+#'   st_distance(parks_sgp)
 #'
 #'
-#'  # run function for a specific park attribute (e.g. area)
-#'   recre_supply(park_attribute = parks_sgp$area,
-#'                dist_matrix = d_matrix,
-#'                c = 0.3) # example value for distance decay coefficient c
-#'
+#' # run function for a specific park attribute (e.g. area)
+#' recre_supply(park_attribute = parks_sgp$area,
+#'              dist_matrix = d_matrix,
+#'              c = 0.3) # example value for distance decay coefficient c
 #' }
 #'
 #'@import checkmate

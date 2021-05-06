@@ -30,6 +30,7 @@
 #'@examples
 #' \dontrun{
 #' data(pop_sgp)
+#' pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
 #'
 #' # merge all census blocks for chosen year (2020) into single multi-polygon
 #' # function requires that polygons are merged
@@ -37,7 +38,7 @@
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>% # clean up
 #'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
@@ -142,6 +143,7 @@ get_playgrounds_osm <- function(place, date = NULL, dir_raw = osmextract::oe_dow
 #'@examples
 #' \dontrun{
 #' data(pop_sgp)
+#' pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
 #'
 #' # merge all census blocks for chosen year (2020) into single multi-polygon
 #' # function requires that polygons are merged
@@ -149,7 +151,7 @@ get_playgrounds_osm <- function(place, date = NULL, dir_raw = osmextract::oe_dow
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>% # clean up
 #'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
@@ -254,6 +256,7 @@ get_sportfitness_osm <- function(place, date = NULL, dir_raw = osmextract::oe_do
 #'@examples
 #' \dontrun{
 #' data(pop_sgp)
+#' pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
 #'
 #' # merge all census blocks for chosen year (2020) into single multi-polygon
 #' # function requires that polygons are merged
@@ -261,7 +264,7 @@ get_sportfitness_osm <- function(place, date = NULL, dir_raw = osmextract::oe_do
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>% # clean up
 #'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'

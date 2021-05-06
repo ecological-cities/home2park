@@ -49,6 +49,7 @@
 #'@examples
 #' \dontrun{
 #' data(pop_sgp)
+#' pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
 #'
 #' # merge all census blocks for chosen year (2020) into single multi-polygon
 #' # function requires that polygons are merged
@@ -56,7 +57,7 @@
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>% # clean up
 #'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
@@ -207,6 +208,7 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = list(), 
 #'@examples
 #' \dontrun{
 #' data(pop_sgp)
+#' pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
 #'
 #' # merge all census blocks for chosen year (2020) into single multi-polygon
 #' # function requires that polygons are merged
@@ -214,11 +216,12 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = list(), 
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>% # clean up
 #'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
 #' data(parks_sgp) # to exclude beaches within/intersecting these polygons
+#' parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648)) # transform to projected crs
 #'
 #' # run function
 #' get_beaches_osm(place = city_boundaries,
@@ -378,6 +381,7 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = list()
 #'@examples
 #' \dontrun{
 #' data(pop_sgp)
+#' pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
 #'
 #' # merge all census blocks for chosen year (2020) into single multi-polygon
 #' # function requires that polygons are merged
@@ -385,11 +389,12 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = list()
 #'    dplyr::filter(year == 2020) %>%
 #'    sf::st_union() %>%
 #'    sf::st_as_sf() %>%
-#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>%
+#'    smoothr::fill_holes(threshold = units::set_units(1, 'km^2'))  %>% # clean up
 #'    smoothr::drop_crumbs(threshold = units::set_units(1, 'km^2'))  %>%
 #'    sf::st_make_valid()
 #'
 #' data(parks_sgp) # to exclude nature areas within/intersecting these polygons
+#' parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648)) # transform to projected crs
 #'
 #' # run function
 #' get_informalnature_osm(place = city_boundaries,

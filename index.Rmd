@@ -37,12 +37,12 @@ devtools::install_github("ecological-cities/home2park")
 
 Load the package:
 
-```{r eval = TRUE}
+```{r eval = FALSE}
 library(home2park)
 ```
 
-```{r include = FALSE, eval = FALSE}
-devtools::load_all() # to knit manually
+```{r include = FALSE, eval = TRUE}
+devtools::load_all() # to knit manually w latest changes (not built/installed yet)
 ```
 
 ## Citation
@@ -146,6 +146,11 @@ knitr::include_graphics("man/figures/README-c-sensitivity-map.png")
 To calculate the supply of each park attribute, we first calculate the pairwise distances between all buildings and parks (a distance matrix). This is supplied to the function `recre_supply()`. For example, we can calculate the supply of park _area_ to each building. This supply value can then be multiplied by the population count per building, to obtain the total supply to all residents.
 
 ```{r calc distance matrix and supply of park area, message = FALSE, warning = FALSE}
+
+# transform buildings & parks to projected crs
+buildings_pop_sgp <- sf::st_transform(buildings_pop_sgp, sf::st_crs(32648))
+parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648))
+
 
 # convert buildings to points (centroids), then calculate distances to every park
 m_dist <- buildings_pop_sgp %>%
