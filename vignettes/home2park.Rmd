@@ -343,7 +343,7 @@ rm(buildings_subzones, subzones_parks)
 
 <br>
 
-The following map provides a visual comparison between the metrics that were calculated.
+The following map provides a visual comparison between the metrics that were calculated (viewable online at https://ecological-cities.github.io/home2park/articles/home2park.html).
 
 ```{r  plot park metrics on map, echo = FALSE, message = FALSE, warning = FALSE, dpi = 300, fig.height = 2.0, fig.width = 2.35, fig.cap=paste0("Map: Supply of park area in Singapore based on OSM data (2020). Only a randomly sampled subset of building polygons are shown. All color palettes were binned according to their quantile values.")}
 
