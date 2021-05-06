@@ -137,7 +137,7 @@ knitr::include_graphics("man/figures/README-c-sensitivity.png")
 ```
 <br>
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: The supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature areas tend to be centrally located. The color palette for the buildings (points) are binned according to their quantile values.")}
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values.")}
 knitr::include_graphics("man/figures/README-c-sensitivity-map.png")
 ```
 
@@ -177,7 +177,7 @@ buildings_pop_sgp <- buildings_pop_sgp %>%
 
 ```
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette was binned according to quantile values.")}
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette is binned according to the quantile values.")}
 knitr::include_graphics("man/figures/README-supply-parkarea-to-building-residents.png")
 ```
 

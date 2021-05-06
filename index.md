@@ -228,14 +228,14 @@ between a building and park.
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-c-sensitivity-map.png" alt="Screenshot: The supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature areas tend to be centrally located. The color palette for the buildings (points) are binned according to their quantile values." width="100%" />
+<img src="man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values." width="100%" />
 <p class="caption">
-Screenshot: The supply of park area to residential buildings in
-Singapore when the value of Coefficient c is 0.0001 (left panel) and
-0.01 (right panel). Singapore measures approximately 50 km east to west,
-and the largest parks/nature areas tend to be centrally located. The
-color palette for the buildings (points) are binned according to their
-quantile values.
+Screenshot: Examples showing the supply of park area to residential
+buildings in Singapore when the value of Coefficient c is 0.0001 (left
+panel) and 0.01 (right panel). Singapore measures approximately 50 km
+east to west, and the largest parks/nature trails tend to be centrally
+located. The color palette for the buildings (points) is binned
+according to the quantile values.
 </p>
 
 </div>
@@ -280,10 +280,10 @@ buildings_pop_sgp <- buildings_pop_sgp %>%
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette were binned according to quantile values." width="100%" />
+<img src="man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette is binned according to quantile values." width="100%" />
 <p class="caption">
 Screenshot: Supply of park area to building residents in Singapore based
-on OSM data (2020). The color palette were binned according to quantile
+on OSM data (2020). The color palette is binned according to quantile
 values.
 </p>
 

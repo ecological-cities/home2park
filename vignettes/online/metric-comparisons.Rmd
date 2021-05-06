@@ -1,0 +1,217 @@
+---
+title: "Park area provision: Metric comparisons"
+author: "Song, Xiao Ping"
+date: "`r Sys.Date()`"
+opengraph:
+  image: 
+    src: "man/figures/logo.png"
+output: rmarkdown::html_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r eval = TRUE, include = FALSE}
+library(home2park)
+```
+
+```{r include = FALSE, eval = FALSE}
+devtools::load_all() # to knit manually w latest changes (not built/installed yet)
+# vignette will be checked in R-CMD check & package build (should use library(home2park))
+```
+
+```{r load data, include = FALSE}
+data(buildings_pop_sgp)
+buildings_pop_sgp <- sf::st_transform(buildings_pop_sgp, sf::st_crs(32648)) # transform to projected crs
+
+data(parks_sgp)
+parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648)) # transform to projected crs
+
+data(pop_sgp)
+pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
+```
+
+```{r calc distance matrix and supply of park area, message = FALSE, warning = FALSE, include = FALSE}
+
+# convert buildings to points (centroids), then calculate distances to every park
+m_dist <- buildings_pop_sgp %>%
+  sf::st_centroid() %>%
+  sf::st_distance(parks_sgp) %>%
+    units::set_units(NULL)
+
+
+# new column for the supply of park area
+buildings_pop_sgp$area_supply <- recre_supply(park_attribute = parks_sgp$area, 
+                                              dist_matrix = m_dist, 
+                                              c = 0.302) # e.g. from Tu et al. (2020)
+
+# supply to all residents per building
+buildings_pop_sgp$area_supplytopop <- buildings_pop_sgp$area_supply * buildings_pop_sgp$popcount
+
+
+
+# scale the supply variables if necessary
+buildings_pop_sgp <- buildings_pop_sgp %>%
+    dplyr::mutate(across(.cols = c(area_supply, area_supplytopop), 
+                         ~(scale(., center = FALSE))))
+
+rm(m_dist)
+```
+
+```{r include = FALSE}
+# calculate for year 2020
+pop_2020 <- pop_sgp %>%
+  dplyr::filter(year == 2020)
+```
+
+```{r summarise supply of park area per census block, message = FALSE, warning = FALSE, include = FALSE}
+
+# append subzone info to buildings if building intersects with subzone  
+buildings_subzones <- buildings_pop_sgp  %>%
+  sf::st_join(pop_2020,
+              join = sf::st_intersects,
+              left = TRUE) %>%
+  sf::st_set_geometry(NULL)
+
+
+# summarise total/median/average supply value for all buildings within subzone
+buildings_subzones <- buildings_subzones %>%
+  dplyr::group_by(subzone_n) %>%
+  dplyr::summarise(across(.cols = c(area_supply, area_supplytopop), 
+                          .fns = sum, .names = "{.col}_sum"),
+                   across(.cols = c(area_supply, area_supplytopop), 
+                          .fns = median, .names = "{.col}_median"),
+                   across(.cols = c(area_supply, area_supplytopop), 
+                          .fns = mean, .names = "{.col}_mean")) 
+  
+
+# join information to pop_2020, calculate supply per capita
+pop_2020 <- pop_2020 %>%
+  dplyr::left_join(buildings_subzones) %>%
+  dplyr::mutate(area_supplyperpop = area_supplytopop_sum / pop_count) %>%
+  dplyr::mutate(area_supplyperpop = ifelse(is.infinite(area_supplyperpop), NA, area_supplyperpop)) # make infinite NA
+
+```
+
+```{r include = FALSE}
+sf::st_agr(pop_2020) = "constant"
+sf::st_agr(parks_sgp) = "constant"
+# https://github.com/r-spatial/sf/issues/406
+```
+
+
+```{r conventional park provision metric - per capita park area, message = FALSE, warning = FALSE, include = FALSE}
+
+subzones_parks <- sf::st_intersection(pop_2020, parks_sgp) # subset census block polygons to those that intersect parks, append park info
+subzones_parks$parkarea_m2 <- sf::st_area(subzones_parks) # calc area of each polygon
+
+
+# calculate total park area per census block
+subzones_parks <- subzones_parks %>%
+  dplyr::group_by(subzone_n) %>%
+  dplyr::summarise(parkarea_m2 = as.numeric(sum(parkarea_m2))) %>%
+  sf::st_drop_geometry()
+
+
+# join information to pop_2020, calculate park area per capita
+pop_2020 <- pop_2020 %>%
+  dplyr::left_join(subzones_parks) %>%
+  dplyr::mutate(parkarea_m2 = ifelse(is.na(parkarea_m2), 0, parkarea_m2)) %>% # make NA 0
+  dplyr::mutate(parkperpop_m2 = parkarea_m2 / pop_count) %>%
+  dplyr::mutate(parkperpop_m2 = ifelse(is.infinite(parkperpop_m2), # make infinite NA
+                                NA, parkperpop_m2)) %>%
+  dplyr::mutate(parkperpop_m2 = ifelse(is.nan(parkperpop_m2), # make NaN NA
+                                NA, parkperpop_m2))
+
+```
+
+```{r include = FALSE}
+rm(buildings_subzones, subzones_parks)
+```
+
+<br>
+
+The following interactive map provides a visual comparison between the metrics for the provision of park area that were calculated in the '[Get started](articles/home2park.html)' vignette.
+
+```{r  plot park metrics on map, echo = FALSE, message = FALSE, warning = FALSE, dpi = 300, fig.height = 2.0, fig.width = 2.35, fig.cap=paste0("Map: Supply of park area in Singapore based on OSM data (2020). Only a randomly sampled subset of building polygons are shown. All color palettes are binned according to the quantile values.")}
+
+# convert buildings to points (centroids) for plotting
+buildings_pop_sgp <- buildings_pop_sgp %>% 
+  sf::st_centroid() %>%
+  dplyr::mutate(across(everything(), as.vector)) # remove attributes from columns for plotting
+
+
+
+tmap::tmap_mode("view")
+
+tm <- 
+  tmap::tm_basemap(c("Esri.WorldGrayCanvas", "CartoDB.DarkMatter", "OpenStreetMap")) +
+
+  # census blocks
+  tmap::tm_shape(pop_2020) +
+    tmap::tm_polygons(title = "Park area per capita (Ha/1000 residents)",
+                      group = "Census blocks: Per capita park area (conventional)",
+                      col = "parkperpop_m2",
+                      palette = "Greens", alpha = 0.7,
+                      style = "quantile",
+                      border.col = "white", border.alpha = 0.5, lwd = 1) +
+  tmap::tm_shape(pop_2020) +
+    tmap::tm_polygons(title = "Supply of park area per capita (scaled)",
+                      group = "Census blocks: Per capita supply of park area",
+                      col = "area_supplyperpop", 
+                      palette = "Greens", alpha = 0.7,
+                      style = "quantile",
+                      border.col = "white", border.alpha = 0.5, lwd = 1) +
+          
+  # buildings
+  tmap::tm_shape(dplyr::slice_sample(buildings_pop_sgp, # subset random sample
+                                     n = nrow(buildings_pop_sgp)/12)) +
+    tmap::tm_dots(title = "Supply of park area (scaled)",
+                  group = "Buildings: Supply of park area to residents",
+                  col = "area_supplytopop", border.col = "transparent",
+                  palette = viridis::viridis(5),
+                  style = "quantile",
+                  size = 0.01,
+                  alpha = 0.7) +
+  
+  # parks  
+  tmap::tm_shape(parks_sgp %>% dplyr::select(id, name, area)) +
+    tmap::tm_polygons(group = "Parks",
+                      col = "#33a02c",
+                      alpha = 0.6,
+                      border.col = "grey50",  border.alpha = 0.5)
+  
+  
+# Pipe the tmap object into tmap_leaflet() to create a leaflet widget,
+# so that we can use leaflet::hideGroup().
+tm %>% 
+  tmap::tmap_leaflet() %>%
+  leaflet::hideGroup("Census blocks: Per capita park area (conventional)") %>%
+  leaflet::hideGroup("Census blocks: Per capita supply of park area")
+```
+
+
+```{r include = FALSE}
+rm(tm, buildings_pop_sgp, parks_sgp, pop_sgp, pop_2020)
+```
+
+
+<br>
+
+## Data sources
+
+- Singapore census data from the [Department of Statistics Singapore](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data). Released under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
+
+- Singapore census block (subzone) polygons from the [Singapore Master Plan Subzones](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea). Released under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
+
+- Singapore Master Plan Land Use Zones for the years [2014](https://data.gov.sg/dataset/master-plan-2014-land-use) and [2019](https://data.gov.sg/dataset/master-plan-2019-land-use-layer). Released under the terms of the [Singapore Open Data License](https://data.gov.sg/open-data-licence).
+
+- Building polygons derived from map data [copyrighted](https://www.openstreetmap.org/copyright) OpenStreetMap contributors and available from https://www.openstreetmap.org. Released under the terms of the [ODbL License](https://opendatacommons.org/licenses/odbl/summary/).
+
+- Park polygons and summarised attributes (trails, playgrounds) derived from map data [copyrighted](https://www.openstreetmap.org/copyright) OpenStreetMap contributors and available from https://www.openstreetmap.org. Released under the terms of the [ODbL License](https://opendatacommons.org/licenses/odbl/summary/).
+
+

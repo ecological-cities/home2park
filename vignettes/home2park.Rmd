@@ -130,7 +130,7 @@ popdens_raster <- pop_dasymap(pop_polygons = pop_rasters$pop_polygons[[2]],
 Here's a screenshot showing an overlay of the multiple datasets used to redistribute the population data per census block (subzones) across residential buildings. 
 
 ```{r, echo=FALSE, fig.align = "center", out.width="80%", fig.cap = paste0("Screenshot: Residential population in Singapore redistributed across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution.")}
-knitr::include_graphics("README-dasymetric-mapping.png")
+knitr::include_graphics("../man/figures/README-dasymetric-mapping.png")
 ```
 
 <br>
@@ -201,7 +201,7 @@ head(parks_sgp[, 28:33])
 The processed data can now be used to calculate the provision of park attributes per residential building. The total supply $S$ of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; attributes from parks further away are generally reduced as a result of the negative exponential function _e<sup>-cd</sup>_, an effect also known as the 'distance decay' ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)).
 
 ```{r, echo=FALSE, fig.align = "center", out.width="18%"}
-knitr::include_graphics("README-equation.png")
+knitr::include_graphics("../man/figures/README-equation.png")
 ```
 
 where  
@@ -220,13 +220,13 @@ The value of coefficient $c$ depends on both park and park visitors' attributes,
 
 
 ```{r, echo=FALSE, fig.align = "center", out.width="50%", fig.cap = paste0("Figure: The effect of Coefficient c and its effect on the distance decay between a building and park.")}
-knitr::include_graphics("README-c-sensitivity.png")
+knitr::include_graphics("../man/figures/README-c-sensitivity.png")
 ```
 
 <br> 
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: The supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature areas tend to be centrally located. The color palette for the buildings (points) are binned according to their quantile values.")}
-knitr::include_graphics("README-c-sensitivity-map.png")
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values.")}
+knitr::include_graphics("../man/figures/README-c-sensitivity-map.png")
 ```
 
 
@@ -262,6 +262,10 @@ buildings_pop_sgp <- buildings_pop_sgp %>%
 
 ```{r include = FALSE}
 rm(m_dist)
+```
+
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette is binned according to the quantile values.")}
+knitr::include_graphics("../man/figures/README-supply-parkarea-to-building-residents.png")
 ```
 
 <br>
@@ -350,63 +354,10 @@ rm(buildings_subzones, subzones_parks)
 
 <br>
 
-The following map provides a visual comparison between the metrics that were calculated (viewable online at https://ecological-cities.github.io/home2park/articles/home2park.html).
+The following figure provides a visual comparison between the provision of park area per capita summarised per census block (subzone), based on conventional metrics (left panel) and derived from each residential building (right panel). The interactive map is viewable online at https://ecological-cities.github.io/home2park/articles/website/metric-comparisons.html.
 
-```{r  plot park metrics on map, echo = FALSE, message = FALSE, warning = FALSE, dpi = 300, fig.height = 2.0, fig.width = 2.35, fig.cap=paste0("Map: Supply of park area in Singapore based on OSM data (2020). Only a randomly sampled subset of building polygons are shown. All color palettes were binned according to their quantile values.")}
-
-# convert buildings to points (centroids) for plotting
-buildings_pop_sgp <- buildings_pop_sgp %>% 
-  sf::st_centroid() %>%
-  dplyr::mutate(across(everything(), as.vector)) # remove attributes from columns for plotting
-
-
-
-tmap::tmap_mode("view")
-
-tm <- 
-  tmap::tm_basemap(c("Esri.WorldGrayCanvas", "CartoDB.DarkMatter", "OpenStreetMap")) +
-
-  # census blocks
-  tmap::tm_shape(pop_2020) +
-    tmap::tm_polygons(title = "Park area per capita (Ha/1000 residents)",
-                      group = "Census blocks: Per capita park area (conventional)",
-                      col = "parkperpop_m2",
-                      palette = "Greens", alpha = 0.7,
-                      style = "quantile",
-                      border.col = "white", border.alpha = 0.5, lwd = 1) +
-  tmap::tm_shape(pop_2020) +
-    tmap::tm_polygons(title = "Supply of park area per capita (scaled)",
-                      group = "Census blocks: Per capita supply of park area",
-                      col = "area_supplyperpop", 
-                      palette = "Greens", alpha = 0.7,
-                      style = "quantile",
-                      border.col = "white", border.alpha = 0.5, lwd = 1) +
-          
-  # buildings
-  tmap::tm_shape(dplyr::slice_sample(buildings_pop_sgp, # subset random sample
-                                     n = nrow(buildings_pop_sgp)/12)) +
-    tmap::tm_dots(title = "Supply of park area (scaled)",
-                  group = "Buildings: Supply of park area to residents",
-                  col = "area_supplytopop", border.col = "transparent",
-                  palette = viridis::viridis(5),
-                  style = "quantile",
-                  size = 0.01,
-                  alpha = 0.7) +
-  
-  # parks  
-  tmap::tm_shape(parks_sgp %>% dplyr::select(id, name, area)) +
-    tmap::tm_polygons(group = "Parks",
-                      col = "#33a02c",
-                      alpha = 0.6,
-                      border.col = "grey50",  border.alpha = 0.5)
-  
-  
-# Pipe the tmap object into tmap_leaflet() to create a leaflet widget,
-# so that we can use leaflet::hideGroup().
-tm %>% 
-  tmap::tmap_leaflet() %>%
-  leaflet::hideGroup("Census blocks: Per capita park area (conventional)") %>%
-  leaflet::hideGroup("Census blocks: Per capita supply of park area")
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Provision of park area per census block (subzone) in Singapore based on OSM data (2020), as measured by the total park area per capita (left panel); and by the supply of park area per capita within residential buildings (right panel). The color palettes are binned according to the quantile values.")}
+knitr::include_graphics("../man/figures/vignette-subzone-park-area.png")
 ```
 
 
