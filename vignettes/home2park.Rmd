@@ -312,6 +312,13 @@ pop_2020 <- pop_2020 %>%
 
 Calculate the per capita park area for each census block:
 
+```{r include = FALSE}
+sf::st_agr(pop_2020) = "constant"
+sf::st_agr(parks_sgp) = "constant"
+# https://github.com/r-spatial/sf/issues/406
+```
+
+
 ```{r conventional park provision metric - per capita park area, message = FALSE, warning = FALSE}
 
 subzones_parks <- sf::st_intersection(pop_2020, parks_sgp) # subset census block polygons to those that intersect parks, append park info
