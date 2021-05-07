@@ -28,7 +28,7 @@ The package `home2park` provides a way to measure _multiple aspects_ of park pro
 
 - Download relevant data from OpenStreetMap (OSM), e.g., buildings, parks and features related to recreation/leisure (alternatively, the user may use their own datasets).
 - Redistribute coarse-scale population data (per census block region) into residential buildings, also known as 'dasymetric mapping'.
-- Summarise multiple attributes that are important for recreation/leisure, at each park.
+- Summarise at each park multiple attributes that are important for recreation/leisure.
 - Calculate the supply (provision) of the park attributes to each residential building, while accounting for 'distance decay', or the fact that supply from parks further away are reduced.
 
 ## Installation
@@ -219,7 +219,7 @@ where
 The value of coefficient $c$ depends on both park and park visitors' attributes, such as socio-demographic factors and preferences for activities that may impel shorter or longer travel ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)). For example, (non-Euclidean) distance decay in the ratio of visitors at urban parks in Beijing in [Tu et al. (2020)](https://doi.org/10.1016/j.ufug.2020.126689) fit the negative exponential curve _e<sup>-cd</sup>_, with coefficient $c$ empirically determined as _0.302_. Empirical cut-off distances were 1–2km where most (> 50%) people would visit a park and 5–10km beyond which few (< 5%) people would visit a park. 
 
 
-```{r, echo=FALSE, fig.align = "center", out.width="50%", fig.cap = paste0("Figure: The effect of Coefficient c and its effect on the distance decay between a building and park.")}
+```{r, echo=FALSE, fig.align = "center", out.width="50%", fig.cap = paste0("Figure: The value of Coefficient c and its effect on the distance decay between a building and park.")}
 knitr::include_graphics("../man/figures/README-c-sensitivity.png")
 ```
 

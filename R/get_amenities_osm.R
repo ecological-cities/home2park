@@ -6,8 +6,7 @@
 #'processes the downloaded files for subsequent analyses. Refer to package `osmextract` for
 #'more details and options for input arguments when downloading the data.
 #'
-#'OSM points filtered by key-value attributes, where `leisure:fitness_station` or `sport:*`,
-#'and `access:` is not `no` or `private`.
+#'OSM points are filtered by key-value attributes, where `leisure:playground`, and `access:` is not `no` or `private`.
 #'
 #'@param place `sf` object (with projected coordinate reference system). Geographical area to match with the (`.osm.pbf`) file in the data archive.
 #'Argument passed to `osmextract::oe_match()`.
@@ -120,7 +119,8 @@ get_playgrounds_osm <- function(place, date = NULL, dir_raw = osmextract::oe_dow
 #'processes the downloaded files for subsequent analyses. Refer to package `osmextract` for
 #'more details and options for input arguments when downloading the data.
 #'
-#'OSM points are filtered by key-value attributes, where `leisure:playground`, and `access:` is not `no` or `private`.
+#'OSM points filtered by key-value attributes, where `leisure:fitness_station` or `sport:*`,
+#'and `access:` is not `no` or `private`.
 #'
 #'@param place `sf` object (with projected coordinate reference system). Geographical area to match with the (`.osm.pbf`) file in the data archive.
 #'Argument passed to `osmextract::oe_match()`.

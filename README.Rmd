@@ -71,7 +71,7 @@ The package `home2park` provides a way to measure _multiple aspects_ of park pro
 
 - Download relevant data from OpenStreetMap (OSM), e.g., buildings, parks and features related to recreation/leisure (alternatively, the user may use their own datasets).
 - Redistribute coarse-scale population data (per census block region) into residential buildings, also known as 'dasymetric mapping'.
-- Summarise multiple attributes that are important for recreation/leisure, at each park.
+- Summarise at each park multiple attributes that are important for recreation/leisure.
 - Calculate the supply (provision) of the park attributes to each residential building, while accounting for 'distance decay', or the fact that supply from parks further away are reduced.
 
 The following sections provide a high-level overview of the various steps required to measure the spatial provision of parks. Further details and code examples can be found in the package vignette '[Get started](https://ecological-cities.github.io/home2park/articles/home2park.html)'
@@ -100,7 +100,7 @@ head(buildings_pop_sgp)
 
 ### 2. Process parks
 
-Parks are the other important component of the analysis. These may be downloaded and processed from OSM using this package. The following example dataset contains parks in Singapore with selected attributes related to recreation/leisure:
+Parks are the other important component of the analysis. These may be downloaded from OSM and processed using this package. The following example dataset contains parks in Singapore with selected attributes related to recreation/leisure:
 
 ```{r}
 data(parks_sgp)
@@ -111,7 +111,7 @@ head(parks_sgp[, 28:33]) # subset to relevant columns
 
 ### 3. Recreation supply
 
-With the processed building and park polygons, the provision of park attributes per residential building can be calculated. The total supply $S$ of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; attributes from parks further away are generally reduced as a result of the negative exponential function _e<sup>-cd</sup>_, an effect also known as the 'distance decay' ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)).
+With the processed building and park polygons, the provision of park attributes per residential building can be calculated. The total supply $S$ of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; attributes from parks further away are reduced as a result of the negative exponential function _e<sup>-cd</sup>_, an effect also known as the 'distance decay' ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)).
 
 ```{r, echo=FALSE, fig.align = "center", out.width="18%"}
 knitr::include_graphics("man/figures/README-equation.png")
@@ -132,7 +132,7 @@ where
 Note that the value of Coefficient $c$ depends on both park and park visitors' attributes, such as socio-demographic factors and preferences for activities that may impel shorter or longer travel ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008); [Tu et al.](https://doi.org/10.1016/j.ufug.2020.126689)). A lower value implies that parks further away are accessible or frequently visited by residents (i.e. still contributes to the 'recreation supply' of a particular building).
 
 
-```{r, echo=FALSE, fig.align = "center", out.width="50%", fig.cap = paste0("Figure: The effect of Coefficient c and its effect on the distance decay between a building and park.")}
+```{r, echo=FALSE, fig.align = "center", out.width="50%", fig.cap = paste0("Figure: The value of Coefficient c and its effect on the distance decay between a building and park.")}
 knitr::include_graphics("man/figures/README-c-sensitivity.png")
 ```
 <br>

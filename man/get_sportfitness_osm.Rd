@@ -37,7 +37,8 @@ processes the downloaded files for subsequent analyses. Refer to package \code{o
 more details and options for input arguments when downloading the data.
 }
 \details{
-OSM points are filtered by key-value attributes, where \code{leisure:playground}, and \verb{access:} is not \code{no} or \code{private}.
+OSM points filtered by key-value attributes, where \code{leisure:fitness_station} or \verb{sport:*},
+and \verb{access:} is not \code{no} or \code{private}.
 }
 \examples{
 \dontrun{

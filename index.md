@@ -73,8 +73,8 @@ The key features include the ability to:
     user may use their own datasets).
 -   Redistribute coarse-scale population data (per census block region)
     into residential buildings, also known as ‘dasymetric mapping’.
--   Summarise multiple attributes that are important for
-    recreation/leisure, at each park.
+-   Summarise at each park multiple attributes that are important for
+    recreation/leisure.
 -   Calculate the supply (provision) of the park attributes to each
     residential building, while accounting for ‘distance decay’, or the
     fact that supply from parks further away are reduced.
@@ -141,7 +141,7 @@ head(buildings_pop_sgp)
 ### 2. Process parks
 
 Parks are the other important component of the analysis. These may be
-downloaded and processed from OSM using this package. The following
+downloaded from OSM and processed using this package. The following
 example dataset contains parks in Singapore with selected attributes
 related to recreation/leisure:
 
@@ -178,7 +178,7 @@ attributes per residential building can be calculated. The total supply
 *S* of each park attribute to a building is calculated based on the
 following equation. Its value depends on the distances between that
 particular building and all parks; attributes from parks further away
-are generally reduced as a result of the negative exponential function
+are reduced as a result of the negative exponential function
 *e<sup>-cd</sup>*, an effect also known as the ‘distance decay’ ([Rossi
 et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)).
 
@@ -216,9 +216,9 @@ particular building).
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-c-sensitivity.png" alt="Figure: The effect of Coefficient c and its effect on the distance decay between a building and park." width="50%" />
+<img src="man/figures/README-c-sensitivity.png" alt="Figure: The value of Coefficient c and its effect on the distance decay between a building and park." width="50%" />
 <p class="caption">
-Figure: The effect of Coefficient c and its effect on the distance decay
+Figure: The value of Coefficient c and its effect on the distance decay
 between a building and park.
 </p>
 
