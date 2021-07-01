@@ -136,7 +136,7 @@ knitr::include_graphics("man/figures/README-c-sensitivity.png")
 ```
 <br>
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values.")}
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values.")}
 knitr::include_graphics("man/figures/README-c-sensitivity-map.png")
 ```
 
