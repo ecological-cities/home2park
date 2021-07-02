@@ -26,9 +26,9 @@ there is a need to characterise the wide variety of parks (e.g. nature areas, ga
 
 The package `home2park` provides a way to measure _multiple aspects_ of park provision to homes, at the resolution of _individual buildings_. The key features include the ability to:
 
-- Download relevant data from OpenStreetMap (OSM), e.g., buildings, parks and features related to recreation/leisure (alternatively, the user may use their own datasets).
-- Redistribute coarse-scale population data (per census block region) into residential buildings, also known as 'dasymetric mapping'.
-- Summarise at each park multiple attributes that are important for recreation/leisure.
+- Download relevant data from OpenStreetMap (OSM) such as buildings, parks and features related to recreation (alternatively, the user may use their own datasets).
+- Redistribute coarse-scale population data (e.g. per census unit) into residential buildings, also known as 'dasymetric mapping'.
+- Summarise at each park multiple attributes that are important for recreation.
 - Calculate the supply (provision) of the park attributes to each residential building, while accounting for 'distance decay', or the fact that supply from parks further away are reduced.
 
 ## Installation
@@ -56,15 +56,15 @@ devtools::load_all() # to knit manually w latest changes (not built/installed ye
 
 ## 1. Process city population
 
-The first step is to process data related to the residential population (e.g. population census counts, residential buildings), in order to get the population count per building. The package comes with example data from the city of Singapore. This includes [population counts](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data) per [census block](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea) in the years 2018 and 2020, and land use zones based on the Master Plan released in the years [2014](https://data.gov.sg/dataset/master-plan-2014-land-use) and [2019](https://data.gov.sg/dataset/master-plan-2019-land-use-layer). To get the residential buildings for the population census conducted in 2020, we can download building polygons from OpenStreetMap on 2021-01-01, and subset them to areas within 'residential' land use zones in the 2019 Master Plan. The processed polygons can then be rasterised in preparation for dasymetric mapping.
+The first step is to process data related to the residential population (e.g. population census counts, residential buildings), in order to get the population count per building. The package comes with example data from the city of Singapore. This includes [population counts](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data) per [census unit](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea) in the years 2018 and 2020, and land use zones based on the Master Plan released in the years [2014](https://data.gov.sg/dataset/master-plan-2014-land-use) and [2019](https://data.gov.sg/dataset/master-plan-2019-land-use-layer). To get the residential buildings for the population census conducted in 2020, we can download building polygons from OpenStreetMap on 2021-01-01, and subset them to areas within 'residential' land use zones in the 2019 Master Plan. The processed polygons can then be rasterised in preparation for dasymetric mapping.
 
 ```{r load data, eval = FALSE}
 
-data(pop_sgp) # population count per census block (years 2018 & 2020)
+data(pop_sgp) # population count per census unit (years 2018 & 2020)
 pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected crs
   
 
-# merge all census blocks for chosen year (2020) into single multi-polygon 
+# merge all census units for chosen year (2020) into single multi-polygon 
 # next function requires that polygons are merged
 city_boundaries <- pop_sgp %>%
     dplyr::filter(year == 2020) %>%
@@ -113,7 +113,7 @@ buildings_rasters <- rasterise_buildings(buildings,
 
 ```
 
-Next, perform dasymetric mapping to redistribute the population counts per census block region (year 2020) into the residential buildings. The number of building 'levels' from OSM can be used as a proxy for population density (i.e. more residents per unit area).  
+Next, perform dasymetric mapping to redistribute the population counts per census unit region (year 2020) into the residential buildings. The number of building 'levels' from OSM can be used as a proxy for population density (i.e. more residents per unit area).  
 
 ```{r dasymetric mapping, eval = FALSE}
 
@@ -127,9 +127,9 @@ popdens_raster <- pop_dasymap(pop_polygons = pop_rasters$pop_polygons[[2]],
 
 <br>
 
-Here's a screenshot showing an overlay of the multiple datasets used to redistribute the population data per census block (subzones) across residential buildings. 
+Here's a screenshot showing an overlay of the multiple datasets used to redistribute the population data per census unit (subzones) across residential buildings. 
 
-```{r, echo=FALSE, fig.align = "center", out.width="80%", fig.cap = paste0("Screenshot: Residential population in Singapore redistributed across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution.")}
+```{r, echo=FALSE, fig.align = "center", out.width="80%", fig.cap = paste0("Example screenshot showing an overlay of multiple datasets used to redistribute the population across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution.")}
 knitr::include_graphics("../man/figures/README-dasymetric-mapping.png")
 ```
 
@@ -198,7 +198,7 @@ head(parks_sgp[, 28:33])
 
 ## 3. Recreation supply
 
-The processed data can now be used to calculate the provision of park attributes per residential building. The total supply $S$ of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; attributes from parks further away are generally reduced as a result of the negative exponential function _e<sup>-cd</sup>_, an effect also known as the 'distance decay' ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)).
+The processed data can now be used to calculate the provision of park attributes per residential building. The total supply $S$ of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; supply from parks further away are generally reduced as a result of the negative exponential function _e<sup>-cd</sup>_, an effect also known as the 'distance decay' ([Rossi et al., 2015](http://dx.doi.org/10.1016/j.apgeog.2015.06.008)).
 
 ```{r, echo=FALSE, fig.align = "center", out.width="18%"}
 knitr::include_graphics("../man/figures/README-equation.png")
@@ -225,14 +225,14 @@ knitr::include_graphics("../man/figures/README-c-sensitivity.png")
 
 <br> 
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values.")}
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values.")}
 knitr::include_graphics("../man/figures/README-c-sensitivity-map.png")
 ```
 
 
 <br>
 
-To calculate the supply of each park attribute, we first calculate the pairwise distances between all buildings and parks (a distance matrix). This is supplied to the function `recre_supply()`. For example, we can calculate the supply of park _area_ to each building. This supply value can then be multiplied by the population count per building, to obtain the total supply to all residents. This can help highlight important areas where more people would benefit from the presence of parks. 
+To calculate the supply of each park attribute, we first calculate the pairwise distances between all buildings and parks (a distance matrix). This output is supplied to the function `recre_supply()`. For example, we can calculate the supply of park _area_ to each building. This supply value can then be multiplied by the population count per building, to obtain the total supply to all residents. This can help highlight important areas where more people would benefit from the presence of parks. 
 
 ```{r calc distance matrix and supply of park area, message = FALSE, warning = FALSE}
 
@@ -264,13 +264,13 @@ buildings_pop_sgp <- buildings_pop_sgp %>%
 rm(m_dist)
 ```
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette is binned according to the quantile values.")}
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to the quantile values.")}
 knitr::include_graphics("../man/figures/README-supply-parkarea-to-building-residents.png")
 ```
 
 <br>
 
-Finally, it is also possible to summarise the supply values of buildings within coarser spatial regions (e.g. census blocks). This allows us to compare our results with conventional park provision metrics (per capita park area) for the selected year 2020.
+Finally, it is also possible to summarise the supply values of buildings within coarser spatial regions. This allows us to compare our results with conventional park provision metrics (per capita park area) for the selected year 2020.
 
 ```{r echo = FALSE}
 data(pop_sgp)
@@ -283,9 +283,9 @@ pop_2020 <- pop_sgp %>%
   dplyr::filter(year == 2020)
 ```
 
-Calculate summary statistics (e.g. sum, median, mean) for the supply of park area within each census block region:
+Calculate summary statistics (e.g. sum, median, mean) for the supply of park area within each region:
 
-```{r summarise supply of park area per census block, message = FALSE, warning = FALSE}
+```{r summarise supply of park area per subzone, message = FALSE, warning = FALSE}
 
 # append subzone info to buildings if building intersects with subzone  
 buildings_subzones <- buildings_pop_sgp  %>%
@@ -314,7 +314,7 @@ pop_2020 <- pop_2020 %>%
 
 ```
 
-Calculate the per capita park area for each census block:
+Calculate the per capita park area for each census unit:
 
 ```{r include = FALSE}
 sf::st_agr(pop_2020) = "constant"
@@ -325,11 +325,11 @@ sf::st_agr(parks_sgp) = "constant"
 
 ```{r conventional park provision metric - per capita park area, message = FALSE, warning = FALSE}
 
-subzones_parks <- sf::st_intersection(pop_2020, parks_sgp) # subset census block polygons to those that intersect parks, append park info
+subzones_parks <- sf::st_intersection(pop_2020, parks_sgp) # subset census unit polygons to those that intersect parks, append park info
 subzones_parks$parkarea_m2 <- sf::st_area(subzones_parks) # calc area of each polygon
 
 
-# calculate total park area per census block
+# calculate total park area per census unit
 subzones_parks <- subzones_parks %>%
   dplyr::group_by(subzone_n) %>%
   dplyr::summarise(parkarea_m2 = as.numeric(sum(parkarea_m2))) %>%
@@ -354,9 +354,9 @@ rm(buildings_subzones, subzones_parks)
 
 <br>
 
-The following figure provides a visual comparison between the provision of park area per capita summarised per census block (subzone), based on conventional metrics (left panel) and derived from each residential building (right panel). The interactive map is viewable online at https://ecological-cities.github.io/home2park/articles/website/metric-comparisons.html.
+The following figure provides a visual comparison between the provision of park area per capita summarised per region (subzone), based on conventional metrics (left panel) and derived from each residential building (right panel). The interactive map is viewable online at https://ecological-cities.github.io/home2park/articles/website/metric-comparisons.html.
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Provision of park area per census block (subzone) in Singapore based on OSM data (2020), as measured by the total park area per capita (left panel); and by the supply of park area per capita within residential buildings (right panel). The color palettes are binned according to the quantile values.")}
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Provision of park area per subzone in Singapore based on OSM data (2020), as measured by the total park area per capita (left panel); and by the supply of park area per capita within residential buildings (right panel). The color palettes are binned according to quantile values.")}
 knitr::include_graphics("../man/figures/vignette-subzone-park-area.png")
 ```
 
@@ -372,7 +372,7 @@ rm(tm, buildings_pop_sgp, parks_sgp, pop_sgp, pop_2020)
 
 - Singapore census data from the [Department of Statistics Singapore](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data). Released under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
 
-- Singapore census block (subzone) polygons from the [Singapore Master Plan Subzones](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea). Released under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
+- Singapore subzone polygons from the [Singapore Master Plan Subzones](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea). Released under the terms of the [Singapore Open Data Licence version 1.0](https://data.gov.sg/open-data-licence).
 
 - Singapore Master Plan Land Use Zones for the years [2014](https://data.gov.sg/dataset/master-plan-2014-land-use) and [2019](https://data.gov.sg/dataset/master-plan-2019-land-use-layer). Released under the terms of the [Singapore Open Data License](https://data.gov.sg/open-data-licence).
 

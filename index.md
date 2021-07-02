@@ -55,13 +55,13 @@ The get a BibTex entry, run `citation("home2park")`.
 ## Background
 
 Parks are important spaces for recreation and leisure in cities.
-Conventional metrics that measure the provision of parks to city
-residents usually summarise the park area within a given region
-(e.g. per capita park area). However, there is a need to characterise
-the wide variety of parks (e.g. nature areas, gardens, waterfront parks,
-outdoor playgrounds, etc.) that serve different groups of people. When
-planning at fine spatial scales, such metrics are also limited by their
-coarse spatial resolution and the presence of artificial boundaries.
+Conventional measures of park provision tend to rely on summaries of
+park area within a given region (e.g. per capita park area). However,
+there is a need to characterise the wide variety of parks (e.g. nature
+areas, gardens, waterfront parks, outdoor playgrounds, etc.) that serve
+different groups of people. When planning at fine spatial scales, such
+current metrics are also limited by their coarse spatial resolution and
+the presence of artificial boundaries.
 
 <br>
 
@@ -71,13 +71,14 @@ The package `home2park` provides a way to measure *multiple aspects* of
 park provision to homes, at the resolution of *individual buildings*.
 The key features include the ability to:
 
--   Download relevant data from OpenStreetMap (OSM), e.g., buildings,
-    parks and features related to recreation/leisure (alternatively, the
-    user may use their own datasets).
--   Redistribute coarse-scale population data (per census block region)
-    into residential buildings, also known as ‘dasymetric mapping’.
--   Summarise at each park multiple attributes that are important for
-    recreation/leisure.
+-   Download relevant data from OpenStreetMap (OSM) such as buildings,
+    parks and features related to recreation (alternatively, the user
+    may use their own datasets).
+-   Redistribute coarse-scale population data (e.g. per census unit
+    region) into residential buildings, also known as ‘dasymetric
+    mapping’.
+-   Summarise multiple attributes that are important for recreation, at
+    each park.
 -   Calculate the supply (provision) of the park attributes to each
     residential building, while accounting for ‘distance decay’, or the
     fact that supply from parks further away are reduced.
@@ -85,7 +86,7 @@ The key features include the ability to:
 The following sections provide a high-level overview of the various
 steps required to measure the spatial provision of parks. Further
 details and code examples can be found in the package vignette ‘[Get
-started](articles/home2park.html)’
+started](articles/home2park.html)’.
 
 ### 1. Process city population
 
@@ -103,16 +104,17 @@ redistributed into the residential buildings, via a technique known as
 used as a proxy for population density (i.e. more residents per unit
 area). Here’s an example screenshot showing an overlay of multiple
 example datasets in the package (for the city of Singapore), which were
-used to redistribute population data per census block (subzones) across
+used to redistribute population data per census unit (subzones) across
 residential buildings.
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-dasymetric-mapping.png" alt="Screenshot: Residential population in Singapore redistributed across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution." width="80%" />
+<img src="man/figures/README-dasymetric-mapping.png" alt="Example screenshot showing an overlay of multiple datasets used to redistribute the population across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution." width="80%" />
 <p class="caption">
-Screenshot: Residential population in Singapore redistributed across
-buildings within residential land use zones. The legends are ordered
-(top to bottom) by increasing spatial resolution.
+Example screenshot showing an overlay of multiple datasets used to
+redistribute the population across buildings within residential land use
+zones. The legends are ordered (top to bottom) by increasing spatial
+resolution.
 </p>
 
 </div>
@@ -231,14 +233,15 @@ between a building and park.
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values." width="100%" />
+<img src="man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values." width="100%" />
 <p class="caption">
 Screenshot: Examples showing the supply of park area to residential
-buildings in Singapore when the value of Coefficient c is 0.0001 (left
-panel) and 0.01 (right panel). Singapore measures approximately 50 km
-east to west, and the largest parks/nature trails tend to be centrally
-located. The color palette for the buildings (points) is binned
-according to quantile values.
+buildings in Singapore for the year 2020 when the value of Coefficient c
+is 0.0001 (left panel) and 0.01 (right panel). Includes
+publicly-accessible parks, beaches and informal nature areas. Singapore
+measures approximately 50 km east to west, and the largest green spaces
+tend to be centrally located. The color palette for the buildings
+(points) is binned according to quantile values.
 </p>
 
 </div>
@@ -247,10 +250,10 @@ according to quantile values.
 
 To calculate the supply of each park attribute, we first calculate the
 pairwise distances between all buildings and parks (a distance matrix).
-This is supplied to the function `recre_supply()`. For example, we can
-calculate the supply of park *area* to each building. This supply value
-can then be multiplied by the population count per building, to obtain
-the total supply to all residents.
+This output is supplied to the function `recre_supply()`. For example,
+we can calculate the supply of park *area* to each building. This supply
+value can then be multiplied by the population count per building, to
+obtain the total supply to all residents.
 
 ``` r
 # transform buildings & parks to projected crs
@@ -283,11 +286,11 @@ buildings_pop_sgp <- buildings_pop_sgp %>%
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette is binned according to quantile values." width="100%" />
+<img src="man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to quantile values." width="100%" />
 <p class="caption">
 Screenshot: Supply of park area to building residents in Singapore based
-on OSM data (2020). The color palette is binned according to quantile
-values.
+on OSM data (2020). Each building is denoted as a point (a random subset
+is shown). The color palette is binned according to quantile values.
 </p>
 
 </div>
@@ -301,8 +304,7 @@ values.
     Released under the terms of the [Singapore Open Data Licence version
     1.0](https://data.gov.sg/open-data-licence).
 
--   Singapore census block (subzone) polygons from the [Singapore Master
-    Plan
+-   Singapore subzone polygons from the [Singapore Master Plan
     Subzones](https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea).
     Released under the terms of the [Singapore Open Data Licence version
     1.0](https://data.gov.sg/open-data-licence).

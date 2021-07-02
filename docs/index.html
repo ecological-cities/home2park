@@ -135,7 +135,7 @@
 <div id="background" class="section level2">
 <h2 class="hasAnchor">
 <a href="#background" class="anchor"></a>Background</h2>
-<p>Parks are important spaces for recreation and leisure in cities. Conventional metrics that measure the provision of parks to city residents usually summarise the park area within a given region (e.g. per capita park area). However, there is a need to characterise the wide variety of parks (e.g. nature areas, gardens, waterfront parks, outdoor playgrounds, etc.) that serve different groups of people. When planning at fine spatial scales, such metrics are also limited by their coarse spatial resolution and the presence of artificial boundaries.</p>
+<p>Parks are important spaces for recreation and leisure in cities. Conventional measures of park provision tend to rely on summaries of park area within a given region (e.g. per capita park area). However, there is a need to characterise the wide variety of parks (e.g. nature areas, gardens, waterfront parks, outdoor playgrounds, etc.) that serve different groups of people. When planning at fine spatial scales, such current metrics are also limited by their coarse spatial resolution and the presence of artificial boundaries.</p>
 <p><br></p>
 </div>
 <div id="using-home2park" class="section level2">
@@ -143,20 +143,20 @@
 <a href="#using-home2park" class="anchor"></a>Using home2park</h2>
 <p>The package <code>home2park</code> provides a way to measure <em>multiple aspects</em> of park provision to homes, at the resolution of <em>individual buildings</em>. The key features include the ability to:</p>
 <ul>
-<li>Download relevant data from OpenStreetMap (OSM), e.g., buildings, parks and features related to recreation/leisure (alternatively, the user may use their own datasets).</li>
-<li>Redistribute coarse-scale population data (per census block region) into residential buildings, also known as ‘dasymetric mapping’.</li>
-<li>Summarise at each park multiple attributes that are important for recreation/leisure.</li>
+<li>Download relevant data from OpenStreetMap (OSM) such as buildings, parks and features related to recreation (alternatively, the user may use their own datasets).</li>
+<li>Redistribute coarse-scale population data (e.g. per census unit region) into residential buildings, also known as ‘dasymetric mapping’.</li>
+<li>Summarise multiple attributes that are important for recreation, at each park.</li>
 <li>Calculate the supply (provision) of the park attributes to each residential building, while accounting for ‘distance decay’, or the fact that supply from parks further away are reduced.</li>
 </ul>
-<p>The following sections provide a high-level overview of the various steps required to measure the spatial provision of parks. Further details and code examples can be found in the package vignette ‘<a href="articles/home2park.html">Get started</a>’</p>
+<p>The following sections provide a high-level overview of the various steps required to measure the spatial provision of parks. Further details and code examples can be found in the package vignette ‘<a href="articles/home2park.html">Get started</a>’.</p>
 <div id="1-process-city-population" class="section level3">
 <h3 class="hasAnchor">
 <a href="#1-process-city-population" class="anchor"></a>1. Process city population</h3>
 <p>Residential buildings (homes) are an important component of the analysis. These may be obtained, for example, by downloading building polygons from OpenStreetMap (OSM), and subsetting the dataset to areas within ‘residential’ land use zones.</p>
-<p>In addition, having the population count per residential building allows us to calculate the total spatial provision of parks to all residents, and can help highlight important areas where more people will benefit from the presence of parks. Coarse-scale population census data can be redistributed into the residential buildings, via a technique known as ‘dasymetric mapping’. The number of building ‘levels’ from OSM can be used as a proxy for population density (i.e. more residents per unit area). Here’s an example screenshot showing an overlay of multiple example datasets in the package (for the city of Singapore), which were used to redistribute population data per census block (subzones) across residential buildings.</p>
+<p>In addition, having the population count per residential building allows us to calculate the total spatial provision of parks to all residents, and can help highlight important areas where more people will benefit from the presence of parks. Coarse-scale population census data can be redistributed into the residential buildings, via a technique known as ‘dasymetric mapping’. The number of building ‘levels’ from OSM can be used as a proxy for population density (i.e. more residents per unit area). Here’s an example screenshot showing an overlay of multiple example datasets in the package (for the city of Singapore), which were used to redistribute population data per census unit (subzones) across residential buildings.</p>
 <div class="figure" style="text-align: center">
-<img src="reference/figures/README-dasymetric-mapping.png" alt="Screenshot: Residential population in Singapore redistributed across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution." width="80%"><p class="caption">
-Screenshot: Residential population in Singapore redistributed across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution.
+<img src="reference/figures/README-dasymetric-mapping.png" alt="Example screenshot showing an overlay of multiple datasets used to redistribute the population across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution." width="80%"><p class="caption">
+Example screenshot showing an overlay of multiple datasets used to redistribute the population across buildings within residential land use zones. The legends are ordered (top to bottom) by increasing spatial resolution.
 </p>
 </div>
 <p><br></p>
@@ -227,12 +227,12 @@ Figure: The value of Coefficient c and its effect on the distance decay between 
 </div>
 <p><br></p>
 <div class="figure" style="text-align: center">
-<img src="reference/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values." width="100%"><p class="caption">
-Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values.
+<img src="reference/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values." width="100%"><p class="caption">
+Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values.
 </p>
 </div>
 <p><br></p>
-<p>To calculate the supply of each park attribute, we first calculate the pairwise distances between all buildings and parks (a distance matrix). This is supplied to the function <code><a href="reference/recre_supply.html">recre_supply()</a></code>. For example, we can calculate the supply of park <em>area</em> to each building. This supply value can then be multiplied by the population count per building, to obtain the total supply to all residents.</p>
+<p>To calculate the supply of each park attribute, we first calculate the pairwise distances between all buildings and parks (a distance matrix). This output is supplied to the function <code><a href="reference/recre_supply.html">recre_supply()</a></code>. For example, we can calculate the supply of park <em>area</em> to each building. This supply value can then be multiplied by the population count per building, to obtain the total supply to all residents.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># transform buildings &amp; parks to projected crs</span>
 <span class="va">buildings_pop_sgp</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">buildings_pop_sgp</span>, <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="fl">32648</span><span class="op">)</span><span class="op">)</span>
@@ -261,8 +261,8 @@ Screenshot: Examples showing the supply of park area to residential buildings in
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span>.cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">area_supply</span>, <span class="va">area_supplytopop</span><span class="op">)</span>, 
                          <span class="op">~</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">.</span>, center <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="reference/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette is binned according to quantile values." width="100%"><p class="caption">
-Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). The color palette is binned according to quantile values.
+<img src="reference/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to quantile values." width="100%"><p class="caption">
+Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to quantile values.
 </p>
 </div>
 <p><br></p>
@@ -273,7 +273,7 @@ Screenshot: Supply of park area to building residents in Singapore based on OSM 
 <a href="#data-sources" class="anchor"></a>Data sources</h2>
 <ul>
 <li><p>Singapore census data from the <a href="https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data">Department of Statistics Singapore</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence">Singapore Open Data Licence version 1.0</a>.</p></li>
-<li><p>Singapore census block (subzone) polygons from the <a href="https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea">Singapore Master Plan Subzones</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence">Singapore Open Data Licence version 1.0</a>.</p></li>
+<li><p>Singapore subzone polygons from the <a href="https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea">Singapore Master Plan Subzones</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence">Singapore Open Data Licence version 1.0</a>.</p></li>
 <li><p>Singapore Master Plan Land Use Zones for the years <a href="https://data.gov.sg/dataset/master-plan-2014-land-use">2014</a> and <a href="https://data.gov.sg/dataset/master-plan-2019-land-use-layer">2019</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence">Singapore Open Data License</a>.</p></li>
 <li><p>Building polygons derived from map data <a href="https://www.openstreetmap.org/copyright">copyrighted</a> OpenStreetMap contributors and available from <a href="https://www.openstreetmap.org" class="uri">https://www.openstreetmap.org</a>. Released under the terms of the <a href="https://opendatacommons.org/licenses/odbl/summary/">ODbL License</a>.</p></li>
 <li><p>Park polygons and summarised attributes (trails, playgrounds) derived from map data <a href="https://www.openstreetmap.org/copyright">copyrighted</a> OpenStreetMap contributors and available from <a href="https://www.openstreetmap.org" class="uri">https://www.openstreetmap.org</a>. Released under the terms of the <a href="https://opendatacommons.org/licenses/odbl/summary/">ODbL License</a>.</p></li>
