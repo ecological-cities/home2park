@@ -11,7 +11,7 @@ template:
       card: summary_large_image
   params:
     bootswatch:
-    ganalytics:
+    ganalytics: G-NS9BX6B4CZ
 
 development:
   mode: auto
