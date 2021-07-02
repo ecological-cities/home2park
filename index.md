@@ -43,6 +43,9 @@ To cite `home2park` or acknowledge its use, please cite the following:
 *Song, X. P., Chong, K. Y., home2park: An R package to assess the
 spatial provision of urban parks (in prep).*
 
+*Song, X. P. (2021). home2park: Spatial provision of urban parks. R
+package version 0.1.0. <https://doi.org/10.6084/m9.figshare.14893113>*
+
 <br>
 
 The get a BibTex entry, run `citation("home2park")`.
@@ -228,14 +231,14 @@ between a building and park.
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values." width="100%" />
+<img src="man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Singapore measures approximately 50 km east to west, and the largest parks/nature trails tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values." width="100%" />
 <p class="caption">
 Screenshot: Examples showing the supply of park area to residential
 buildings in Singapore when the value of Coefficient c is 0.0001 (left
 panel) and 0.01 (right panel). Singapore measures approximately 50 km
 east to west, and the largest parks/nature trails tend to be centrally
 located. The color palette for the buildings (points) is binned
-according to the quantile values.
+according to quantile values.
 </p>
 
 </div>

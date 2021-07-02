@@ -43,6 +43,9 @@ To cite `home2park` or acknowledge its use, please cite the following:
 *Song, X. P., Chong, K. Y., home2park: An R package to assess the
 spatial provision of urban parks (in prep).*
 
+*Song, X. P. (2021). home2park: Spatial provision of urban parks. R
+package version 0.1.0. <https://doi.org/10.6084/m9.figshare.14893113>*
+
 <br>
 
 The get a BibTex entry, run `citation("home2park")`.
