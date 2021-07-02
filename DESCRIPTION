@@ -33,7 +33,7 @@ Imports:
     osmextract (>= 0.2.1),
     smoothr (>= 0.1.2),
     lwgeom (>= 0.2.6),
-    sf (>= 1.0.1)
+    sf (>= 1.0.8)
 Suggests: 
     testthat (>= 3.0.0),
     spelling,
