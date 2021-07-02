@@ -28,7 +28,7 @@ Imports:
     stats,
     glue,
     raster (>= 3.4.5),
-    sf (>= 0.9.8),
+    sf (>= 1.0.0),
     stars (>= 0.5.2),
     terra (>= 1.1.4),
     osmextract (>= 0.2.1),
