@@ -137,8 +137,7 @@ The following interactive map provides a visual comparison between metrics for p
 # convert buildings to points (centroids) for plotting
 buildings_pop_sgp <- buildings_pop_sgp %>% 
   sf::st_centroid() %>%
-  dplyr::mutate(across(everything(), as.vector)) %>%  # remove attributes from columns for plotting
-  dplyr::select(-area_supply) # remove ss values to building
+  dplyr::mutate(across(everything(), as.vector)) # remove attributes from columns for plotting
 
 
 # random sampling of buildings
@@ -175,23 +174,26 @@ tmap::tmap_mode("view")
 tm <- 
   tmap::tm_basemap(c("Esri.WorldGrayCanvas", "CartoDB.DarkMatter", "OpenStreetMap")) +
 
-  # census units
-  tmap::tm_shape(pop_2020) +
-    tmap::tm_polygons(title = "Park area per capita (km<sup>2</sup>)",
-                      group = "Subzones: Per capita park area (conventional)",
-                      col = "parkperpop_m2",
-                      palette = "Greens", alpha = 0.7,
-                      style = "quantile",
-                      border.col = "white", border.alpha = 0.5, lwd = 1) +
-  tmap::tm_shape(pop_2020) +
-    tmap::tm_polygons(title = "Supply of park area per capita (km<sup>2</sup>)",
-                      group = "Subzones: Per capita supply of park area",
-                      col = "area_supplyperpop", 
-                      palette = "Greens", alpha = 0.7,
-                      style = "quantile",
-                      border.col = "white", border.alpha = 0.5, lwd = 1) +
-          
+  # parks  
+  tmap::tm_shape(parks_sgp %>% dplyr::select(id, name, area)) +
+    tmap::tm_polygons(group = "Parks",
+                      col = "#33a02c",
+                      alpha = 0.6,
+                      border.col = "grey50",  border.alpha = 0.5) +
+
   # buildings
+  tmap::tm_shape(buildings_pop_sgp) +
+    tmap::tm_dots(title = "Buildings: Supply of park area (km<sup>2</sup>)",
+                  group = "Buildings: Supply of park area",
+                  col = "area_supply", border.col = "transparent",
+                  palette = viridis::viridis(5),
+                  style = "quantile",
+                  size = 0.01,
+                  alpha = 0.7,
+                  interactive = FALSE, # some glitch in values of hover text/popup
+                  popup.vars = NULL,
+                  showNA = FALSE) +
+  
   tmap::tm_shape(buildings_pop_sgp) +
     tmap::tm_dots(title = "All building residents: Supply of park area (km<sup>2</sup>)",
                   group = "Buildings: Supply of park area to residents",
@@ -201,22 +203,34 @@ tm <-
                   size = 0.01,
                   alpha = 0.7,
                   interactive = FALSE, # some glitch in values of hover text/popup
-                  popup.vars = NULL) +
-  
-  # parks  
-  tmap::tm_shape(parks_sgp %>% dplyr::select(id, name, area)) +
-    tmap::tm_polygons(group = "Parks",
-                      col = "#33a02c",
-                      alpha = 0.6,
-                      border.col = "grey50",  border.alpha = 0.5)
+                  popup.vars = NULL,
+                  showNA = FALSE) +
+    
+  # census units
+  tmap::tm_shape(pop_2020) +
+    tmap::tm_polygons(title = "Supply of park area per capita (km<sup>2</sup>)",
+                      group = "Subzones: Per capita supply of park area",
+                      col = "area_supplyperpop", 
+                      palette = "Greens", alpha = 0.7,
+                      style = "quantile",
+                      border.col = "white", border.alpha = 0.5, lwd = 1) +
+  tmap::tm_shape(pop_2020) +
+    tmap::tm_polygons(title = "Park area per capita (km<sup>2</sup>)",
+                      group = "Subzones: Per capita park area (conventional)",
+                      col = "parkperpop_m2",
+                      palette = "Greens", alpha = 0.7,
+                      style = "quantile",
+                      border.col = "white", border.alpha = 0.5, lwd = 1)
   
   
 # Pipe the tmap object into tmap_leaflet() to create a leaflet widget,
 # so that we can use leaflet::hideGroup().
 tm %>% 
   tmap::tmap_leaflet() %>%
-  leaflet::hideGroup("Subzones: Per capita park area (conventional)") %>%
-  leaflet::hideGroup("Subzones: Per capita supply of park area")
+  leaflet::hideGroup("Buildings: Supply of park area") %>%
+  leaflet::hideGroup("Subzones: Per capita supply of park area") %>% 
+  leaflet::hideGroup("Subzones: Per capita park area (conventional)") 
+
 ```
 
 
