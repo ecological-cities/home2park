@@ -16,10 +16,8 @@
 #'
 #'  \eqn{s_{i}} = Supply of a specific park attribute from park \eqn{i}.
 #'  A perfect positive linear association is assumed, since the focus is on supply metrics.
-#'  Other coefficients (e.g.\eqn{ks^{z}_{i}}) could be added to future versions of this package,
-#'  in order to model (monotonically positive) relationships with actual park use or downstream benefits.
 #'
-#'  \eqn{d_{i}} = Euclidean distance from the building to park \eqn{i}.
+#'  \eqn{d_{i}} = Distance in kilometres from the building to park \eqn{i} (e.g. Euclidean, Manhattan, etc.).
 #'
 #'  \eqn{c} = Coefficient determining rate of decay in supply \eqn{i} with increasing distance.
 #'
@@ -52,7 +50,9 @@
 #' # Calculate pairwise distances between (the centroid of) each building & all parks
 #' d_matrix <- buildings_pop_sgp %>%
 #'   st_centroid() %>%
-#'   st_distance(parks_sgp)
+#'   st_distance(parks_sgp) # euclidean distance
+#'
+#' m_dist <- m_dist / 1000 # convert distances to km
 #'
 #'
 #' # run function for a specific park attribute (e.g. area)

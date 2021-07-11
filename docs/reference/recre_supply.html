@@ -202,10 +202,8 @@ The length of the vector equals to the number of buildings considered.</p>
 <p>\(S\) = Total supply of a specific park attribute to the building from parks \(i\);
 \(i = 1,2,3\)... \(n\), \(n\) = total number of parks</p>
 <p>\(s_{i}\) = Supply of a specific park attribute from park \(i\).
-A perfect positive linear association is assumed, since the focus is on supply metrics.
-Other coefficients (e.g.\(ks^{z}_{i}\)) could be added to future versions of this package,
-in order to model (monotonically positive) relationships with actual park use or downstream benefits.</p>
-<p>\(d_{i}\) = Euclidean distance from the building to park \(i\).</p>
+A perfect positive linear association is assumed, since the focus is on supply metrics.</p>
+<p>\(d_{i}\) = Distance in kilometres from the building to park \(i\) (e.g. Euclidean, Manhattan, etc.).</p>
 <p>\(c\) = Coefficient determining rate of decay in supply \(i\) with increasing distance.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -221,7 +219,9 @@ in order to model (monotonically positive) relationships with actual park use or
 <span class='co'># Calculate pairwise distances between (the centroid of) each building &amp; all parks</span>
 <span class='va'>d_matrix</span> <span class='op'>&lt;-</span> <span class='va'>buildings_pop_sgp</span> <span class='op'>%&gt;%</span>
   <span class='fu'>st_centroid</span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>st_distance</span><span class='op'>(</span><span class='va'>parks_sgp</span><span class='op'>)</span>
+  <span class='fu'>st_distance</span><span class='op'>(</span><span class='va'>parks_sgp</span><span class='op'>)</span> <span class='co'># euclidean distance</span>
+
+<span class='va'>m_dist</span> <span class='op'>&lt;-</span> <span class='va'>m_dist</span> <span class='op'>/</span> <span class='fl'>1000</span> <span class='co'># convert distances to km</span>
 
 
 <span class='co'># run function for a specific park attribute (e.g. area)</span>
