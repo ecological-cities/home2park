@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![R-CMD-check](https://github.com/ecological-cities/home2park/workflows/R-CMD-check/badge.svg)](https://github.com/ecological-cities/home2park/actions)
 [![test-coverage](https://github.com/ecological-cities/home2park/workflows/test-coverage/badge.svg)](https://github.com/ecological-cities/home2park/actions)
+[![DOI](https://zenodo.org/badge/321609762.svg)](https://zenodo.org/badge/latestdoi/321609762)
 <!-- badges: end -->
 
 ## Spatial Provision of Urban Parks
@@ -50,9 +51,7 @@ devtools::load_all() # to knit manually w latest changes (not built/installed ye
 
 To cite `home2park` or acknowledge its use, please cite the following:
 
-*Song, X. P., Chong, K. Y., home2park: An R package to assess the spatial provision of urban parks (in prep).*  
-
-*Song, X. P. (2021). home2park: Spatial provision of urban parks. R package version 0.1.0. https://doi.org/10.6084/m9.figshare.14893113*  
+*Song, X. P., Chong, K. Y. (2021), home2park: An R package to assess the spatial provision of urban parks. https://doi.org/10.5281/zenodo.5090644*  
 
 
 <br>

@@ -1,7 +1,7 @@
 citHeader("To cite home2park in publications use:")
 
 citEntry(
-  entry    = "Unpublished",
+  entry    = "Misc",
   title    = "home2park: An R package to assess the spatial provision of urban parks",
   author   = "Xiao Ping Song, Kwek Yan Chong",
   journal  = "",
@@ -9,23 +9,8 @@ citEntry(
   volume   = "",
   number   = "",
   pages    = "",
-  url      = "",
-  note     = "in prep",
-  doi      = "",
-  textVersion = paste("Song, X. P., Chong, K. Y., home2park: An R package to assess the spatial provision of urban parks (in prep).")
-)
-
-citEntry(
-  entry    = "Misc",
-  title    = "home2park: Spatial Provision of Urban Parks",
-  author   = "Xiao Ping Song",
-  journal  = "",
-  year     = "2021",
-  volume   = "",
-  number   = "",
-  pages    = "",
   url      = "https://github.com/ecological-cities/home2park",
-  note     = "R package version 0.1.0",
-  doi = "10.6084/m9.figshare.14893113",
-  textVersion = paste("Song, X. P. (2021). home2park: Spatial provision of urban parks. R package version 0.1.0. https://doi.org/10.6084/m9.figshare.14893113")
+  note     = "",
+  doi      = "10.5281/zenodo.5090644",
+  textVersion = paste("Song, X. P., Chong, K. Y. (2021), home2park: An R package to assess the spatial provision of urban parks. https://doi.org/10.5281/zenodo.5090644")
 )
