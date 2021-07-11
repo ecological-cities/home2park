@@ -105,7 +105,7 @@
       <h1 data-toc-skip>Get started with home2park</h1>
                         <h4 class="author">Song, Xiao Ping</h4>
             
-            <h4 class="date">2021-07-02</h4>
+            <h4 class="date">2021-07-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ecological-cities/home2park/blob/master/vignettes/home2park.Rmd"><code>vignettes/home2park.Rmd</code></a></small>
       <div class="hidden name"><code>home2park.Rmd</code></div>
@@ -296,8 +296,8 @@ Example screenshot showing an overlay of multiple datasets used to redistribute 
 <p>where</p>
 <ul>
 <li><p><span class="math inline">\(S\)</span> = Total supply of a specific park attribute to the building from parks <span class="math inline">\(i\)</span>; <span class="math inline">\(i\)</span> = 1,2,3, … <span class="math inline">\(n\)</span> where <span class="math inline">\(n\)</span> = total number of parks citywide.</p></li>
-<li><p><span class="math inline">\(s_{i}\)</span> = Supply of a specific park attribute from park <span class="math inline">\(i\)</span>. A perfect positive linear association is assumed, since the focus is on supply metrics. If park area has been calculated as an attribute, other attributes may be calculated as relative amounts (e.g. point density, ratio of line-to-perimeter length, proportional area) to avoid double-counting the effect of park size.</p></li>
-<li><p><span class="math inline">\(d_{i}\)</span> = Euclidean distance from the building to park <span class="math inline">\(i\)</span>.</p></li>
+<li><p><span class="math inline">\(s_{i}\)</span> = Supply of a specific park attribute from park <span class="math inline">\(i\)</span>. A perfect positive linear association is assumed, since the focus is on supply metrics.</p></li>
+<li><p><span class="math inline">\(d_{i}\)</span> = Distance in kilometres from the building to park <span class="math inline">\(i\)</span> (e.g. Euclidean, Manhattan, etc.).</p></li>
 <li><p><span class="math inline">\(c\)</span> = Coefficient determining rate of decay in supply <span class="math inline">\(s_{i}\)</span> with increasing distance.</p></li>
 </ul>
 <p><br></p>
@@ -309,8 +309,8 @@ Figure: The value of Coefficient c and its effect on the distance decay between 
 </div>
 <p><br></p>
 <div class="figure" style="text-align: center">
-<img src="../man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values." width="100%"><p class="caption">
-Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to the quantile values.
+<img src="../man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of OSM park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.1 (left panel) and 1 (right panel). Each building is denoted as a pount (a random subset is shown). The color palette for the buildings (points) is binned according to the quantile values." width="100%"><p class="caption">
+Screenshot: Examples showing the supply of OSM park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.1 (left panel) and 1 (right panel). Each building is denoted as a pount (a random subset is shown). The color palette for the buildings (points) is binned according to the quantile values.
 </p>
 </div>
 <p><br></p>
@@ -320,8 +320,10 @@ Screenshot: Examples showing the supply of park area to residential buildings in
 <span class="co"># convert buildings to points (centroids), then calculate distances to every park</span>
 <span class="va">m_dist</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span> <span class="op">%&gt;%</span>
   <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># euclidean distance</span>
     <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">set_units</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>
+
+<span class="va">m_dist</span> <span class="op">&lt;-</span> <span class="va">m_dist</span> <span class="op">/</span> <span class="fl">1000</span> <span class="co"># convert distances to km</span>
 
 
 <span class="co"># new column for the supply of park area</span>
@@ -329,15 +331,9 @@ Screenshot: Examples showing the supply of park area to residential buildings in
                                               dist_matrix <span class="op">=</span> <span class="va">m_dist</span>, 
                                               c <span class="op">=</span> <span class="fl">0.302</span><span class="op">)</span> <span class="co"># e.g. from Tu et al. (2020)</span>
 
+
 <span class="co"># supply to all residents per building</span>
-<span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supplytopop</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supply</span> <span class="op">*</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">popcount</span>
-
-
-
-<span class="co"># scale the supply variables if necessary</span>
-<span class="va">buildings_pop_sgp</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span> <span class="op">%&gt;%</span>
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span>.cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">area_supply</span>, <span class="va">area_supplytopop</span><span class="op">)</span>, 
-                         <span class="op">~</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">.</span>, center <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supplytopop</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supply</span> <span class="op">*</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">popcount</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="../man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to the quantile values." width="100%"><p class="caption">
 Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to the quantile values.
@@ -400,10 +396,10 @@ Screenshot: Supply of park area to building residents in Singapore based on OSM 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>parkperpop_m2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.nan</a></span><span class="op">(</span><span class="va">parkperpop_m2</span><span class="op">)</span>, <span class="co"># make NaN NA</span>
                                 <span class="cn">NA</span>, <span class="va">parkperpop_m2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><br></p>
-<p>The following figure provides a visual comparison between the provision of park area per capita summarised per region (subzone), based on conventional metrics (left panel) and derived from each residential building (right panel). The interactive map is viewable online at <a href="https://ecological-cities.github.io/home2park/articles/website/metric-comparisons.html" class="uri">https://ecological-cities.github.io/home2park/articles/website/metric-comparisons.html</a>.</p>
+<p>The following figure provides a visual comparison between the provision of park area per capita summarised per region (subzone), based on conventional metrics (left panel) and derived from each residential building (right panel). The interactive map is viewable online at <a href="https://ecological-cities.github.io/home2park/articles/online/metric-comparisons.html" class="uri">https://ecological-cities.github.io/home2park/articles/online/metric-comparisons.html</a>.</p>
 <div class="figure" style="text-align: center">
-<img src="../man/figures/vignette-subzone-park-area.png" alt="Screenshot: Provision of park area per subzone in Singapore based on OSM data (2020), as measured by the total park area per capita (left panel); and by the supply of park area per capita within residential buildings (right panel). The color palettes are binned according to quantile values." width="100%"><p class="caption">
-Screenshot: Provision of park area per subzone in Singapore based on OSM data (2020), as measured by the total park area per capita (left panel); and by the supply of park area per capita within residential buildings (right panel). The color palettes are binned according to quantile values.
+<img src="../man/figures/vignette-subzone-park-area.png" alt="Screenshot: Provision of park area per capita within each subzone in Singapore, as measured by the total park area per subzone (left panel); and by the supply of park area to residents within residential buildings (right panel). Based on OSM data (2020). For the calculation of the supply value per building, the value for Coefficient c was set at 0.302. The color palettes are binned according to quantile values." width="100%"><p class="caption">
+Screenshot: Provision of park area per capita within each subzone in Singapore, as measured by the total park area per subzone (left panel); and by the supply of park area to residents within residential buildings (right panel). Based on OSM data (2020). For the calculation of the supply value per building, the value for Coefficient c was set at 0.302. The color palettes are binned according to quantile values.
 </p>
 </div>
 <p><br></p>

@@ -121,9 +121,9 @@ where
 
 - $S$ = Total supply of a specific park attribute to the building from parks $i$; $i$ = 1,2,3, ... $n$ where $n$ = total number of parks citywide.
 
-- $s_{i}$ = Supply of a specific park attribute from park $i$. A perfect positive linear association is assumed, since the focus is on supply metrics. If park area has been calculated as an attribute, other attributes may be calculated as relative amounts (e.g. point density, ratio of line-to-perimeter length, proportional area) to avoid double-counting the effect of park size.
+- $s_{i}$ = Supply of a specific park attribute from park $i$. A perfect positive linear association is assumed, since the focus is on supply metrics.  
 
-- $d_{i}$ = Euclidean distance from the building to park $i$.
+- $d_{i}$ = Distance in kilometres from the building to park $i$ (e.g. Euclidean, Manhattan, etc.).
 
 - $c$ = Coefficient determining rate of decay in supply $s_{i}$ with increasing distance. 
 
@@ -137,7 +137,7 @@ knitr::include_graphics("man/figures/README-c-sensitivity.png")
 ```
 <br>
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values.")}
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Examples showing the supply of OSM park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.1 (left panel) and 1 (right panel). Each building is denoted as a point (a random subset is shown); the color palette is binned according to quantile values.")}
 knitr::include_graphics("man/figures/README-c-sensitivity-map.png")
 ```
 
@@ -156,8 +156,10 @@ parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648))
 # convert buildings to points (centroids), then calculate distances to every park
 m_dist <- buildings_pop_sgp %>%
   sf::st_centroid() %>%
-  sf::st_distance(parks_sgp) %>%
+  sf::st_distance(parks_sgp) %>% # euclidean distance
     units::set_units(NULL)
+
+m_dist <- m_dist / 1000 # convert distances to km
 
 
 # new column for the supply of park area
@@ -168,16 +170,9 @@ buildings_pop_sgp$area_supply <- recre_supply(park_attribute = parks_sgp$area,
 # supply to all residents per building
 buildings_pop_sgp$area_supplytopop <- buildings_pop_sgp$area_supply * buildings_pop_sgp$popcount
 
-
-
-# scale the supply variables if necessary
-buildings_pop_sgp <- buildings_pop_sgp %>%
-    dplyr::mutate(across(.cols = c(area_supply, area_supplytopop), 
-                         ~(scale(., center = FALSE))))
-
 ```
 
-```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to quantile values.")}
+```{r, echo=FALSE, fig.align = "center", out.width="100%", fig.cap = paste0("Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The value for Coefficient c was set at 0.302. The color palette is binned according to quantile values.")}
 knitr::include_graphics("man/figures/README-supply-parkarea-to-building-residents.png")
 ```
 

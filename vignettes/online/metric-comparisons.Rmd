@@ -40,8 +40,10 @@ pop_sgp <- sf::st_transform(pop_sgp, sf::st_crs(32648)) # transform to projected
 # convert buildings to points (centroids), then calculate distances to every park
 m_dist <- buildings_pop_sgp %>%
   sf::st_centroid() %>%
-  sf::st_distance(parks_sgp) %>%
+  sf::st_distance(parks_sgp) %>% # euclidean distance
     units::set_units(NULL)
+
+m_dist <- m_dist / 1000 # convert distances to km
 
 
 # new column for the supply of park area
@@ -51,13 +53,6 @@ buildings_pop_sgp$area_supply <- recre_supply(park_attribute = parks_sgp$area,
 
 # supply to all residents per building
 buildings_pop_sgp$area_supplytopop <- buildings_pop_sgp$area_supply * buildings_pop_sgp$popcount
-
-
-
-# scale the supply variables if necessary
-buildings_pop_sgp <- buildings_pop_sgp %>%
-    dplyr::mutate(across(.cols = c(area_supply, area_supplytopop), 
-                         ~(scale(., center = FALSE))))
 
 rm(m_dist)
 ```
@@ -92,7 +87,7 @@ buildings_subzones <- buildings_subzones %>%
 # join information to pop_2020, calculate supply per capita
 pop_2020 <- pop_2020 %>%
   dplyr::left_join(buildings_subzones) %>%
-  dplyr::mutate(area_supplyperpop = area_supplytopop_sum / pop_count) %>%
+  dplyr::mutate(area_supplyperpop = area_supplytopop_sum / pop_count * 1e-6) %>% # convert to km2
   dplyr::mutate(area_supplyperpop = ifelse(is.infinite(area_supplyperpop), NA, area_supplyperpop)) # make infinite NA
 
 ```
@@ -121,7 +116,7 @@ subzones_parks <- subzones_parks %>%
 pop_2020 <- pop_2020 %>%
   dplyr::left_join(subzones_parks) %>%
   dplyr::mutate(parkarea_m2 = ifelse(is.na(parkarea_m2), 0, parkarea_m2)) %>% # make NA 0
-  dplyr::mutate(parkperpop_m2 = parkarea_m2 / pop_count) %>%
+  dplyr::mutate(parkperpop_m2 = parkarea_m2 / pop_count * 1e-6) %>% # convert to km2
   dplyr::mutate(parkperpop_m2 = ifelse(is.infinite(parkperpop_m2), # make infinite NA
                                 NA, parkperpop_m2)) %>%
   dplyr::mutate(parkperpop_m2 = ifelse(is.nan(parkperpop_m2), # make NaN NA
@@ -142,9 +137,38 @@ The following interactive map provides a visual comparison between metrics for p
 # convert buildings to points (centroids) for plotting
 buildings_pop_sgp <- buildings_pop_sgp %>% 
   sf::st_centroid() %>%
-  dplyr::mutate(across(everything(), as.vector)) # remove attributes from columns for plotting
+  dplyr::mutate(across(everything(), as.vector)) %>%  # remove attributes from columns for plotting
+  dplyr::select(-area_supply) # remove ss values to building
 
-test <- buildings_pop_sgp %>%  dplyr::select(-area_supply)
+
+# random sampling of buildings
+set.seed(123) 
+buildings_pop_sgp <- buildings_pop_sgp %>% 
+  dplyr::mutate(across(.cols = contains("area"), # for area related vars, convert m2 to km2
+              .fns = function(x) x*1e-6))
+
+# some processing to get proper range for color scale later
+# get max values per building (for particular round)
+buildings_max <- buildings_pop_sgp %>%
+  tidyr::pivot_longer(cols = c(-popcount, -geometry),
+                      names_to = "supply", 
+                      values_to = "value") %>%
+     dplyr::group_by(supply) %>%
+     dplyr::slice(which.max(value)) %>%
+  tidyr::pivot_wider(names_from = "supply", values_from = "value")
+
+# subset random sample
+buildings_pop_sgp <- 
+  dplyr::slice_sample(buildings_pop_sgp, 
+                      n = nrow(buildings_pop_sgp)/12)
+
+# append max buildings to the random subset 
+buildings_pop_sgp <- buildings_pop_sgp %>%
+  dplyr::bind_rows(buildings_max)
+
+
+
+
 
 tmap::tmap_mode("view")
 
@@ -153,14 +177,14 @@ tm <-
 
   # census units
   tmap::tm_shape(pop_2020) +
-    tmap::tm_polygons(title = "Park area per capita (Ha/1000 residents)",
+    tmap::tm_polygons(title = "Park area per capita (km<sup>2</sup>)",
                       group = "Subzones: Per capita park area (conventional)",
                       col = "parkperpop_m2",
                       palette = "Greens", alpha = 0.7,
                       style = "quantile",
                       border.col = "white", border.alpha = 0.5, lwd = 1) +
   tmap::tm_shape(pop_2020) +
-    tmap::tm_polygons(title = "Supply of park area per capita (scaled)",
+    tmap::tm_polygons(title = "Supply of park area per capita (km<sup>2</sup>)",
                       group = "Subzones: Per capita supply of park area",
                       col = "area_supplyperpop", 
                       palette = "Greens", alpha = 0.7,
@@ -168,9 +192,8 @@ tm <-
                       border.col = "white", border.alpha = 0.5, lwd = 1) +
           
   # buildings
-  tmap::tm_shape(dplyr::slice_sample(test, # subset random sample
-                                     n = nrow(test)/12)) +
-    tmap::tm_dots(title = "Supply of park area (scaled)",
+  tmap::tm_shape(buildings_pop_sgp) +
+    tmap::tm_dots(title = "All building residents: Supply of park area (km<sup>2</sup>)",
                   group = "Buildings: Supply of park area to residents",
                   col = "area_supplytopop", border.col = "transparent",
                   palette = viridis::viridis(5),

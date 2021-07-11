@@ -214,8 +214,8 @@ Example screenshot showing an overlay of multiple datasets used to redistribute 
 <p>where</p>
 <ul>
 <li><p><em>S</em> = Total supply of a specific park attribute to the building from parks <em>i</em>; <em>i</em> = 1,2,3, … <em>n</em> where <em>n</em> = total number of parks citywide.</p></li>
-<li><p><em>s</em><sub><em>i</em></sub> = Supply of a specific park attribute from park <em>i</em>. A perfect positive linear association is assumed, since the focus is on supply metrics. If park area has been calculated as an attribute, other attributes may be calculated as relative amounts (e.g. point density, ratio of line-to-perimeter length, proportional area) to avoid double-counting the effect of park size.</p></li>
-<li><p><em>d</em><sub><em>i</em></sub> = Euclidean distance from the building to park <em>i</em>.</p></li>
+<li><p><em>s</em><sub><em>i</em></sub> = Supply of a specific park attribute from park <em>i</em>. A perfect positive linear association is assumed, since the focus is on supply metrics.</p></li>
+<li><p><em>d</em><sub><em>i</em></sub> = Distance in kilometres from the building to park <em>i</em> (e.g. Euclidean, Manhattan, etc.).</p></li>
 <li><p><em>c</em> = Coefficient determining rate of decay in supply <em>s</em><sub><em>i</em></sub> with increasing distance.</p></li>
 </ul>
 <p><br></p>
@@ -227,8 +227,8 @@ Figure: The value of Coefficient c and its effect on the distance decay between 
 </div>
 <p><br></p>
 <div class="figure" style="text-align: center">
-<img src="reference/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values." width="100%"><p class="caption">
-Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values.
+<img src="reference/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of OSM park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.1 (left panel) and 1 (right panel). Each building is denoted as a point (a random subset is shown); the color palette is binned according to quantile values." width="100%"><p class="caption">
+Screenshot: Examples showing the supply of OSM park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.1 (left panel) and 1 (right panel). Each building is denoted as a point (a random subset is shown); the color palette is binned according to quantile values.
 </p>
 </div>
 <p><br></p>
@@ -242,8 +242,10 @@ Screenshot: Examples showing the supply of park area to residential buildings in
 <span class="co"># convert buildings to points (centroids), then calculate distances to every park</span>
 <span class="va">m_dist</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span> <span class="op">%&gt;%</span>
   <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># euclidean distance</span>
     <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">set_units</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>
+
+<span class="va">m_dist</span> <span class="op">&lt;-</span> <span class="va">m_dist</span> <span class="op">/</span> <span class="fl">1000</span> <span class="co"># convert distances to km</span>
 
 
 <span class="co"># new column for the supply of park area</span>
@@ -252,17 +254,10 @@ Screenshot: Examples showing the supply of park area to residential buildings in
                                               c <span class="op">=</span> <span class="fl">0.302</span><span class="op">)</span> <span class="co"># e.g. from Tu et al. (2020)</span>
 
 <span class="co"># supply to all residents per building</span>
-<span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supplytopop</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supply</span> <span class="op">*</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">popcount</span>
-
-
-
-<span class="co"># scale the supply variables if necessary</span>
-<span class="va">buildings_pop_sgp</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span> <span class="op">%&gt;%</span>
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span>.cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">area_supply</span>, <span class="va">area_supplytopop</span><span class="op">)</span>, 
-                         <span class="op">~</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">.</span>, center <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supplytopop</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supply</span> <span class="op">*</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">popcount</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="reference/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to quantile values." width="100%"><p class="caption">
-Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to quantile values.
+<img src="reference/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The value for Coefficient c was set at 0.302. The color palette is binned according to quantile values." width="100%"><p class="caption">
+Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The value for Coefficient c was set at 0.302. The color palette is binned according to quantile values.
 </p>
 </div>
 <p><br></p>

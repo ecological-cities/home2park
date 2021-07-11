@@ -197,13 +197,10 @@ where
 
 -   *s*<sub>*i*</sub> = Supply of a specific park attribute from park
     *i*. A perfect positive linear association is assumed, since the
-    focus is on supply metrics. If park area has been calculated as an
-    attribute, other attributes may be calculated as relative amounts
-    (e.g. point density, ratio of line-to-perimeter length, proportional
-    area) to avoid double-counting the effect of park size.
+    focus is on supply metrics.
 
--   *d*<sub>*i*</sub> = Euclidean distance from the building to park
-    *i*.
+-   *d*<sub>*i*</sub> = Distance in kilometres from the building to park
+    *i* (e.g. Euclidean, Manhattan, etc.).
 
 -   *c* = Coefficient determining rate of decay in supply
     *s*<sub>*i*</sub> with increasing distance.
@@ -233,15 +230,13 @@ between a building and park.
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.0001 (left panel) and 0.01 (right panel). Includes publicly-accessible parks, beaches and informal nature areas. Singapore measures approximately 50 km east to west, and the largest green spaces tend to be centrally located. The color palette for the buildings (points) is binned according to quantile values." width="100%" />
+<img src="man/figures/README-c-sensitivity-map.png" alt="Screenshot: Examples showing the supply of OSM park area to residential buildings in Singapore for the year 2020 when the value of Coefficient c is 0.1 (left panel) and 1 (right panel). Each building is denoted as a point (a random subset is shown); the color palette is binned according to quantile values." width="100%" />
 <p class="caption">
-Screenshot: Examples showing the supply of park area to residential
+Screenshot: Examples showing the supply of OSM park area to residential
 buildings in Singapore for the year 2020 when the value of Coefficient c
-is 0.0001 (left panel) and 0.01 (right panel). Includes
-publicly-accessible parks, beaches and informal nature areas. Singapore
-measures approximately 50 km east to west, and the largest green spaces
-tend to be centrally located. The color palette for the buildings
-(points) is binned according to quantile values.
+is 0.1 (left panel) and 1 (right panel). Each building is denoted as a
+point (a random subset is shown); the color palette is binned according
+to quantile values.
 </p>
 
 </div>
@@ -264,8 +259,10 @@ parks_sgp <- sf::st_transform(parks_sgp, sf::st_crs(32648))
 # convert buildings to points (centroids), then calculate distances to every park
 m_dist <- buildings_pop_sgp %>%
   sf::st_centroid() %>%
-  sf::st_distance(parks_sgp) %>%
+  sf::st_distance(parks_sgp) %>% # euclidean distance
     units::set_units(NULL)
+
+m_dist <- m_dist / 1000 # convert distances to km
 
 
 # new column for the supply of park area
@@ -275,22 +272,16 @@ buildings_pop_sgp$area_supply <- recre_supply(park_attribute = parks_sgp$area,
 
 # supply to all residents per building
 buildings_pop_sgp$area_supplytopop <- buildings_pop_sgp$area_supply * buildings_pop_sgp$popcount
-
-
-
-# scale the supply variables if necessary
-buildings_pop_sgp <- buildings_pop_sgp %>%
-    dplyr::mutate(across(.cols = c(area_supply, area_supplytopop), 
-                         ~(scale(., center = FALSE))))
 ```
 
 <div class="figure" style="text-align: center">
 
-<img src="man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to quantile values." width="100%" />
+<img src="man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The value for Coefficient c was set at 0.302. The color palette is binned according to quantile values." width="100%" />
 <p class="caption">
 Screenshot: Supply of park area to building residents in Singapore based
 on OSM data (2020). Each building is denoted as a point (a random subset
-is shown). The color palette is binned according to quantile values.
+is shown). The value for Coefficient c was set at 0.302. The color
+palette is binned according to quantile values.
 </p>
 
 </div>
