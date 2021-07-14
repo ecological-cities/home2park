@@ -255,6 +255,7 @@ raster_class_area <- function(polygons, raster, raster_min_patch_size = units::s
     # extract values
     suppressWarnings(extracted <- terra::extract(x = raster, y = terra::vect(results), fun = NULL,
         ...))
+    extracted <- extracted[,1:2] # only keep 1st 2 cols (some output may have 'area' col)
     rm(raster)
     names(extracted)[-1] <- "raster_classes"  # rename colname for raster classes
 
