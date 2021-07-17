@@ -2,11 +2,15 @@ Package: home2park
 Title: Spatial Provision of Urban Parks
 Version: 0.1.0
 Authors@R: 
-    person(given = "Xiao Ping",
-           family = "Song",
-           role = c("aut", "cre"),
-           email = "xp.song@u.nus.edu",
-           comment = c(ORCID = "0000-0002-8825-195X"))
+    c(person(given = "Xiao Ping",
+             family = "Song",
+             role = c("aut", "cre"),
+             email = "xp.song@u.nus.edu",
+             comment = c(ORCID = "0000-0002-8825-195X")),
+      person(given = "Kwek Yan",
+             family = "Chong",
+             role = "ctb",
+             comment = c("Methodology")))
 Description: Assess the spatial provision of urban parks to city buildings.
 License: GPL (>= 3)
 URL: https://github.com/ecological-cities/home2park
