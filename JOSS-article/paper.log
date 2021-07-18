@@ -1,9 +1,9 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.7.8)  11 JUL 2021 22:12
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.7.8)  18 JUL 2021 20:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**JOSS-article_home2park.tex
-(./JOSS-article_home2park.tex
+**paper.tex
+(./paper.tex
 LaTeX2e <2021-06-01> patch level 1
 L3 programming layer <2021-06-18> (/Users/xpsong/Library/TinyTeX/texmf-dist/tex
 /latex/base/article.cls
@@ -949,8 +949,8 @@ line 40.
 \cslhangindent=\skip92
 \@quotelevel=\count461
 \@quotereset=\count462
-(./JOSS-article_home2park.aux)
-\openout1 = `JOSS-article_home2park.aux'.
+(./paper.aux)
+\openout1 = `paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 220.
 LaTeX Font Info:    ... okay on input line 220.
@@ -992,9 +992,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 220.
 LaTeX Info: Redefining \pageref on input line 220.
 LaTeX Info: Redefining \nameref on input line 220.
-(./JOSS-article_home2park.out) (./JOSS-article_home2park.out)
+(./paper.out) (./paper.out)
 \@outlinefile=\write5
-\openout5 = `JOSS-article_home2park.out'.
+\openout5 = `paper.out'.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
@@ -1016,11 +1016,11 @@ Package biblatex Info: ... and expl3
 (/Users/xpsong/Library/TinyTeX/texmf-dist/tex/latex/biblatex/blx-case-expl3.sty
 Package: blx-case-expl3 2020/12/31 v3.16 expl3 case changing code for biblatex
 )
-\openout4 = `JOSS-article_home2park.bcf'.
+\openout4 = `paper.bcf'.
 
 Package biblatex Info: Trying to load bibliographic data...
-Package biblatex Info: ... file 'JOSS-article_home2park.bbl' not found.
-No file JOSS-article_home2park.bbl.
+Package biblatex Info: ... file 'paper.bbl' not found.
+No file paper.bbl.
 Package biblatex Info: Reference section=0 on input line 220.
 Package biblatex Info: Reference segment=0 on input line 220.
 *geometry* driver: auto-detecting
@@ -1108,21 +1108,20 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
 
-[2] (./JOSS-article_home2park.aux)
-Package rerunfilecheck Info: File `JOSS-article_home2park.out' has not changed.
-
+[2] (./paper.aux)
+Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: A4E6E919EBC3966A1B06F6E49C8EEFD2;432.
-Package logreq Info: Writing requests to 'JOSS-article_home2park.run.xml'.
-\openout1 = `JOSS-article_home2park.run.xml'.
+Package logreq Info: Writing requests to 'paper.run.xml'.
+\openout1 = `paper.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
  33154 strings out of 478451
- 670283 string characters out of 5857705
- 1452134 words of memory out of 5000000
+ 669926 string characters out of 5857705
+ 1452049 words of memory out of 5000000
  52988 multiletter control sequences out of 15000+600000
  410286 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 87i,13n,95p,755b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 87i,13n,95p,738b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on JOSS-article_home2park.pdf (2 pages).
+Output written on paper.pdf (2 pages).
