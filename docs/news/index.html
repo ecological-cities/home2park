@@ -158,7 +158,8 @@
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
 <ul>
-<li>Helper function <code><a href="../reference/raster_class_area.html">raster_class_area()</a></code>. The use of <code><a href="https://rdrr.io/pkg/terra/man/extract.html">terra::extract()</a></code> may output an additional third <code>area</code> column that is unused. Only keep first 2 columns of output.</li>
+<li><p>Helper function <code><a href="../reference/raster_class_area.html">raster_class_area()</a></code>. The use of <code><a href="https://rdrr.io/pkg/terra/man/extract.html">terra::extract()</a></code> may output an additional third <code>area</code> column that is unused. Only keep first 2 columns of output.</p></li>
+<li><p>Fix error in <code><a href="../reference/rasterise_buildings.html">rasterise_buildings()</a></code>. Getting the files for land use rasters resulted in an error (e.g. multiple files). Syntax for re-naming for the output using the <code><a href="https://glue.tidyverse.org/reference/glue.html">glue::glue()</a></code> function also did not work within package environment.</p></li>
 </ul>
 <p><br></p>
 </div>

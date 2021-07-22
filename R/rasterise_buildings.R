@@ -199,16 +199,14 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
                     # IF BOTH POP & LANDUSE PROVIDED (landuse file will have pop year as suffix)
                     if (!is.null(sf_landuse)) {
 
-                      file <- dir(dir_processing, pattern = glue::glue("^landuse.*{years_popmatch[j]}"),
+                      file <- dir(dir_processing, pattern = glue::glue("^landuse.*{years_popmatch[j]}.tif$"),
                         full.names = TRUE)
                       landuse_raster_matching <- rast(file)
 
                       # mask away building pixels not within relevant landuse zones
                       results[[i]][[j]] <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
-                      names(results[[i]][[j]]) <- glue::glue("buildings-{years_buildings[i]}_",
-                        {
-                          sub("\\..*$", "", basename(file))
-                        })
+                      landuse_name <- sub("\\..*$", "", basename(file))
+                      names(results[[i]][[j]]) <- glue::glue("buildings-{years_buildings[i]}_{landuse_name}")
 
                     }
 
@@ -256,9 +254,8 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "
 
                     # mask away building pixels not within relevant landuse zones
                     results[[i]] <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
-                    names(results[[i]]) <- glue::glue("buildings-{years_buildings[i]}_", {
-                      sub("\\..*$", "", basename(file))
-                    })
+                    landuse_name <- sub("\\..*$", "", basename(file))
+                    names(results[[i]]) <- glue::glue("buildings-{years_buildings[i]}_{landuse_name}")
 
                   }
 

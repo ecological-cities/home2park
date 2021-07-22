@@ -5,6 +5,8 @@
 ## Bug fixes 
 * Helper function `raster_class_area()`. The use of `terra::extract()` may output an additional third `area` column that is unused. Only keep first 2 columns of output.
 
+* Fix error in `rasterise_buildings()`. Getting the files for land use rasters resulted in an error (e.g. multiple files). Syntax for re-naming for the output using the `glue::glue()` function also did not work within package environment.
+
 <br>
 
 # home2park 0.1.0
