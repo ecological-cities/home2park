@@ -172,6 +172,7 @@ more details and options for input arguments when downloading the data.</p>
   filename <span class='op'>=</span> <span class='cn'>NULL</span>,
   driver <span class='op'>=</span> <span class='st'>"GeoJSON"</span>,
   delete_dsn <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  append <span class='op'>=</span> <span class='cn'>NA</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -205,6 +206,10 @@ Defaults to "GeoJSON".</p></td>
     <tr>
       <th>delete_dsn</th>
       <td><p>logical (optional). Passed to <code><a href='https://r-spatial.github.io/sf/reference/st_write.html'>sf::st_write()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>append</th>
+      <td><p>defaults to <code>NA</code>, which raises an error if a layer exists. Passed to <code><a href='https://r-spatial.github.io/sf/reference/st_write.html'>sf::st_write()</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>

@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   home2park: home2park.html
   online/metric-comparisons: metric-comparisons.html
-last_built: 2021-08-04T12:39Z
+last_built: 2021-08-04T13:00Z
 urls:
   reference: https://ecological-cities.github.io/home2park//reference
   article: https://ecological-cities.github.io/home2park//articles

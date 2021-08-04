@@ -11,6 +11,7 @@ get_buildings_osm(
   filename = NULL,
   driver = "GeoJSON",
   delete_dsn = TRUE,
+  append = NA,
   ...
 )
 }
@@ -30,6 +31,8 @@ argument \code{download_directory} in \code{osmextract::oe_read()}.}
 Defaults to "GeoJSON".}
 
 \item{delete_dsn}{logical (optional). Passed to \code{sf::st_write()}.}
+
+\item{append}{defaults to \code{NA}, which raises an error if a layer exists. Passed to \code{sf::st_write()}.}
 
 \item{...}{Other arguments passed to \code{osmextract::oe_read()}.}
 }
