@@ -17,6 +17,7 @@ URL: https://github.com/ecological-cities/home2park
 BugReports: https://github.com/ecological-cities/home2park/issues
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
