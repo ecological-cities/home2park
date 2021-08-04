@@ -106,15 +106,23 @@ get_buildings_osm <- function(place, date = NULL, dir_raw = osmextract::oe_downl
 
     # clean up ---- remove empty geoms, transform back to same crs as 'place', cast to
     # individual polygons
+
+
+
     suppressWarnings(results <- results %>%
         dplyr::filter(!sf::st_is_empty(.)) %>%
         sf::st_transform(sf::st_crs(place)) %>%
-        sf::st_make_valid() %>%
-        sf::st_cast("MULTIPOLYGON", warn = FALSE) %>%
-        sf::st_cast("POLYGON", warn = FALSE))
+        sf::st_make_valid())
 
     # rm invalid building polygons
     results <- results[sf::st_is_valid(results),]
+    results <- results[!st_is_empty(results),]
+
+    results <- results %>%
+        sf::st_cast("MULTIPOLYGON", warn = FALSE) %>%
+        sf::st_cast("POLYGON", warn = FALSE)
+
+
 
     # convert building_levels ---- if no info, set as 1; if underground, NA; convert to
     # numeric, round up
