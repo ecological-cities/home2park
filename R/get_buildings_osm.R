@@ -109,6 +109,9 @@ get_buildings_osm <- function(place, date = NULL, dir_raw = osmextract::oe_downl
         sf::st_cast("MULTIPOLYGON", warn = FALSE) %>%
         sf::st_cast("POLYGON", warn = FALSE))
 
+    # rm invalid building polygons
+    results <- results[sf::st_is_valid(results),]
+
     # convert building_levels ---- if no info, set as 1; if underground, NA; convert to
     # numeric, round up
     suppressWarnings(results <- results %>%
