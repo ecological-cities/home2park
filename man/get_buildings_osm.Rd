@@ -9,6 +9,8 @@ get_buildings_osm(
   date = NULL,
   dir_raw = osmextract::oe_download_directory(),
   filename = NULL,
+  driver = "GeoJSON",
+  delete_dsn = TRUE,
   ...
 )
 }
@@ -22,7 +24,12 @@ for the specific dates available. Defaults to \code{NULL} (download the latest a
 \item{dir_raw}{character. Directory to download the raw unprocessed OSM data. Passed to
 argument \code{download_directory} in \code{osmextract::oe_read()}.}
 
-\item{filename}{character (optional). File path to export output data (GeoJSON format).}
+\item{filename}{character (optional). File path to export output data.}
+
+\item{driver}{character (optional). Name of driver used to export output data, passed to \code{sf::st_write()}.
+Defaults to "GeoJSON".}
+
+\item{delete_dsn}{logical (optional). Passed to \code{sf::st_write()}.}
 
 \item{...}{Other arguments passed to \code{osmextract::oe_read()}.}
 }

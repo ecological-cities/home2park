@@ -19,7 +19,10 @@
 #'for the specific dates available. Defaults to `NULL` (download the latest available data).
 #'@param dir_raw character. Directory to download the raw unprocessed OSM data. Passed to
 #'argument `download_directory` in `osmextract::oe_read()`.
-#'@param filename character (optional). File path to export output data (GeoJSON format).
+#'@param filename character (optional). File path to export output data.
+#'@param driver character (optional). Name of driver used to export output data, passed to `sf::st_write()`.
+#'Defaults to "GeoJSON".
+#'@param delete_dsn logical (optional). Passed to `sf::st_write()`.
 #'@param ... Other arguments passed to `osmextract::oe_read()`.
 #'
 #'@return The processed building polygons (`sf` object).
@@ -53,7 +56,7 @@
 #' }
 #'
 #'@export
-get_buildings_osm <- function(place, date = NULL, dir_raw = osmextract::oe_download_directory(), filename = NULL,
+get_buildings_osm <- function(place, date = NULL, dir_raw = osmextract::oe_download_directory(), filename = NULL, driver = "GeoJSON", delete_dsn = TRUE,
     ...) {
 
     # Error checking ------------------
@@ -128,7 +131,7 @@ get_buildings_osm <- function(place, date = NULL, dir_raw = osmextract::oe_downl
 
     # export ----
     if (!is.null(filename)) {
-        sf::st_write(results, filename, driver = "GeoJSON", delete_dsn = TRUE, overwrite = TRUE)
+        sf::st_write(results, filename, driver = driver, delete_dsn = delete_dsn)
     }
 
     rm(link, osmkeys, q, bb)
