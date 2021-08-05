@@ -102,9 +102,10 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
     coll <- checkmate::makeAssertCollection()
 
     # file formats
-    checkmate::assertTRUE(!st_is_longlat(sf_buildings) & !is.null(st_crs(sf_buildings)), add = coll)  # must be projected crs
+    checkmate::assertTRUE(!is.null(st_crs(sf_buildings)), add = coll)  # must have crs
     # checkmate::assertTRUE(all(st_is_valid(sf_buildings)), add = coll) # all features must be
     # valid (too time consuming)
+
 
     # colnames
     checkmate::assert_subset(proxy_pop_density, choices = colnames(sf_buildings), empty.ok = FALSE,
@@ -133,6 +134,8 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
     # IF POP DATA IS PROVIDED
     if (!is.null(sf_pop)) {
 
+        checkmate::assertTRUE(st_crs(sf_buildings) == st_crs(sf_pop))  # must have same crs
+
         # match pop data to most recent building data
         sf_pop <- matchyear(data = sf_pop, data_tomatch = sf_buildings, year = year, match = match_buildings_pop)
 
@@ -151,8 +154,10 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
     # GET RASTER TEMPLATE IF USER SUPPLIED
     if (!is.null(dir_rastertemplate)) {
         raster_template <- rast(dir_rastertemplate)
+        checkmate::assertTRUE(st_crs(sf_buildings) == st_crs(raster_template))  # must have same crs
     } else {
         raster_template <- rast(glue::glue("{dir_processing}/popdensity_raster-template.tif"))
+        checkmate::assertTRUE(st_crs(sf_buildings) == st_crs(raster_template))  # must have same crs
     }
 
 
@@ -160,123 +165,193 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
     results <- list()  # create empty list for output
 
     # If there is a year column in sf_buildings
-    if (!is.null(unique(sf_buildings[[year]])))
-        {
+    if (!is.null(year)) {
 
-            years_buildings <- unique(sf_buildings[[year]])
+        years_buildings <- unique(sf_buildings[[year]])
 
-            # each buildings year
-            for (i in seq_along(years_buildings)) {
+        # each buildings year
+        for (i in seq_along(years_buildings)) {
 
-                sf_buildings_subset <- sf_buildings %>%
-                  dplyr::filter(.data[[year]] == years_buildings[i])
+            sf_buildings_subset <- sf_buildings %>%
+              dplyr::filter(.data[[year]] == years_buildings[i])
 
-                # rasterize & export to temp directory
-                buildings_raster <- terra::rasterize(terra::vect(sf_buildings_subset), raster_template,
-                  field = proxy_pop_density)
+            # rasterize & export to temp directory
+            buildings_raster <- terra::rasterize(terra::vect(sf_buildings_subset), raster_template,
+              field = proxy_pop_density)
 
-                buildings_raster[buildings_raster == 0] <- NA  # convert 0s to NAs
-
-
-                # IF POP DATA IS PROVIDED, remove areas not covered by pop census blocks (for matching
-                # census yr)
-                if (!is.null(sf_pop)) {
-
-                  years_popmatch <- unique(sf_pop$year[sf_pop$year_match == years_buildings[i]])
-                  years_popmatch <- stats::na.omit(years_popmatch)
-
-                  results[[i]] <- list()
-
-                  for (j in seq_along(years_popmatch)) {
-
-                    pop_raster_matching <- rast(glue::glue("{dir_processing}/popdensity-by-census-block_{years_popmatch[j]}.tif"))
-
-                    # # mask away building pixels not within relevant pop zones
-                    results[[i]][[j]] <- terra::mask(buildings_raster, pop_raster_matching)
-                    names(results[[i]][[j]]) <- glue::glue("buildings-{years_buildings[i]}_for-pop-{years_popmatch[j]}")
+            buildings_raster[buildings_raster == 0] <- NA  # convert 0s to NAs
 
 
-                    # IF BOTH POP & LANDUSE PROVIDED (landuse file will have pop year as suffix)
-                    if (!is.null(sf_landuse)) {
+            # IF POP DATA IS PROVIDED, remove areas not covered by pop census blocks (for matching
+            # census yr)
+            if (!is.null(sf_pop)) {
 
-                      file <- dir(dir_processing, pattern = glue::glue("^landuse.*{years_popmatch[j]}.tif$"),
-                        full.names = TRUE)
-                      landuse_raster_matching <- rast(file)
+              years_popmatch <- unique(sf_pop$year[sf_pop$year_match == years_buildings[i]])
+              years_popmatch <- stats::na.omit(years_popmatch)
 
-                      # mask away building pixels not within relevant landuse zones
-                      results[[i]][[j]] <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
-                      landuse_name <- sub("\\..*$", "", basename(file))
-                      names(results[[i]][[j]]) <- glue::glue("buildings-{years_buildings[i]}_{landuse_name}")
+              results[[i]] <- list()
 
-                    }
+              for (j in seq_along(years_popmatch)) {
 
-                    # export
-                    if (!is.null(dir_export)) {
-                      terra::writeRaster(results[[i]][[j]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]][[j]])}.tif")),
-                        overwrite = overwrite, wopt = wopt, ...)
-                    }
+                pop_raster_matching <- rast(glue::glue("{dir_processing}/popdensity-by-census-block_{years_popmatch[j]}.tif"))
 
-                    terra::tmpFiles(remove = TRUE)
-                    rm(j)
-                  }
+                # # mask away building pixels not within relevant pop zones
+                results[[i]][[j]] <- terra::mask(buildings_raster, pop_raster_matching)
+                names(results[[i]][[j]]) <- glue::glue("buildings-{years_buildings[i]}_for-pop-{years_popmatch[j]}")
 
 
-                  # POP DATA NOT PROVIDED
-                } else {
+                # IF BOTH POP & LANDUSE PROVIDED (landuse file will have pop year as suffix)
+                if (!is.null(sf_landuse)) {
 
-                  results[[i]] <- buildings_raster
-                  names(results[[i]]) <- glue::glue("buildings-{years_buildings[i]}")
+                  file <- dir(dir_processing, pattern = glue::glue("^landuse.*{years_popmatch[j]}.tif$"),
+                    full.names = TRUE)
+                  landuse_raster_matching <- rast(file)
 
+                  # mask away building pixels not within relevant landuse zones
+                  results[[i]][[j]] <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
+                  landuse_name <- sub("\\..*$", "", basename(file))
+                  names(results[[i]][[j]]) <- glue::glue("buildings-{years_buildings[i]}_{landuse_name}")
 
-                  # POP NOT PROVIDED, BUT LANDUSE DATA IS, remove areas not covered by relevant landuse
-                  if (!is.null(sf_landuse)) {
-
-                    file <- dir(dir_processing, pattern = glue::glue("^landuse.*"), full.names = TRUE)
-
-                    if (length(file) > 1) {
-                      # multiple files: choose closest year to building data
-
-                      # years in file
-                      years_landuse <- str_extract(basename(file), "landuse-residential-[0-9]{4}") %>%
-                        str_extract("[0-9]{4}") %>%
-                        as.numeric()
-
-                      # match building to landuse (rmbr not to use the full sf)
-                      buildings_temp <- matchyear(data = sf_buildings_subset, data_tomatch = sf_landuse,
-                        year = year, match = match_buildings_landuse)
-
-                      which_file <- which(years_landuse == unique(buildings_temp$year_match))
-                      file <- file[which_file]
-                      rm(which_file)
-                    }
-
-                    landuse_raster_matching <- rast(file)
-
-                    # mask away building pixels not within relevant landuse zones
-                    results[[i]] <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
-                    landuse_name <- sub("\\..*$", "", basename(file))
-                    names(results[[i]]) <- glue::glue("buildings-{years_buildings[i]}_{landuse_name}")
-
-                  }
-
-                  # export
-                  if (!is.null(dir_export)) {
-                    terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")),
-                      overwrite = overwrite, wopt = wopt, ...)
-                  }
-                  terra::tmpFiles(remove = TRUE)
                 }
 
-                rm(buildings_raster, i)
+                # export
+                if (!is.null(dir_export)) {
+                  terra::writeRaster(results[[i]][[j]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]][[j]])}.tif")),
+                    overwrite = overwrite, wopt = wopt, ...)
+                }
+
+                terra::tmpFiles(remove = TRUE)
+                rm(j)
+              }
+
+
+            # POP DATA NOT PROVIDED
+            } else {
+
+              results[[i]] <- buildings_raster
+              names(results[[i]]) <- glue::glue("buildings-{years_buildings[i]}")
+
+
+              # POP NOT PROVIDED, BUT LANDUSE DATA IS, remove areas not covered by relevant landuse
+              if (!is.null(sf_landuse)) {
+
+                file <- dir(dir_processing, pattern = glue::glue("^landuse.*"), full.names = TRUE)
+
+                if (length(file) > 1) {
+                  # multiple files: choose closest year to building data
+
+                  # years in file
+                  years_landuse <- str_extract(basename(file), "landuse-residential-[0-9]{4}") %>%
+                    str_extract("[0-9]{4}") %>%
+                    as.numeric()
+
+                  # match building to landuse (rmbr not to use the full sf)
+                  buildings_temp <- matchyear(data = sf_buildings_subset, data_tomatch = sf_landuse,
+                    year = year, match = match_buildings_landuse)
+
+                  which_file <- which(years_landuse == unique(buildings_temp$year_match))
+                  file <- file[which_file]
+                  rm(which_file)
+                }
+
+                landuse_raster_matching <- rast(file)
+
+                # mask away building pixels not within relevant landuse zones
+                results[[i]] <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
+                landuse_name <- sub("\\..*$", "", basename(file))
+                names(results[[i]]) <- glue::glue("buildings-{years_buildings[i]}_{landuse_name}")
+
+              }
+
+              # export
+              if (!is.null(dir_export)) {
+                terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")),
+                  overwrite = overwrite, wopt = wopt, ...)
+              }
+              terra::tmpFiles(remove = TRUE)
             }
 
-            # If no year column in sf_buildings
-        }  #else{
-    # results[[1]] <- terra::rasterize(terra::vect(sf_buildings), raster_template, field =
-    # proxy_pop_density) results[[1]][results[[1]] == 0] <- NA # convert 0s to NAs
-    # names(results[[1]]) <- 'buildings' terra::writeRaster(results[[1]], filename =
-    # file.path(glue::glue('{dir_processing}/buildings.tif')), overwrite = TRUE, wopt =
-    # list(gdal=c('COMPRESS=LZW'))) rm(i) }
+            rm(buildings_raster, i)
+        }
+
+
+        # IF NO YEAR COLUMN IN sf_buildings
+        }  else {
+
+          buildings_raster <- terra::rasterize(terra::vect(sf_buildings),
+                                               raster_template,
+                                               field = proxy_pop_density)
+
+          buildings_raster[buildings_raster == 0] <- NA  # convert 0s to NAs
+          names(buildings_raster) <- 'buildings'
+
+
+          # IF POP DATA IS PROVIDED
+          if (!is.null(sf_pop)) {
+
+              file <- dir(dir_processing, pattern = glue::glue("^popdensity-by-census-block.tif$"),
+                           full.names = TRUE)
+              pop_raster_matching <- rast(file[1]) # if multiple files, pick the top one
+
+              # # mask away building pixels not within relevant pop zones
+              buildings_raster <- terra::mask(buildings_raster, pop_raster_matching)
+              names(buildings_raster) <- glue::glue("buildings_for-pop")
+
+
+              # IF BOTH POP & LANDUSE PROVIDED
+              if (!is.null(sf_landuse)) {
+
+                file <- dir(dir_processing, pattern = glue::glue("^landuse.*.tif$"),
+                            full.names = TRUE)
+                landuse_raster_matching <- rast(file[1]) # if multiple files, pick the top one
+
+                # mask away building pixels not within relevant landuse zones
+                buildings_raster <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
+                landuse_name <- sub("\\..*$", "", basename(file))
+                names(buildings_raster) <- glue::glue("buildings_{landuse_name}")
+
+              }
+
+              # export
+              if (!is.null(dir_export)) {
+                terra::writeRaster(buildings_raster, filename = file.path(glue::glue("{dir_export}/{names(buildings_raster)}.tif")),
+                                   overwrite = overwrite, wopt = wopt, ...)
+              }
+
+              terra::tmpFiles(remove = TRUE)
+              rm(j)
+
+
+            # POP DATA NOT PROVIDED
+          } else {
+
+            # POP NOT PROVIDED, BUT LANDUSE DATA IS
+            if (!is.null(sf_landuse)) {
+
+              file <- dir(dir_processing, pattern = glue::glue("^landuse.*"), full.names = TRUE)
+              landuse_raster_matching <- rast(file[1]) # if multiple files, pick the top one
+
+              # mask away building pixels not within relevant landuse zones
+              buildings_raster <- terra::mask(buildings_raster, landuse_raster_matching)  # overwrite!
+              landuse_name <- sub("\\..*$", "", basename(file))
+              names(buildings_raster) <- glue::glue("buildings_{landuse_name}")
+
+            }
+
+            # export
+            if (!is.null(dir_export)) {
+              terra::writeRaster(buildings_raster, filename = file.path(glue::glue("{dir_export}/{names(buildings_raster)}.tif")),
+                                 overwrite = overwrite, wopt = wopt, ...)
+            }
+
+            results[[1]] <- buildings_raster
+
+            terra::tmpFiles(remove = TRUE)
+          }
+
+          rm(buildings_raster, i)
+        }
+
 
     return(unlist(results))
 }
