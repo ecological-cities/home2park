@@ -15,6 +15,10 @@
     - Allow raster template (`terra::rast()` object) to be input directly as argument, or alternatively supply file path to the raster file.
     - Check if CRS are similar between supplied objects (e.g. similar crs between `sf_buildings` and `sf_pop` if supplied; similar crs between `sf_buildings` and `rastertemplate`).
 
+* In `pop_dasymap()`
+
+    - Remove argument `raster_template`, and replaced with raster from argument `land_relative_density`.
+
 <br>
 
 # home2park 0.1.0
