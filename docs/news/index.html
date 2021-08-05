@@ -161,6 +161,7 @@
 <li><p>Helper function <code><a href="../reference/raster_class_area.html">raster_class_area()</a></code>. The use of <code><a href="https://rdrr.io/pkg/terra/man/extract.html">terra::extract()</a></code> may output an additional third <code>area</code> column that is unused. Only keep first 2 columns of output.</p></li>
 <li><p>Fix error in <code><a href="../reference/rasterise_buildings.html">rasterise_buildings()</a></code>. Getting the files for land use rasters resulted in an error (e.g. multiple files). Syntax for re-naming for the output using the <code><a href="https://glue.tidyverse.org/reference/glue.html">glue::glue()</a></code> function also did not work within package environment.</p></li>
 <li><p>In <code><a href="../reference/get_buildings_osm.html">get_buildings_osm()</a></code>, add removal of invalid building polygons which remained in spite of <code>st_make_valid()</code>. Related to <a href="https://github.com/r-spatial/sf/issues/1649" class="uri">https://github.com/r-spatial/sf/issues/1649</a>. Also, add arguments for <code><a href="https://r-spatial.github.io/sf/reference/st_write.html">sf::st_write()</a></code> (e.g. <code>driver</code>, <code>delete_dsn</code>, <code>append</code>).</p></li>
+<li><p>In <code>rasterise_buildings_osm()</code>, change default argument for ‘year’ to <code>NULL</code>, as multiple years may not necessarily be analysed.</p></li>
 </ul>
 <p><br></p>
 </div>

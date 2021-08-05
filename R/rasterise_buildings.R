@@ -26,7 +26,7 @@
 #'This column will be used to assign values to the output raster. If not provided, population density
 #'across all building pixels are assumed to be similar.
 #'@param year character. Specify column name for the year within `sf_buildings`, `sf_landuse`
-#'and `sf_pop` (if provided). Defaults to `'year'`. Column data should be numeric.
+#'and `sf_pop` (if provided). Defaults to `NULL`, assuming that there is no 'year' column. Column data should be numeric.
 #'@param sf_pop (optional) `sf` polygons containing the population census data with column containing the census year.
 #'If absent, the output (building rasters) will not be associated with specific population census year(s).
 #'@param sf_landuse (optional) `sf` polygons of the land use zones.
@@ -92,7 +92,7 @@
 #' }
 #'
 #'@export
-rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = "year", sf_pop = NULL,
+rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = NULL, sf_pop = NULL,
     sf_landuse = NULL, match_buildings_pop = "closest", match_buildings_landuse = "closest",
     dir_rastertemplate = NULL, dir_processing = tempdir(), dir_export = NULL, overwrite = TRUE,
     wopt = list(gdal = c("COMPRESS=LZW")), ...) {

@@ -164,7 +164,7 @@ building data for multiple years are present.</p>
     <pre class="usage"><span class='fu'>rasterise_buildings</span><span class='op'>(</span>
   <span class='va'>sf_buildings</span>,
   proxy_pop_density <span class='op'>=</span> <span class='cn'>NULL</span>,
-  year <span class='op'>=</span> <span class='st'>"year"</span>,
+  year <span class='op'>=</span> <span class='cn'>NULL</span>,
   sf_pop <span class='op'>=</span> <span class='cn'>NULL</span>,
   sf_landuse <span class='op'>=</span> <span class='cn'>NULL</span>,
   match_buildings_pop <span class='op'>=</span> <span class='st'>"closest"</span>,
@@ -195,7 +195,7 @@ across all building pixels are assumed to be similar.</p></td>
     <tr>
       <th>year</th>
       <td><p>character. Specify column name for the year within <code>sf_buildings</code>, <code>sf_landuse</code>
-and <code>sf_pop</code> (if provided). Defaults to <code>'year'</code>. Column data should be numeric.</p></td>
+and <code>sf_pop</code> (if provided). Defaults to <code>NULL</code>, assuming that there is no 'year' column. Column data should be numeric.</p></td>
     </tr>
     <tr>
       <th>sf_pop</th>

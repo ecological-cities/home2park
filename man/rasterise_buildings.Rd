@@ -7,7 +7,7 @@
 rasterise_buildings(
   sf_buildings,
   proxy_pop_density = NULL,
-  year = "year",
+  year = NULL,
   sf_pop = NULL,
   sf_landuse = NULL,
   match_buildings_pop = "closest",
@@ -30,7 +30,7 @@ This column will be used to assign values to the output raster. If not provided,
 across all building pixels are assumed to be similar.}
 
 \item{year}{character. Specify column name for the year within \code{sf_buildings}, \code{sf_landuse}
-and \code{sf_pop} (if provided). Defaults to \code{'year'}. Column data should be numeric.}
+and \code{sf_pop} (if provided). Defaults to \code{NULL}, assuming that there is no 'year' column. Column data should be numeric.}
 
 \item{sf_pop}{(optional) \code{sf} polygons containing the population census data with column containing the census year.
 If absent, the output (building rasters) will not be associated with specific population census year(s).}

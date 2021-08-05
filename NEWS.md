@@ -9,6 +9,8 @@
 
 * In `get_buildings_osm()`, add removal of invalid building polygons which remained in spite of `st_make_valid()`. Related to https://github.com/r-spatial/sf/issues/1649. Also, add arguments for `sf::st_write()` (e.g. `driver`, `delete_dsn`, `append`).
 
+* In `rasterise_buildings_osm()`, change default argument for 'year' to `NULL`, as multiple years may not necessarily be analysed.
+
 <br>
 
 # home2park 0.1.0
