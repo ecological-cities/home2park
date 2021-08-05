@@ -319,7 +319,6 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
               }
 
               terra::tmpFiles(remove = TRUE)
-              rm(j)
 
 
             # POP DATA NOT PROVIDED
@@ -349,7 +348,7 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
             terra::tmpFiles(remove = TRUE)
           }
 
-          rm(buildings_raster, i)
+          rm(buildings_raster)
         }
 
 
