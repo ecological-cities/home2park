@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.7.8)  18 JUL 2021 20:27
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021) (preloaded format=xelatex 2021.7.8)  11 AUG 2021 21:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1079,9 +1079,9 @@ Package hyperref Warning: Suppressing link with empty target on input line 247.
 Package hyperref Warning: Suppressing link with empty target on input line 247.
 
 
-File: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rticles/rm
+File: /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rticles/rm
 arkdown/templates/joss/resources/JOSS-logo.png Graphic file (type bmp)
-</Library/Frameworks/R.framework/Versions/4.0/Resources/library/rticles/rmarkdo
+</Library/Frameworks/R.framework/Versions/4.1/Resources/library/rticles/rmarkdo
 wn/templates/joss/resources/JOSS-logo.png>
 
 Package fancyhdr Warning: \headheight is too small (62.59596pt): 
@@ -1092,13 +1092,13 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 (fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
 
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <8> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 306.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 327.
 [1
 
 ]
-File: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rticles/rm
+File: /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rticles/rm
 arkdown/templates/joss/resources/JOSS-logo.png Graphic file (type bmp)
-</Library/Frameworks/R.framework/Versions/4.0/Resources/library/rticles/rmarkdo
+</Library/Frameworks/R.framework/Versions/4.1/Resources/library/rticles/rmarkdo
 wn/templates/joss/resources/JOSS-logo.png>
 
 Package fancyhdr Warning: \headheight is too small (62.59596pt): 
@@ -1108,20 +1108,33 @@ Package fancyhdr Warning: \headheight is too small (62.59596pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
 
-[2] (./paper.aux)
+[2]
+File: /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rticles/rm
+arkdown/templates/joss/resources/JOSS-logo.png Graphic file (type bmp)
+</Library/Frameworks/R.framework/Versions/4.1/Resources/library/rticles/rmarkdo
+wn/templates/joss/resources/JOSS-logo.png>
+
+Package fancyhdr Warning: \headheight is too small (62.59596pt): 
+(fancyhdr)                Make it at least 63.55022pt, for example:
+(fancyhdr)                \setlength{\headheight}{63.55022pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-0.95425pt}.
+
+[3] (./paper.aux)
 Package rerunfilecheck Info: File `paper.out' has not changed.
-(rerunfilecheck)             Checksum: A4E6E919EBC3966A1B06F6E49C8EEFD2;432.
+(rerunfilecheck)             Checksum: 6A576A78B873E2D5EF9BCD2B40D6A713;588.
 Package logreq Info: Writing requests to 'paper.run.xml'.
 \openout1 = `paper.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 33154 strings out of 478451
- 669926 string characters out of 5857705
- 1452049 words of memory out of 5000000
- 52988 multiletter control sequences out of 15000+600000
+ 33158 strings out of 478451
+ 669994 string characters out of 5857705
+ 1456263 words of memory out of 5000000
+ 52992 multiletter control sequences out of 15000+600000
  410286 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 87i,13n,95p,738b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 87i,12n,95p,738b,804s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on paper.pdf (2 pages).
+Output written on paper.pdf (3 pages).
