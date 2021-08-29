@@ -56,7 +56,7 @@ To cite `home2park` or acknowledge its use, please cite the following:
 
 <br>
 
-The get a BibTex entry, run `citation("home2park")`.
+To get a BibTex entry, run `citation("home2park")`.
 
 <br>
 
@@ -202,6 +202,6 @@ rm(buildings_pop_sgp, parks_sgp, pop_sgp,
 
 ## References
 
-Rossi, S. D., Byrne, J. A., & Pickering, C. M. (2015). The role of distance in peri-urban national park use: Who visits them and how far do they travel?. Applied Geography, 63, 77-88.
+Rossi, S. D., Byrne, J. A., & Pickering, C. M. (2015). The role of distance in peri-urban national park use: Who visits them and how far do they travel?. _Applied Geography_, 63, 77-88.
 
-Tu, X., Huang, G., Wu, J., & Guo, X. (2020). How do travel distance and park size influence urban park visits?. Urban Forestry & Urban Greening, 52, 126689.
+Tu, X., Huang, G., Wu, J., & Guo, X. (2020). How do travel distance and park size influence urban park visits?. _Urban Forestry & Urban Greening_, 52, 126689.

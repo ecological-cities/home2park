@@ -324,8 +324,8 @@ palette is binned according to quantile values.
 
 Rossi, S. D., Byrne, J. A., & Pickering, C. M. (2015). The role of
 distance in peri-urban national park use: Who visits them and how far do
-they travel?. Applied Geography, 63, 77-88.
+they travel?. *Applied Geography*, 63, 77-88.
 
 Tu, X., Huang, G., Wu, J., & Guo, X. (2020). How do travel distance and
-park size influence urban park visits?. Urban Forestry & Urban Greening,
-52, 126689.
+park size influence urban park visits?. *Urban Forestry & Urban
+Greening*, 52, 126689.
