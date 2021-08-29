@@ -85,7 +85,7 @@ The key features include the ability to:
 The following sections provide a high-level overview of the various
 steps required to measure the spatial provision of parks. Further
 details and code examples can be found in the package vignette ‘[Get
-started](articles/home2park.html)’.
+started](https://ecological-cities.github.io/home2park/articles/home2park.html)’.
 
 ### 1. Process city population
 
