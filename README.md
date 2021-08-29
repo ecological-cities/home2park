@@ -47,7 +47,7 @@ spatial provision of urban parks.
 
 <br>
 
-The get a BibTex entry, run `citation("home2park")`.
+To get a BibTex entry, run `citation("home2park")`.
 
 <br>
 
