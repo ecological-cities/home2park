@@ -59,7 +59,7 @@
 
 #' Population count per residential building in Singapore
 #'
-#' Example dataset of residential building polygons in Singapore,
+#' Example (random 5% subset) dataset of residential building polygons in Singapore,
 #' each with a population count (column `popcount`)
 #' estimated via dasymetric mapping.
 #'
@@ -69,6 +69,7 @@
 #' was re-distributed across the buildings located within residential land use zones,
 #' by performing dasymetric mapping using the functions `pop_dasymap()` and `pop_density_polygonise()`.
 #' See vignette and examples in `pop_density_polygonise()` for more details.
+#' The dataset is a random 5% subset of the resulting polygons.
 #'
 #' @docType data
 #'

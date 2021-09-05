@@ -20,7 +20,7 @@ All are made available under the terms of the \href{https://data.gov.sg/open-dat
 buildings_pop_sgp
 }
 \description{
-Example dataset of residential building polygons in Singapore,
+Example (random 5\% subset) dataset of residential building polygons in Singapore,
 each with a population count (column \code{popcount})
 estimated via dasymetric mapping.
 }
@@ -31,6 +31,7 @@ using the function \code{get_buildings_osm()}. The population count per census b
 was re-distributed across the buildings located within residential land use zones,
 by performing dasymetric mapping using the functions \code{pop_dasymap()} and \code{pop_density_polygonise()}.
 See vignette and examples in \code{pop_density_polygonise()} for more details.
+The dataset is a random 5\% subset of the resulting polygons.
 }
 \examples{
 data(buildings_pop_sgp)

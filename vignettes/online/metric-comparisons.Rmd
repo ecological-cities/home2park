@@ -140,36 +140,39 @@ buildings_pop_sgp <- buildings_pop_sgp %>%
   dplyr::mutate(across(everything(), as.vector)) # remove attributes from columns for plotting
 
 
-# random sampling of buildings
-set.seed(123) 
+# for area related vars, convert m2 to km2
 buildings_pop_sgp <- buildings_pop_sgp %>% 
-  dplyr::mutate(across(.cols = contains("area"), # for area related vars, convert m2 to km2
+  dplyr::mutate(across(.cols = contains("area"), 
               .fns = function(x) x*1e-6))
 
-# some processing to get proper range for color scale later
-# get max values per building (for particular round)
-buildings_max <- buildings_pop_sgp %>%
-  tidyr::pivot_longer(cols = c(-popcount, -geometry),
-                      names_to = "supply", 
-                      values_to = "value") %>%
-     dplyr::group_by(supply) %>%
-     dplyr::slice(which.max(value)) %>%
-  tidyr::pivot_wider(names_from = "supply", values_from = "value")
 
-# subset random sample
-buildings_pop_sgp <- 
-  dplyr::slice_sample(buildings_pop_sgp, 
-                      n = nrow(buildings_pop_sgp)/12)
-
-# append max buildings to the random subset 
-buildings_pop_sgp <- buildings_pop_sgp %>%
-  dplyr::bind_rows(buildings_max)
+# random sampling of buildings
+# set.seed(123) 
+# # some processing to get proper range for color scale later
+# # get max values per building (for particular round)
+# buildings_max <- buildings_pop_sgp %>%
+#   tidyr::pivot_longer(cols = c("area_supply", "area_supplytopop"),
+#                       names_to = "supply", 
+#                       values_to = "value") %>%
+#      dplyr::group_by(supply) %>%
+#      dplyr::slice(which.max(value)) %>%
+#   tidyr::pivot_wider(names_from = "supply", values_from = "value")
+# 
+# # subset random sample (already done with example dataset)
+# buildings_pop_sgp <-
+#   dplyr::slice_sample(buildings_pop_sgp,
+#                       n = nrow(buildings_pop_sgp)/20)
+# 
+# # append max buildings to the random subset 
+# buildings_pop_sgp <- buildings_pop_sgp %>%
+#   dplyr::bind_rows(buildings_max)
 
 
 
 
 
 tmap::tmap_mode("view")
+tmap::tmap_options(check.and.fix = TRUE)
 
 tm <- 
   tmap::tm_basemap(c("Esri.WorldGrayCanvas", "CartoDB.DarkMatter", "OpenStreetMap")) +
