@@ -105,7 +105,7 @@
       <h1 data-toc-skip>Get started with home2park</h1>
                         <h4 class="author">Song, Xiao Ping</h4>
             
-            <h4 class="date">2021-08-06</h4>
+            <h4 class="date">2021-09-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ecological-cities/home2park/blob/master/vignettes/home2park.Rmd"><code>vignettes/home2park.Rmd</code></a></small>
       <div class="hidden name"><code>home2park.Rmd</code></div>
@@ -221,15 +221,15 @@ Example screenshot showing an overlay of multiple datasets used to redistribute 
 <pre><code>#&gt; Simple feature collection with 6 features and 1 field
 #&gt; Geometry type: POLYGON
 #&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 368430.2 ymin: 161460 xmax: 370940.2 ymax: 161610
+#&gt; Bounding box:  xmin: 371080.2 ymin: 143490 xmax: 377260.2 ymax: 157710
 #&gt; Projected CRS: WGS 84 / UTM zone 48N
-#&gt;     popcount                       geometry
-#&gt; 1 218.885435 POLYGON ((368490.2 161610, ...
-#&gt; 2  39.797352 POLYGON ((368430.2 161550, ...
-#&gt; 3   9.219688 POLYGON ((370680.2 161550, ...
-#&gt; 4   9.949338 POLYGON ((368460.2 161530, ...
-#&gt; 5  85.282118 POLYGON ((370840.2 161550, ...
-#&gt; 6 218.885435 POLYGON ((368460.2 161580, ...</code></pre>
+#&gt;    popcount                       geometry
+#&gt; 1 32.367111 POLYGON ((371080.2 157060, ...
+#&gt; 2 20.880897 POLYGON ((375490.2 145930, ...
+#&gt; 3  2.311594 POLYGON ((373650.2 145960, ...
+#&gt; 4 56.747406 POLYGON ((372100.2 144130, ...
+#&gt; 5  6.368404 POLYGON ((372240.2 157710, ...
+#&gt; 6  9.502521 POLYGON ((377240.2 143520, ...</code></pre>
 <p><br></p>
 </div>
 <div id="process-parks" class="section level2">
@@ -334,6 +334,34 @@ Screenshot: Examples showing the supply of OSM park area to residential building
 
 <span class="co"># supply to all residents per building</span>
 <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supplytopop</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">area_supply</span> <span class="op">*</span> <span class="va">buildings_pop_sgp</span><span class="op">$</span><span class="va">popcount</span></code></pre></div>
+<p>We can visualise the supply of park area to building residents using <code><a href="https://github.com/mtennekes/tmap">library(tmap)</a></code>:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="co"># convert buildings to points (centroids) for plotting</span>
+<span class="va">buildings_pop_sgp</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span> <span class="op">%&gt;%</span> 
+  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="fu">everything</span><span class="op">(</span><span class="op">)</span>, <span class="va">as.vector</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># remove attributes from columns for plotting</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span>.cols <span class="op">=</span> <span class="fu">contains</span><span class="op">(</span><span class="st">"area"</span><span class="op">)</span>, <span class="co"># convert from m2 to km2</span>
+              .fns <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">*</span><span class="fl">1e-6</span><span class="op">)</span><span class="op">)</span>
+
+
+<span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tmap_mode.html">tmap_mode</a></span><span class="op">(</span><span class="st">"view"</span><span class="op">)</span>
+
+<span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_tiles.html">tm_basemap</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_polygons.html">tm_polygons</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"#33a02c"</span>,
+                      alpha <span class="op">=</span> <span class="fl">0.6</span>,
+                      border.col <span class="op">=</span> <span class="st">"grey50"</span>, 
+                      border.alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">buildings_pop_sgp</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_symbols.html">tm_dots</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Supply of park area (km&lt;sup&gt;2&lt;/sup&gt;)"</span>,
+                  col <span class="op">=</span> <span class="st">"area_supplytopop"</span>, 
+                  border.col <span class="op">=</span> <span class="st">"transparent"</span>,
+                  palette <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">viridis</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>,
+                  style <span class="op">=</span> <span class="st">"quantile"</span>,
+                  size <span class="op">=</span> <span class="fl">0.01</span>,
+                  alpha <span class="op">=</span> <span class="fl">0.7</span>,
+                  showNA <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="../man/figures/README-supply-parkarea-to-building-residents.png" alt="Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to the quantile values." width="100%"><p class="caption">
 Screenshot: Supply of park area to building residents in Singapore based on OSM data (2020). Each building is denoted as a point (a random subset is shown). The color palette is binned according to the quantile values.
@@ -341,12 +369,12 @@ Screenshot: Supply of park area to building residents in Singapore based on OSM 
 </div>
 <p><br></p>
 <p>Finally, it is also possible to summarise the supply values of buildings within coarser spatial regions. This allows us to compare our results with conventional park provision metrics (per capita park area) for the selected year 2020.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># calculate for year 2020</span>
 <span class="va">pop_2020</span> <span class="op">&lt;-</span> <span class="va">pop_sgp</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2020</span><span class="op">)</span></code></pre></div>
 <p>Calculate summary statistics (e.g. sum, median, mean) for the supply of park area within each region:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="co"># append subzone info to buildings if building intersects with subzone  </span>
 <span class="va">buildings_subzones</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span>  <span class="op">%&gt;%</span>
@@ -370,10 +398,10 @@ Screenshot: Supply of park area to building residents in Singapore based on OSM 
 <span class="co"># join information to pop_2020, calculate supply per capita</span>
 <span class="va">pop_2020</span> <span class="op">&lt;-</span> <span class="va">pop_2020</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">buildings_subzones</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>area_supplyperpop <span class="op">=</span> <span class="va">area_supplytopop_sum</span> <span class="op">/</span> <span class="va">pop_count</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>area_supplyperpop <span class="op">=</span> <span class="va">area_supplytopop_sum</span> <span class="op">/</span> <span class="va">pop_count</span> <span class="op">*</span> <span class="fl">1e-6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># convert to km2</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>area_supplyperpop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.infinite</a></span><span class="op">(</span><span class="va">area_supplyperpop</span><span class="op">)</span>, <span class="cn">NA</span>, <span class="va">area_supplyperpop</span><span class="op">)</span><span class="op">)</span> <span class="co"># make infinite NA</span></code></pre></div>
-<p>Calculate the per capita park area for each census unit:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>Calculate the (conventional) per capita park area for each census unit:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">subzones_parks</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_binary_ops.html">st_intersection</a></span><span class="op">(</span><span class="va">pop_2020</span>, <span class="va">parks_sgp</span><span class="op">)</span> <span class="co"># subset census unit polygons to those that intersect parks, append park info</span>
 <span class="va">subzones_parks</span><span class="op">$</span><span class="va">parkarea_m2</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_area</a></span><span class="op">(</span><span class="va">subzones_parks</span><span class="op">)</span> <span class="co"># calc area of each polygon</span>
@@ -390,11 +418,29 @@ Screenshot: Supply of park area to building residents in Singapore based on OSM 
 <span class="va">pop_2020</span> <span class="op">&lt;-</span> <span class="va">pop_2020</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">subzones_parks</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>parkarea_m2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">parkarea_m2</span><span class="op">)</span>, <span class="fl">0</span>, <span class="va">parkarea_m2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># make NA 0</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>parkperpop_m2 <span class="op">=</span> <span class="va">parkarea_m2</span> <span class="op">/</span> <span class="va">pop_count</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>parkperpop_m2 <span class="op">=</span> <span class="va">parkarea_m2</span> <span class="op">/</span> <span class="va">pop_count</span> <span class="op">*</span> <span class="fl">1e-6</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># convert to km2</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>parkperpop_m2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.infinite</a></span><span class="op">(</span><span class="va">parkperpop_m2</span><span class="op">)</span>, <span class="co"># make infinite NA</span>
                                 <span class="cn">NA</span>, <span class="va">parkperpop_m2</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>parkperpop_m2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html">is.nan</a></span><span class="op">(</span><span class="va">parkperpop_m2</span><span class="op">)</span>, <span class="co"># make NaN NA</span>
                                 <span class="cn">NA</span>, <span class="va">parkperpop_m2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Similarly, we can visualise the park metrics summarised per region:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_tiles.html">tm_basemap</a></span><span class="op">(</span><span class="st">"Esri.WorldGrayCanvas"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">pop_2020</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_polygons.html">tm_polygons</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Park area per capita (km&lt;sup&gt;2&lt;/sup&gt;)"</span>,
+                      group <span class="op">=</span> <span class="st">"Subzones: Per capita park area (conventional)"</span>,
+                      col <span class="op">=</span> <span class="st">"parkperpop_m2"</span>,
+                      palette <span class="op">=</span> <span class="st">"Greens"</span>, alpha <span class="op">=</span> <span class="fl">0.7</span>,
+                      style <span class="op">=</span> <span class="st">"quantile"</span>,
+                      border.col <span class="op">=</span> <span class="st">"white"</span>, border.alpha <span class="op">=</span> <span class="fl">0.5</span>, lwd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">pop_2020</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu">tmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tmap/man/tm_polygons.html">tm_polygons</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Supply of park area per capita (km&lt;sup&gt;2&lt;/sup&gt;)"</span>,
+                      group <span class="op">=</span> <span class="st">"Subzones: Per capita supply of park area"</span>,
+                      col <span class="op">=</span> <span class="st">"area_supplyperpop"</span>, 
+                      palette <span class="op">=</span> <span class="st">"Greens"</span>, alpha <span class="op">=</span> <span class="fl">0.7</span>,
+                      style <span class="op">=</span> <span class="st">"quantile"</span>,
+                      border.col <span class="op">=</span> <span class="st">"white"</span>, border.alpha <span class="op">=</span> <span class="fl">0.5</span>, lwd <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><br></p>
 <p>The following figure provides a visual comparison between the provision of park area per capita summarised per region (subzone), based on conventional metrics (left panel) and derived from each residential building (right panel). The interactive map is viewable online at <a href="https://ecological-cities.github.io/home2park/articles/online/metric-comparisons.html" class="uri">https://ecological-cities.github.io/home2park/articles/online/metric-comparisons.html</a>.</p>
 <div class="figure" style="text-align: center">

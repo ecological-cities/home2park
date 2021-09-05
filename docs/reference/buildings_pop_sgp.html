@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Population count per residential building in Singapore — buildings_pop_sgp" />
-<meta property="og:description" content="Example dataset of residential building polygons in Singapore,
+<meta property="og:description" content="Example (random 5% subset) dataset of residential building polygons in Singapore,
 each with a population count (column popcount)
 estimated via dasymetric mapping." />
 <meta property="og:image" content="https://ecological-cities.github.io/home2park/reference/figures/logo.png" />
@@ -156,7 +156,7 @@ estimated via dasymetric mapping." />
     </div>
 
     <div class="ref-description">
-    <p>Example dataset of residential building polygons in Singapore,
+    <p>Example (random 5% subset) dataset of residential building polygons in Singapore,
 each with a population count (column <code>popcount</code>)
 estimated via dasymetric mapping.</p>
     </div>
@@ -182,7 +182,8 @@ All are made available under the terms of the <a href='https://data.gov.sg/open-
 using the function <code><a href='get_buildings_osm.html'>get_buildings_osm()</a></code>. The population count per census block in the year 2020
 was re-distributed across the buildings located within residential land use zones,
 by performing dasymetric mapping using the functions <code><a href='pop_dasymap.html'>pop_dasymap()</a></code> and <code><a href='pop_density_polygonise.html'>pop_density_polygonise()</a></code>.
-See vignette and examples in <code><a href='pop_density_polygonise.html'>pop_density_polygonise()</a></code> for more details.</p>
+See vignette and examples in <code><a href='pop_density_polygonise.html'>pop_density_polygonise()</a></code> for more details.
+The dataset is a random 5% subset of the resulting polygons.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>buildings_pop_sgp</span><span class='op'>)</span>
@@ -190,15 +191,15 @@ See vignette and examples in <code><a href='pop_density_polygonise.html'>pop_den
 </div><div class='output co'>#&gt; Simple feature collection with 6 features and 1 field
 #&gt; Geometry type: POLYGON
 #&gt; Dimension:     XY
-#&gt; Bounding box:  xmin: 103.8173 ymin: 1.460475 xmax: 103.8399 ymax: 1.46182
+#&gt; Bounding box:  xmin: 103.8412 ymin: 1.297955 xmax: 103.8968 ymax: 1.426561
 #&gt; Geodetic CRS:  WGS 84
-#&gt;     popcount                       geometry
-#&gt; 1 218.885435 POLYGON ((103.8179 1.46182,...
-#&gt; 2  39.797352 POLYGON ((103.8173 1.461277...
-#&gt; 3   9.219688 POLYGON ((103.8375 1.461288...
-#&gt; 4   9.949338 POLYGON ((103.8176 1.461096...
-#&gt; 5  85.282118 POLYGON ((103.839 1.461289,...
-#&gt; 6 218.885435 POLYGON ((103.8176 1.461549...</div></pre>
+#&gt;    popcount                       geometry
+#&gt; 1 32.367111 POLYGON ((103.8412 1.420676...
+#&gt; 2 20.880897 POLYGON ((103.8808 1.320019...
+#&gt; 3  2.311594 POLYGON ((103.8643 1.320283...
+#&gt; 4 56.747406 POLYGON ((103.8504 1.303723...
+#&gt; 5  6.368404 POLYGON ((103.8516 1.426561...
+#&gt; 6  9.502521 POLYGON ((103.8966 1.298226...</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
