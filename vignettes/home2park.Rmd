@@ -36,7 +36,7 @@ The package `home2park` provides a way to measure _multiple aspects_ of park pro
 Install the development version of `home2park` from GitHub:
 
 ```{r, eval = FALSE}
-devtools::install_github("ecological-cities/home2park")
+devtools::install_github("ecological-cities/home2park", ref = "main")
 ```
 
 ## Setup
