@@ -14,7 +14,7 @@
 #'
 #'@param place `sf` object (with projected coordinate reference system). Geographical area to match with the (`.osm.pbf`) file in the data archive.
 #'Argument passed to `osmextract::oe_match()`.
-#'@param date Date of OSM data snapshot to download. Refer to https://download.geofabrik.de
+#'@param date Date of OSM data snapshot to download. Object of class "Date" in format `%Y-%m-%d`. Refer to https://download.geofabrik.de
 #'for the specific dates available. Defaults to `NULL` (download the latest available data).
 #'@param mutually_exclusive_with list of `sf` object(s). This may be used to
 #'ensure that polygons (e.g. parks, beaches, informal nature areas) are mutually-exclusive (i.e. non-overlapping).
@@ -173,7 +173,7 @@ get_parks_osm <- function(place, date = NULL, mutually_exclusive_with = list(), 
 #'
 #'@param place `sf` object (with projected coordinate reference system). Geographical area to match with the (`.osm.pbf`) file in the data archive.
 #'Argument passed to `osmextract::oe_match()`.
-#'@param date Date of OSM data snapshot to download. Refer to https://download.geofabrik.de
+#'@param date Date of OSM data snapshot to download. Object of class "Date" in format `%Y-%m-%d`. Refer to https://download.geofabrik.de
 #'for the specific dates available. Defaults to `NULL` (download the latest available data).
 #'@param mutually_exclusive_with list of `sf` object(s). This may be used to
 #'ensure that polygons (e.g. parks, beaches, informal nature areas) are mutually-exclusive (i.e. non-overlapping).
@@ -342,7 +342,7 @@ get_beaches_osm <- function(place, date = NULL, mutually_exclusive_with = list()
 #'
 #'@param place `sf` object (with projected coordinate reference system). Geographical area to match with the (`.osm.pbf`) file in the data archive.
 #'Argument passed to `osmextract::oe_match()`.
-#'@param date Date of OSM data snapshot to download. Refer to https://download.geofabrik.de
+#'@param date Date of OSM data snapshot to download. Object of class "Date" in format `%Y-%m-%d`. Refer to https://download.geofabrik.de
 #'for the specific dates available. Defaults to `NULL` (download the latest available data).
 #'@param mutually_exclusive_with list of `sf` object(s). This may be used to
 #'ensure that polygons (e.g. parks, beaches, informal nature areas) are mutually-exclusive (i.e. non-overlapping).

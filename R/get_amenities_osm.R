@@ -10,7 +10,7 @@
 #'
 #'@param place `sf` object (with projected coordinate reference system). Geographical area to match with the (`.osm.pbf`) file in the data archive.
 #'Argument passed to `osmextract::oe_match()`.
-#'@param date Date of OSM data snapshot to download. Refer to https://download.geofabrik.de
+#'@param date Date of OSM data snapshot to download. Object of class "Date" in format `%Y-%m-%d`. Refer to https://download.geofabrik.de
 #'for the specific dates available. Defaults to `NULL` (download the latest available data).
 #'@param dir_raw character. Directory to download the raw unprocessed OSM data. Passed to
 #'argument `download_directory` in `osmextract::oe_read()`.
@@ -124,7 +124,7 @@ get_playgrounds_osm <- function(place, date = NULL, dir_raw = osmextract::oe_dow
 #'
 #'@param place `sf` object (with projected coordinate reference system). Geographical area to match with the (`.osm.pbf`) file in the data archive.
 #'Argument passed to `osmextract::oe_match()`.
-#'@param date Date of OSM data snapshot to download. Refer to https://download.geofabrik.de
+#'@param date Date of OSM data snapshot to download. Object of class "Date" in format `%Y-%m-%d`. Refer to https://download.geofabrik.de
 #'for the specific dates available. Defaults to `NULL` (download the latest available data).
 #'@param dir_raw character. Directory to download the raw unprocessed OSM data. Passed to
 #'argument `download_directory` in `osmextract::oe_read()`.
@@ -237,7 +237,7 @@ get_sportfitness_osm <- function(place, date = NULL, dir_raw = osmextract::oe_do
 #'
 #'@param place `sf` object (with projected coordinate reference system). Geographical area to match with the (`.osm.pbf`) file in the data archive.
 #'Argument passed to `osmextract::oe_match()`.
-#'@param date Date of OSM data snapshot to download. Refer to https://download.geofabrik.de
+#'@param date Date of OSM data snapshot to download. Object of class "Date" in format `%Y-%m-%d`. Refer to https://download.geofabrik.de
 #'for the specific dates available. Defaults to `NULL` (download the latest available data).
 #'@param dir_raw character. Directory to download the raw unprocessed OSM data. Passed to
 #'argument `download_directory` in `osmextract::oe_read()`.
