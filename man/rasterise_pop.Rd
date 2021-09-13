@@ -37,7 +37,7 @@ Zero values for population counts/density are converted to \code{NA}. Intermedia
 \description{
 Convert population counts per census block (polygons)
 into population density grid (raster) for subsequent analyses.
-Each polygon's count is divided by its area, such that the the integrated
+Each polygon's count is divided by its area, such that the integrated
 density over each census block should equal the original count.
 Census data for multiple years can be processed (one raster per year).
 The column name for the \code{year} must be specified, even if data does not contain multiple years

@@ -2,7 +2,7 @@
 #'
 #'Convert population counts per census block (polygons)
 #'into population density grid (raster) for subsequent analyses.
-#'Each polygon's count is divided by its area, such that the the integrated
+#'Each polygon's count is divided by its area, such that the integrated
 #'density over each census block should equal the original count.
 #'Census data for multiple years can be processed (one raster per year).
 #'The column name for the `year` must be specified, even if data does not contain multiple years
@@ -78,7 +78,7 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
 
     sf <- sf %>%
         dplyr::mutate(area = st_area(sf)) %>%
-        dplyr::mutate(pop_perpixel = units::drop_units(pop_count/.data$area * (res * res)))  # drop units
+        dplyr::mutate(pop_perpixel = units::drop_units(.data[[pop_count]]/.data$area * (res * res)))  # drop units
 
 
     # template raster file - reference for downstream calculations (& export)
