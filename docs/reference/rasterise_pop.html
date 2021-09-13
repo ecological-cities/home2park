@@ -49,10 +49,10 @@
 <meta property="og:title" content="Rasterise population counts within census block polygons — rasterise_pop" />
 <meta property="og:description" content="Convert population counts per census block (polygons)
 into population density grid (raster) for subsequent analyses.
-Each polygon's count is divided by its area, such that the the integrated
+Each polygon's count is divided by its area, such that the integrated
 density over each census block should equal the original count.
-Census data for multiple years can be processed (one raster per year).
-The column name for the year must be specified, even if data does not contain multiple years
+Census data for multiple years can be processed to output a list of rasters (one raster per year).
+The column name for the 'year' in sf must be specified, even if data does not contain multiple years
 (combined data across multiple years must be in the 'long' format)." />
 <meta property="og:image" content="https://ecological-cities.github.io/home2park/reference/figures/logo.png" />
 <meta property="og:image:alt" content="Spatial Provision of Urban Parks" />
@@ -162,10 +162,10 @@ The column name for the year must be specified, even if data does not contain mu
     <div class="ref-description">
     <p>Convert population counts per census block (polygons)
 into population density grid (raster) for subsequent analyses.
-Each polygon's count is divided by its area, such that the the integrated
+Each polygon's count is divided by its area, such that the integrated
 density over each census block should equal the original count.
-Census data for multiple years can be processed (one raster per year).
-The column name for the <code>year</code> must be specified, even if data does not contain multiple years
+Census data for multiple years can be processed to output a list of rasters (one raster per year).
+The column name for the <code>'year'</code> in <code>sf</code> must be specified, even if data does not contain multiple years
 (combined data across multiple years must be in the 'long' format).</p>
     </div>
 
@@ -213,7 +213,8 @@ Set to <code>NULL</code> if you do not wish to export intermediate (temporary) f
 
     <p>List containing (1) rasterised population count per census block,
 (2) rasterised population density per census block, and (3) processed polygons used to generate
-these rasters. Named <code>pop_count_rasters</code>, <code>pop_density_rasters</code> and <code>pop_polygons</code>, respectively. List is nested if multiple years are present (one sub-list for each census year).
+these rasters. Named <code>pop_count_rasters</code>, <code>pop_density_rasters</code> and <code>pop_polygons</code>, respectively.
+List is nested if multiple years are present (one sub-list for each census year).
 Zero values for population counts/density are converted to <code>NA</code>. Intermediate (raster) files are exported to <code><a href='https://rdrr.io/r/base/tempfile.html'>tempdir()</a></code> for further processing.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

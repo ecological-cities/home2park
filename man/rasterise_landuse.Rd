@@ -63,7 +63,7 @@ Each raster is also an intermediate file exported to the directory as defined by
 }
 \description{
 Rasterise land use zones (\code{sf_landuse}) with reference to population data (\code{sf_pop}), if supplied.
-Multiple output rasters will be generated if land use data for multiple years are present.
+Multiple (a list of) output rasters will be generated if land use data for multiple years are present.
 If the land use data includes unnecessary land use classes, the argument \code{subset} and \code{landuse}
 allows the user to first subset the data to polygons defined as 'residential' land use.
 }

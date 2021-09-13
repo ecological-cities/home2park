@@ -31,7 +31,8 @@ Set to \code{NULL} if you do not wish to export intermediate (temporary) files f
 \value{
 List containing (1) rasterised population count per census block,
 (2) rasterised population density per census block, and (3) processed polygons used to generate
-these rasters. Named \code{pop_count_rasters}, \code{pop_density_rasters} and \code{pop_polygons}, respectively. List is nested if multiple years are present (one sub-list for each census year).
+these rasters. Named \code{pop_count_rasters}, \code{pop_density_rasters} and \code{pop_polygons}, respectively.
+List is nested if multiple years are present (one sub-list for each census year).
 Zero values for population counts/density are converted to \code{NA}. Intermediate (raster) files are exported to \code{tempdir()} for further processing.
 }
 \description{
@@ -39,8 +40,8 @@ Convert population counts per census block (polygons)
 into population density grid (raster) for subsequent analyses.
 Each polygon's count is divided by its area, such that the integrated
 density over each census block should equal the original count.
-Census data for multiple years can be processed (one raster per year).
-The column name for the \code{year} must be specified, even if data does not contain multiple years
+Census data for multiple years can be processed to output a list of rasters (one raster per year).
+The column name for the \code{'year'} in \code{sf} must be specified, even if data does not contain multiple years
 (combined data across multiple years must be in the 'long' format).
 }
 \examples{

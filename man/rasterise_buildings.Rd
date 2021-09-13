@@ -65,7 +65,7 @@ List of raster files. Zero values are converted to \code{NA}.
 }
 \description{
 Rasterise building polygons (\code{sf_buildings}) with reference to population (\code{sf_pop}) and/or
-land use data (\code{sf_landuse}), if supplied. Multiple output rasters will be generated if
+land use data (\code{sf_landuse}), if supplied. Multiple output (a list of) rasters will be generated if
 building data for multiple years are present.
 }
 \details{

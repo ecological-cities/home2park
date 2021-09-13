@@ -16,7 +16,7 @@ get_sportfitness_osm(
 \item{place}{\code{sf} object (with projected coordinate reference system). Geographical area to match with the (\code{.osm.pbf}) file in the data archive.
 Argument passed to \code{osmextract::oe_match()}.}
 
-\item{date}{Date of OSM data snapshot to download. Refer to https://download.geofabrik.de
+\item{date}{Date of OSM data snapshot to download. Object of class "Date" in format \verb{\%Y-\%m-\%d}. Refer to https://download.geofabrik.de
 for the specific dates available. Defaults to \code{NULL} (download the latest available data).}
 
 \item{dir_raw}{character. Directory to download the raw unprocessed OSM data. Passed to
