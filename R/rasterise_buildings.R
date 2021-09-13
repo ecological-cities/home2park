@@ -1,7 +1,7 @@
 #'Rasterise building polygons
 #'
 #'Rasterise building polygons (`sf_buildings`) with reference to population (`sf_pop`) and/or
-#'land use data (`sf_landuse`), if supplied. Multiple output rasters will be generated if
+#'land use data (`sf_landuse`), if supplied. Multiple output (a list of) rasters will be generated if
 #'building data for multiple years are present.
 #'
 #'If population (`sf_pop`) and/or land use data (`sf_landuse`) are supplied,

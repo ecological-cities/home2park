@@ -1,7 +1,7 @@
 #'Rasterise residential land use polygons
 #'
 #'Rasterise land use zones (`sf_landuse`) with reference to population data (`sf_pop`), if supplied.
-#'Multiple output rasters will be generated if land use data for multiple years are present.
+#'Multiple (a list of) output rasters will be generated if land use data for multiple years are present.
 #'If the land use data includes unnecessary land use classes, the argument `subset` and `landuse`
 #'allows the user to first subset the data to polygons defined as 'residential' land use.
 #'

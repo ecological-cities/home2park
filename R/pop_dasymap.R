@@ -1,8 +1,10 @@
 #'Perform dasymetric mapping of (rasterised) population data
 #'
 #'Distribute population data per census block across inhabitable land as defined by `land_relative_density`.
-#'Data provided should be a snapshot of the population for a single time period (e.g. a year).
-#'All input data should have a similar projected coordinate reference system
+#'Raster data provided should be a snapshot of the population for a single time period (e.g. a year),
+#'created with other package functions (e.g. `rasterise_pop()`, `rasterise_buildings()`).
+#'If there are multiple years present in the intermediate datasets, the user will have to extract the relevant list element for
+#'the single year of interest (see examples). All input data should have a similar projected coordinate reference system
 #'specific to the target area.
 #'
 #'@param pop_polygons `sf` polygons of the population data for a single time period.
