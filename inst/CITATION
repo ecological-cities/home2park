@@ -7,10 +7,10 @@ citEntry(
   journal  = "Journal of Open Source Software",
   year     = "2021",
   volume   = "6",
-  number   = "64",
+  number   = "65",
   pages    = "3609",
   url      = "https://github.com/ecological-cities/home2park",
   note     = "",
   doi      = "10.21105/joss.03609",
-  textVersion = paste("Song, X. P., Chong, K. Y. (2021). home2park: An R package to assess the spatial provision of urban parks. Journal of Open Source Software, 6(64), 3609. https://doi.org/10.21105/joss.03609")
+  textVersion = paste("Song, X. P., Chong, K. Y. (2021). home2park: An R package to assess the spatial provision of urban parks. Journal of Open Source Software, 6(65), 3609. https://doi.org/10.21105/joss.03609")
 )
