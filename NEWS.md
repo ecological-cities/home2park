@@ -1,6 +1,5 @@
 
-# home2park (development version)
-
+# home2park 0.1.1
 
 ## Bug fixes 
 * Helper function `raster_class_area()`. The use of `terra::extract()` may output an additional third `area` column that is unused. Only keep first 2 columns of output.

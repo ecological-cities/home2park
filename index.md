@@ -71,13 +71,16 @@ park provision to homes, at the resolution of *individual buildings*.
 The key features include the ability to:
 
 -   Download relevant data from OpenStreetMap (OSM) such as buildings,
-    parks and features related to recreation (alternatively, the user
-    may use their own datasets).
--   Redistribute coarse-scale population data (e.g. per census unit
-    region) into residential buildings, also known as ‘dasymetric
-    mapping’.
--   Summarise multiple attributes that are important for recreation, at
-    each park.
+    parks and features related to recreation. The user may also supply
+    data for new buildings and parks, for the purpose of future scenario
+    planning.
+-   Redistribute coarse-scale population data per census unit into
+    residential buildings, also known as ‘dasymetric mapping’, which
+    helps highlight specific areas where more people will benefit from
+    the presence of parks.
+-   Summarise at each park multiple attributes that are important for
+    recreation (e.g. dense vegetation, length of waterfronts, open
+    spaces, trails, etc.).
 -   Calculate the supply (provision) of the park attributes to each
     residential building, while accounting for ‘distance decay’, or the
     fact that supply from parks further away are reduced.
