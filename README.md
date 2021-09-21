@@ -11,7 +11,7 @@ v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/li
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![R-CMD-check](https://github.com/ecological-cities/home2park/workflows/R-CMD-check/badge.svg)](https://github.com/ecological-cities/home2park/actions)
 [![test-coverage](https://github.com/ecological-cities/home2park/workflows/test-coverage/badge.svg)](https://github.com/ecological-cities/home2park/actions)
-[![DOI](https://zenodo.org/badge/321609762.svg)](https://zenodo.org/badge/latestdoi/321609762)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03609/status.svg)](https://doi.org/10.21105/joss.03609)
 <!-- badges: end -->
 
 ## Spatial Provision of Urban Parks
