@@ -43,7 +43,6 @@ Suggests:
     testthat (>= 3.0.0),
     spelling,
     knitr,
-    markdown,
     rmarkdown
 Config/testthat/edition: 3
 Language: en-GB
