@@ -219,7 +219,6 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
                     overwrite = overwrite, wopt = wopt, ...)
                 }
 
-                terra::tmpFiles(remove = TRUE)
                 rm(j)
               }
 
@@ -267,7 +266,6 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
                 terra::writeRaster(results[[i]], filename = file.path(glue::glue("{dir_export}/{names(results[[i]])}.tif")),
                   overwrite = overwrite, wopt = wopt, ...)
               }
-              terra::tmpFiles(remove = TRUE)
             }
 
             rm(buildings_raster, i)
@@ -317,8 +315,6 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
                                    overwrite = overwrite, wopt = wopt, ...)
               }
 
-              terra::tmpFiles(remove = TRUE)
-
 
             # POP DATA NOT PROVIDED
           } else {
@@ -344,7 +340,6 @@ rasterise_buildings <- function(sf_buildings, proxy_pop_density = NULL, year = N
 
             results[[1]] <- buildings_raster
 
-            terra::tmpFiles(remove = TRUE)
           }
 
           rm(buildings_raster)

@@ -1,4 +1,10 @@
 
+# home2park (development version)
+
+## Bug fixes 
+* Remove lines in `rasterise_buildings()` that clear temporary files used by the `terra` package, as these may cause the function output to go missing later on (if export directory is not specified).
+
+
 # home2park 0.1.1
 
 ## Bug fixes 
