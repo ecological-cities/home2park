@@ -1,10 +1,10 @@
-pandoc: 2.11.2
+pandoc: 2.14.0.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   home2park: home2park.html
   online/metric-comparisons: metric-comparisons.html
-last_built: 2021-09-21T00:26Z
+last_built: 2021-10-28T11:41Z
 urls:
   reference: https://ecological-cities.github.io/home2park//reference
   article: https://ecological-cities.github.io/home2park//articles

@@ -151,12 +151,23 @@
       <small>Source: <a href='https://github.com/ecological-cities/home2park/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="home2park-011" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.1">
-<a href="#home2park-011" class="anchor"></a>home2park 0.1.1</h1>
+    <div id="home2park-development-version" class="section level1">
+<h1 class="page-header" data-toc-text="development version">
+<a href="#home2park-development-version" class="anchor"></a>home2park (development version)</h1>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a>Bug fixes</h2>
+<ul>
+<li>Remove lines in <code><a href="../reference/rasterise_buildings.html">rasterise_buildings()</a></code> that clear temporary files used by the <code>terra</code> package, as these may cause the function output to go missing later on (if export directory is not specified).</li>
+</ul>
+</div>
+</div>
+    <div id="home2park-011" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.1">
+<a href="#home2park-011" class="anchor"></a>home2park 0.1.1</h1>
+<div id="bug-fixes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes-1" class="anchor"></a>Bug fixes</h2>
 <ul>
 <li><p>Helper function <code><a href="../reference/raster_class_area.html">raster_class_area()</a></code>. The use of <code><a href="https://rdrr.io/pkg/terra/man/extract.html">terra::extract()</a></code> may output an additional third <code>area</code> column that is unused. Only keep first 2 columns of output.</p></li>
 <li><p>Fix error in <code><a href="../reference/rasterise_buildings.html">rasterise_buildings()</a></code>. Getting the files for land use rasters resulted in an error (e.g. multiple files). Syntax for re-naming for the output using the <code><a href="https://glue.tidyverse.org/reference/glue.html">glue::glue()</a></code> function also did not work within package environment.</p></li>
