@@ -36,6 +36,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -54,12 +56,6 @@
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="articles/home2park.html">Get started</a>
 </li>
@@ -84,7 +80,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ecological-cities/home2park/">
+  <a href="https://github.com/ecological-cities/home2park/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -101,45 +97,45 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="home2park-spatial-provision-of-urban-parks" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#home2park-spatial-provision-of-urban-parks" class="anchor"></a>home2park: Spatial Provision of Urban Parks</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="home2park-spatial-provision-of-urban-parks">home2park: Spatial Provision of Urban Parks<a class="anchor" aria-label="anchor" href="#home2park-spatial-provision-of-urban-parks"></a>
+</h1></div>
 <!-- badges: start -->
 
 <p><a href="https://ecological-cities.github.io/home2park/"><img src="reference/figures/logo.png" align="right" height="175"></a></p>
 <p><code>home2park</code> is an R package for assessing the spatial provision of urban parks to residential buildings city-wide. Refer to the <a href="https://ecological-cities.github.io/home2park/">package website</a> for demonstrations of how the package may be used.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>Install the development version of <code>home2park</code> from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"ecological-cities/home2park"</span>, ref <span class="op">=</span> <span class="st">"main"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ecological-cities/home2park"</span>, ref <span class="op">=</span> <span class="st">"main"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="setup" class="section level2">
-<h2 class="hasAnchor">
-<a href="#setup" class="anchor"></a>Setup</h2>
+<div class="section level2">
+<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h2>
 <p>Load the package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ecological-cities/home2park">home2park</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ecological-cities/home2park" class="external-link">home2park</a></span><span class="op">)</span></code></pre></div>
 </div>
-<div id="citation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#citation" class="anchor"></a>Citation</h2>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
 <p>To cite <code>home2park</code> or acknowledge its use, please cite the following:</p>
-<p><em>Song, X. P., Chong, K. Y. (2021). home2park: An R package to assess the spatial provision of urban parks. Journal of Open Source Software, 6(65), 3609. <a href="https://doi.org/10.21105/joss.03609" class="uri">https://doi.org/10.21105/joss.03609</a></em></p>
+<p><em>Song, X. P., Chong, K. Y. (2021). home2park: An R package to assess the spatial provision of urban parks. Journal of Open Source Software, 6(65), 3609. <a href="https://doi.org/10.21105/joss.03609" class="external-link uri">https://doi.org/10.21105/joss.03609</a></em></p>
 <p><br></p>
-<p>The get a BibTex entry, run <code><a href="https://rdrr.io/r/utils/citation.html">citation("home2park")</a></code>.</p>
+<p>The get a BibTex entry, run <code>citation("home2park")</code>.</p>
 <p><br></p>
 </div>
-<div id="background" class="section level2">
-<h2 class="hasAnchor">
-<a href="#background" class="anchor"></a>Background</h2>
+<div class="section level2">
+<h2 id="background">Background<a class="anchor" aria-label="anchor" href="#background"></a>
+</h2>
 <p>Parks are important spaces for recreation and leisure in cities. Conventional measures of park provision tend to rely on summaries of park area within a given region (e.g. per capita park area). However, there is a need to characterise the wide variety of parks (e.g. nature areas, gardens, waterfront parks, outdoor playgrounds, etc.) that serve different groups of people. When planning at fine spatial scales, such current metrics are also limited by their coarse spatial resolution and the presence of artificial boundaries.</p>
 <p><br></p>
 </div>
-<div id="using-home2park" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using-home2park" class="anchor"></a>Using home2park</h2>
+<div class="section level2">
+<h2 id="using-home2park">Using home2park<a class="anchor" aria-label="anchor" href="#using-home2park"></a>
+</h2>
 <p>The package <code>home2park</code> provides a way to measure <em>multiple aspects</em> of park provision to homes, at the resolution of <em>individual buildings</em>. The key features include the ability to:</p>
 <ul>
 <li>Download relevant data from OpenStreetMap (OSM) such as buildings, parks and features related to recreation. The user may also supply data for new buildings and parks, for the purpose of future scenario planning.</li>
@@ -148,9 +144,9 @@
 <li>Calculate the supply (provision) of the park attributes to each residential building, while accounting for ‘distance decay’, or the fact that supply from parks further away are reduced.</li>
 </ul>
 <p>The following sections provide a high-level overview of the various steps required to measure the spatial provision of parks. Further details and code examples can be found in the package vignette ‘<a href="articles/home2park.html">Get started</a>’.</p>
-<div id="1-process-city-population" class="section level3">
-<h3 class="hasAnchor">
-<a href="#1-process-city-population" class="anchor"></a>1. Process city population</h3>
+<div class="section level3">
+<h3 id="1-process-city-population">1. Process city population<a class="anchor" aria-label="anchor" href="#1-process-city-population"></a>
+</h3>
 <p>Residential buildings (homes) are an important component of the analysis. These may be obtained, for example, by downloading building polygons from OpenStreetMap (OSM), and subsetting the dataset to areas within ‘residential’ land use zones.</p>
 <p>In addition, having the population count per residential building allows us to calculate the total spatial provision of parks to all residents, and can help highlight important areas where more people will benefit from the presence of parks. Coarse-scale population census data can be redistributed into the residential buildings, via a technique known as ‘dasymetric mapping’. The number of building ‘levels’ from OSM can be used as a proxy for population density (i.e. more residents per unit area). Here’s an example screenshot showing an overlay of multiple example datasets in the package (for the city of Singapore), which were used to redistribute population data per census unit (subzones) across residential buildings.</p>
 <div class="figure" style="text-align: center">
@@ -161,8 +157,8 @@ Example screenshot showing an overlay of multiple datasets used to redistribute 
 <p><br></p>
 <p>Residential building polygons in Singapore each with a population count can be found in the following example dataset:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">buildings_pop_sgp</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">buildings_pop_sgp</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">buildings_pop_sgp</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">buildings_pop_sgp</span><span class="op">)</span>
 <span class="co">#&gt; Simple feature collection with 6 features and 1 field</span>
 <span class="co">#&gt; Geometry type: POLYGON</span>
 <span class="co">#&gt; Dimension:     XY</span>
@@ -177,13 +173,13 @@ Example screenshot showing an overlay of multiple datasets used to redistribute 
 <span class="co">#&gt; 6  9.502521 POLYGON ((103.8966 1.298226...</span></code></pre></div>
 <p><br></p>
 </div>
-<div id="2-process-parks" class="section level3">
-<h3 class="hasAnchor">
-<a href="#2-process-parks" class="anchor"></a>2. Process parks</h3>
+<div class="section level3">
+<h3 id="2-process-parks">2. Process parks<a class="anchor" aria-label="anchor" href="#2-process-parks"></a>
+</h3>
 <p>Parks are the other important component of the analysis. These may be downloaded from OSM and processed using this package. The following example dataset contains parks in Singapore with selected attributes related to recreation/leisure:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">[</span>, <span class="fl">28</span><span class="op">:</span><span class="fl">33</span><span class="op">]</span><span class="op">)</span> <span class="co"># subset to relevant columns</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">[</span>, <span class="fl">28</span><span class="op">:</span><span class="fl">33</span><span class="op">]</span><span class="op">)</span> <span class="co"># subset to relevant columns</span>
 <span class="co">#&gt; Simple feature collection with 6 features and 6 fields</span>
 <span class="co">#&gt; Geometry type: MULTIPOLYGON</span>
 <span class="co">#&gt; Dimension:     XY</span>
@@ -205,10 +201,10 @@ Example screenshot showing an overlay of multiple datasets used to redistribute 
 <span class="co">#&gt; 6   905.5080 [m]             0.8290105 [1] MULTIPOLYGON (((103.7812 1....</span></code></pre></div>
 <p><br></p>
 </div>
-<div id="3-recreation-supply" class="section level3">
-<h3 class="hasAnchor">
-<a href="#3-recreation-supply" class="anchor"></a>3. Recreation supply</h3>
-<p>With the processed building and park polygons, the provision of park attributes per residential building can be calculated. The total supply <em>S</em> of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; attributes from parks further away are reduced as a result of the negative exponential function <em>e<sup>-cd</sup></em>, an effect also known as the ‘distance decay’ (<a href="http://dx.doi.org/10.1016/j.apgeog.2015.06.008">Rossi et al., 2015</a>).</p>
+<div class="section level3">
+<h3 id="3-recreation-supply">3. Recreation supply<a class="anchor" aria-label="anchor" href="#3-recreation-supply"></a>
+</h3>
+<p>With the processed building and park polygons, the provision of park attributes per residential building can be calculated. The total supply <em>S</em> of each park attribute to a building is calculated based on the following equation. Its value depends on the distances between that particular building and all parks; attributes from parks further away are reduced as a result of the negative exponential function <em>e<sup>-cd</sup></em>, an effect also known as the ‘distance decay’ (<a href="http://dx.doi.org/10.1016/j.apgeog.2015.06.008" class="external-link">Rossi et al., 2015</a>).</p>
 <p><img src="reference/figures/README-equation.png" width="18%" style="display: block; margin: auto;"></p>
 <p>where</p>
 <ul>
@@ -218,7 +214,7 @@ Example screenshot showing an overlay of multiple datasets used to redistribute 
 <li><p><em>c</em> = Coefficient determining rate of decay in supply <em>s</em><sub><em>i</em></sub> with increasing distance.</p></li>
 </ul>
 <p><br></p>
-<p>Note that the value of Coefficient <em>c</em> depends on both park and park visitors’ attributes, such as socio-demographic factors and preferences for activities that may impel shorter or longer travel (<a href="http://dx.doi.org/10.1016/j.apgeog.2015.06.008">Rossi et al., 2015</a>; <a href="https://doi.org/10.1016/j.ufug.2020.126689">Tu et al.</a>). A lower value implies that parks further away are accessible or frequently visited by residents (i.e. still contributes to the ‘recreation supply’ of a particular building).</p>
+<p>Note that the value of Coefficient <em>c</em> depends on both park and park visitors’ attributes, such as socio-demographic factors and preferences for activities that may impel shorter or longer travel (<a href="http://dx.doi.org/10.1016/j.apgeog.2015.06.008" class="external-link">Rossi et al., 2015</a>; <a href="https://doi.org/10.1016/j.ufug.2020.126689" class="external-link">Tu et al.</a>). A lower value implies that parks further away are accessible or frequently visited by residents (i.e. still contributes to the ‘recreation supply’ of a particular building).</p>
 <div class="figure" style="text-align: center">
 <img src="reference/figures/README-c-sensitivity.png" alt="Figure: The value of Coefficient c and its effect on the distance decay between a building and park." width="50%"><p class="caption">
 Figure: The value of Coefficient c and its effect on the distance decay between a building and park.
@@ -234,15 +230,15 @@ Screenshot: Examples showing the supply of OSM park area to residential building
 <p>To calculate the supply of each park attribute, we first calculate the pairwise distances between all buildings and parks (a distance matrix). This output is supplied to the function <code><a href="reference/recre_supply.html">recre_supply()</a></code>. For example, we can calculate the supply of park <em>area</em> to each building. This supply value can then be multiplied by the population count per building, to obtain the total supply to all residents.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># transform buildings &amp; parks to projected crs</span>
-<span class="va">buildings_pop_sgp</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">buildings_pop_sgp</span>, <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="fl">32648</span><span class="op">)</span><span class="op">)</span>
-<span class="va">parks_sgp</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html">st_transform</a></span><span class="op">(</span><span class="va">parks_sgp</span>, <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html">st_crs</a></span><span class="op">(</span><span class="fl">32648</span><span class="op">)</span><span class="op">)</span>
+<span class="va">buildings_pop_sgp</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">buildings_pop_sgp</span>, <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">32648</span><span class="op">)</span><span class="op">)</span>
+<span class="va">parks_sgp</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">parks_sgp</span>, <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_crs.html" class="external-link">st_crs</a></span><span class="op">(</span><span class="fl">32648</span><span class="op">)</span><span class="op">)</span>
 
 
 <span class="co"># convert buildings to points (centroids), then calculate distances to every park</span>
-<span class="va">m_dist</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span> <span class="op">%&gt;%</span>
-  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html">st_centroid</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html">st_distance</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># euclidean distance</span>
-    <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html">set_units</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>
+<span class="va">m_dist</span> <span class="op">&lt;-</span> <span class="va">buildings_pop_sgp</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
+  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_centroid</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
+  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_distance</a></span><span class="op">(</span><span class="va">parks_sgp</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> <span class="co"># euclidean distance</span>
+    <span class="fu">units</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/units/man/units.html" class="external-link">set_units</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>
 
 <span class="va">m_dist</span> <span class="op">&lt;-</span> <span class="va">m_dist</span> <span class="op">/</span> <span class="fl">1000</span> <span class="co"># convert distances to km</span>
 
@@ -262,21 +258,21 @@ Screenshot: Supply of park area to building residents in Singapore based on OSM 
 <p><br></p>
 </div>
 </div>
-<div id="data-sources" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-sources" class="anchor"></a>Data sources</h2>
+<div class="section level2">
+<h2 id="data-sources">Data sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
+</h2>
 <ul>
-<li><p>Singapore census data from the <a href="https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data">Department of Statistics Singapore</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence">Singapore Open Data Licence version 1.0</a>.</p></li>
-<li><p>Singapore subzone polygons from the <a href="https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea">Singapore Master Plan Subzones</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence">Singapore Open Data Licence version 1.0</a>.</p></li>
-<li><p>Singapore Master Plan Land Use Zones for the years <a href="https://data.gov.sg/dataset/master-plan-2014-land-use">2014</a> and <a href="https://data.gov.sg/dataset/master-plan-2019-land-use-layer">2019</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence">Singapore Open Data License</a>.</p></li>
-<li><p>Building polygons derived from map data <a href="https://www.openstreetmap.org/copyright">copyrighted</a> OpenStreetMap contributors and available from <a href="https://www.openstreetmap.org" class="uri">https://www.openstreetmap.org</a>. Released under the terms of the <a href="https://opendatacommons.org/licenses/odbl/summary/">ODbL License</a>.</p></li>
-<li><p>Park polygons and summarised attributes (trails, playgrounds) derived from map data <a href="https://www.openstreetmap.org/copyright">copyrighted</a> OpenStreetMap contributors and available from <a href="https://www.openstreetmap.org" class="uri">https://www.openstreetmap.org</a>. Released under the terms of the <a href="https://opendatacommons.org/licenses/odbl/summary/">ODbL License</a>.</p></li>
+<li><p>Singapore census data from the <a href="https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data" class="external-link">Department of Statistics Singapore</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence" class="external-link">Singapore Open Data Licence version 1.0</a>.</p></li>
+<li><p>Singapore subzone polygons from the <a href="https://data.gov.sg/dataset/master-plan-2019-subzone-boundary-no-sea" class="external-link">Singapore Master Plan Subzones</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence" class="external-link">Singapore Open Data Licence version 1.0</a>.</p></li>
+<li><p>Singapore Master Plan Land Use Zones for the years <a href="https://data.gov.sg/dataset/master-plan-2014-land-use" class="external-link">2014</a> and <a href="https://data.gov.sg/dataset/master-plan-2019-land-use-layer" class="external-link">2019</a>. Released under the terms of the <a href="https://data.gov.sg/open-data-licence" class="external-link">Singapore Open Data License</a>.</p></li>
+<li><p>Building polygons derived from map data <a href="https://www.openstreetmap.org/copyright" class="external-link">copyrighted</a> OpenStreetMap contributors and available from <a href="https://www.openstreetmap.org" class="external-link uri">https://www.openstreetmap.org</a>. Released under the terms of the <a href="https://opendatacommons.org/licenses/odbl/summary/" class="external-link">ODbL License</a>.</p></li>
+<li><p>Park polygons and summarised attributes (trails, playgrounds) derived from map data <a href="https://www.openstreetmap.org/copyright" class="external-link">copyrighted</a> OpenStreetMap contributors and available from <a href="https://www.openstreetmap.org" class="external-link uri">https://www.openstreetmap.org</a>. Released under the terms of the <a href="https://opendatacommons.org/licenses/odbl/summary/" class="external-link">ODbL License</a>.</p></li>
 </ul>
 <p><br></p>
 </div>
-<div id="references" class="section level2">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <p>Rossi, S. D., Byrne, J. A., &amp; Pickering, C. M. (2015). The role of distance in peri-urban national park use: Who visits them and how far do they travel?. Applied Geography, 63, 77-88.</p>
 <p>Tu, X., Huang, G., Wu, J., &amp; Guo, X. (2020). How do travel distance and park size influence urban park visits?. Urban Forestry &amp; Urban Greening, 52, 126689.</p>
 </div>
@@ -285,62 +281,67 @@ Screenshot: Supply of park area to building residents in Singapore based on OSM 
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/ecological-cities/home2park/">https://​github.com/​ecological-cities/​home2park/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/ecological-cities/home2park/issues">https://​github.com/​ecological-cities/​home2park/​issues</a>
-</li>
+<li><a href="https://github.com/ecological-cities/home2park/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/ecological-cities/home2park/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
 <li><small>GPL (&gt;= 3)</small></li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CONTRIBUTING.html">Contributing guide</a></li>
 </ul>
 </div>
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing home2park</a></li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://xp-song.github.io">Xiao Ping Song</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8825-195X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing home2park</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://github.com/ecological-cities/home2park/actions"><img src="https://github.com/ecological-cities/home2park/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://github.com/ecological-cities/home2park/actions"><img src="https://github.com/ecological-cities/home2park/workflows/test-coverage/badge.svg" alt="test-coverage"></a></li>
-<li><a href="https://doi.org/10.21105/joss.03609"><img src="https://joss.theoj.org/papers/10.21105/joss.03609/status.svg" alt="DOI"></a></li>
+<li>
+<a href="https://xp-song.github.io" class="external-link">Xiao Ping Song</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8825-195X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://github.com/ecological-cities/home2park/actions" class="external-link"><img src="https://github.com/ecological-cities/home2park/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/ecological-cities/home2park/actions" class="external-link"><img src="https://github.com/ecological-cities/home2park/workflows/test-coverage/badge.svg" alt="test-coverage"></a></li>
+<li><a href="https://doi.org/10.21105/joss.03609" class="external-link"><img src="https://joss.theoj.org/papers/10.21105/joss.03609/status.svg" alt="DOI"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="https://xp-song.github.io">Xiao Ping Song</a>.</p>
+  <p></p>
+<p>Developed by <a href="https://xp-song.github.io" class="external-link">Xiao Ping Song</a>.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -348,6 +349,8 @@ Screenshot: Supply of park area to building residents in Singapore based on OSM 
 
   
 
+
+  
 
   </body>
 </html>
