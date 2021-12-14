@@ -16,6 +16,14 @@ template:
 development:
   mode: auto
 
+footer:
+  structure:
+    left: developed_by
+    right: organisation
+  components:
+    organisation: _home2park_ is a part of [__ecological-cities__](https://github.com/ecological-cities)
+
+
 home:
   title: R Package - Spatial provision of urban parks
   description: Assess the spatial provision of various park attributes to residential buildings city-wide.
