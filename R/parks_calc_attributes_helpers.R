@@ -138,6 +138,7 @@ raster_edge_length <- function(polygons, raster, raster_min_patch_size = units::
     # left_join to polygons, replace NA w 0
     results <- results %>%
         dplyr::left_join(parks_rasteredge, by = "id_temporary") %>%
+        dplyr::mutate(dplyr::across(matches("[0-9]_length"), .fns = ~units::set_units(., NULL))) %>%
         dplyr::mutate(dplyr::across(matches("[0-9]_length"), .fns = ~tidyr::replace_na(.,
             0)))
 
