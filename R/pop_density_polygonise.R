@@ -21,7 +21,6 @@
 #'@import sf
 #'@import checkmate
 #'@importFrom dplyr mutate select
-#'@importFrom stars st_as_stars
 #'@importFrom terra res
 #'@importFrom units drop_units
 #'@importFrom rlang .data
@@ -110,16 +109,16 @@ pop_density_polygonise <- function(input_raster, write = FALSE, dsn, driver = "G
     pixel_res <- terra::res(input_raster)  # get pixel res for later
     crs_output <- st_crs(input_raster)  # get crs for later
 
-    input_raster <- stars::st_as_stars(input_raster)  # convert to stars object to polygonise (crs changes!)
-
-    # polygonise, merge polygons with similar pixel values
-    output_polygons <- st_as_sf(input_raster, as_points = FALSE, merge = TRUE) %>%
-        st_make_valid()
-
+    output_polygons <-
+      terra::as.polygons(input_raster,
+                         round = FALSE, # don't round off values before aggregation
+                         aggregate = TRUE) %>%  # combine cells with same values
+      sf::st_as_sf() %>%
+      sf::st_make_valid()
 
     # convert polygon pop density values to pop count per polygon (e.g. building)
     colnames(output_polygons)[1] <- "pop_perpixel"
-    output_polygons$area_m2 <- st_area(output_polygons)
+    output_polygons$area_m2 <- sf::st_area(output_polygons)
 
     output_polygons <- output_polygons %>%
         dplyr::mutate(popcount = .data$pop_perpixel * .data$area_m2/prod(pixel_res)) %>%

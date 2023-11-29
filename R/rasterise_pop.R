@@ -27,8 +27,7 @@
 #'@import checkmate
 #'@importFrom glue glue
 #'@importFrom dplyr filter mutate
-#'@importFrom raster raster writeRaster
-#'@importFrom terra vect rast rasterize
+#'@importFrom terra vect rast ext rasterize writeRaster
 #'@importFrom rlang .data
 #'
 #'@examples
@@ -86,7 +85,12 @@ rasterise_pop <- function(sf, res = 10, census_block = NULL, pop_count = NULL, y
     raster_template <- sf %>%
         raster::raster(res = res)  # make & export using library('raster'), cuz library('terra') fails to export if no cell values
 
-    suppressWarnings(raster::writeRaster(raster_template, filename = file.path(glue::glue("{dir_processing}/popdensity_raster-template.tif")),
+    raster_template <- terra::rast(terra::ext(sf),
+                                   resolution = res,
+                                   crs = sf::st_crs(sf)$wkt) # input format is WKT
+
+
+    suppressWarnings(terra::writeRaster(raster_template, filename = file.path(glue::glue("{dir_processing}/popdensity_raster-template.tif")),
         overwrite = TRUE, wopt = list(gdal = c("COMPRESS=LZW"))))
 
 
